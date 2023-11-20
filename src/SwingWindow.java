@@ -6,25 +6,30 @@ import java.awt.*;
 
 public class SwingWindow extends JFrame {
 
-    JMenuBar menubar = new JMenuBar();
-    JMenu menu = new JMenu("Menu");
-    JMenuItem register = new JMenuItem("Register");
-    JMenuItem login = new JMenuItem("Login");
 
     JPanel panel;
-    JPanel registerPanel;
 
     public SwingWindow(String text) {
         super(text);
+        panel = new JPanel();
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension screenSize = toolkit.getScreenSize();
         setSize(screenSize.width/2, screenSize.height/2);
         setLocation(screenSize.width/4, screenSize.height/4);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         
+        JMenuBar menubar = new JMenuBar();
+        JMenu menu = new JMenu("Login/Register");
+        JMenuItem register = new JMenuItem("Register");
+        JMenuItem login = new JMenuItem("Login");
         menu.add(register);
         menu.add(login);
         menubar.add(menu);
         this.setJMenuBar(menubar);
+
+        addButton(panel, "Button1");
+
+        this.add(panel, BorderLayout.CENTER);
 
         /* 
          * Notes - Here is where we can define JButtons, JTextFields, JComboBoxes, JCheckBoxes, JPasswordFields, JRadioButtons, JMenu stuff...
@@ -32,16 +37,7 @@ public class SwingWindow extends JFrame {
          * I'll also upgrade the JPanel when necessary.
          */
 
-        panel = new JPanel();
-        panel.setLayout(new GridLayout(5, 4));
 
-        addButton(panel, "Button1");
-
-        registerPanel = new RegisterLoginPanels();
-
-        this.add(registerPanel, BorderLayout.CENTER);
-        registerPanel.setVisible(false);
-        this.add(panel, BorderLayout.CENTER);
         this.addListeners();
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -53,6 +49,7 @@ public class SwingWindow extends JFrame {
         panel.add(button);
     }
     public void addListeners() {
+        /*
     	register.addActionListener(new ActionListener() {
     		public void actionPerformed(ActionEvent e) {
     			System.out.println("Plz work register");
@@ -64,6 +61,6 @@ public class SwingWindow extends JFrame {
     		public void actionPerformed(ActionEvent e) {
     			System.out.println("Plz work login!");
     		}
-        });
+        });*/
     }
 }
