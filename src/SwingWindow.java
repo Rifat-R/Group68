@@ -1,9 +1,17 @@
 package src;
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.*;
-import java.util.Stack;
 
 public class SwingWindow extends JFrame {
+
+    MainPanel panel;    
+        
+    JMenuBar menubar = new JMenuBar();
+    JMenu menu = new JMenu("Login/Register");
+    JMenuItem register = new JMenuItem("Register");
+    JMenuItem login = new JMenuItem("Login");
 
     public SwingWindow(String text) {
         super(text);
@@ -11,16 +19,14 @@ public class SwingWindow extends JFrame {
         Dimension screenSize = toolkit.getScreenSize();
         setSize(screenSize.width/2, screenSize.height/2);
         setLocation(screenSize.width/4, screenSize.height/4);
-        System.out.println(screenSize.width);
 
-        JMenuBar menubar = new JMenuBar();
-        JMenu menu = new JMenu("Menu");
-        JMenuItem register = new JMenuItem("Register");
-        JMenuItem login = new JMenuItem("Login");
         menu.add(register);
         menu.add(login);
         menubar.add(menu);
         this.setJMenuBar(menubar);
+        ;
+        panel = new MainPanel();
+
 
         /* 
          * Notes - Here is where we can define JButtons, JTextFields, JComboBoxes, JCheckBoxes, JPasswordFields, JRadioButtons, JMenu stuff...
@@ -28,19 +34,24 @@ public class SwingWindow extends JFrame {
          * I'll also upgrade the JPanel when necessary.
          */
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(5, 4));
-
-        addButton(panel, "Button1");
-
-
-        this.add(panel, BorderLayout.CENTER);
+        this.add(panel);
+        this.addListeners();
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     }
-    private void addButton(JPanel panel, String label) {
-        JButton button = new JButton(label);
-        button.setFont(new Font("Monospaced", Font.BOLD, 22));
-        panel.add(button);
+    public void addListeners() {
+        CardLayout c1 = (CardLayout)(panel.getLayout());
+    	register.addActionListener(new ActionListener() {
+    		public void actionPerformed(ActionEvent e) {
+    			System.out.println("Plz work register");
+                c1.show(panel,"Register");
+    		}
+        });
+        login.addActionListener(new ActionListener() {
+    		public void actionPerformed(ActionEvent e) {
+    			System.out.println("Plz work login!");
+                c1.show(panel,"Login");
+    		}
+        });
     }
 }
