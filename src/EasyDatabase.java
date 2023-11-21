@@ -60,6 +60,8 @@ public class EasyDatabase {
             e.printStackTrace();
         }
     }
-
+    public Connection getConnection() {
+        return this.con;
+    }
 
 }

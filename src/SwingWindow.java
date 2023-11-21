@@ -3,6 +3,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.*;
+// import java.sql.*;
 
 public class SwingWindow extends JFrame {
 
@@ -13,8 +14,13 @@ public class SwingWindow extends JFrame {
     JMenuItem register = new JMenuItem("Register");
     JMenuItem login = new JMenuItem("Login");
 
+    EasyDatabase db;
+
     public SwingWindow(String text) {
         super(text);
+
+        this.db = db;
+
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension screenSize = toolkit.getScreenSize();
         setSize(screenSize.width/2, screenSize.height/2);
@@ -24,7 +30,6 @@ public class SwingWindow extends JFrame {
         menu.add(login);
         menubar.add(menu);
         this.setJMenuBar(menubar);
-        ;
         panel = new MainPanel();
 
 
