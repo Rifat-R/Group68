@@ -8,11 +8,11 @@ import java.awt.*;
 
 public class MainPanel extends JPanel {
     final int column = 20;
-    final String[] invalidChars = {"!","*"};
+    final String[] invalidChars = {"!","*", " "};
 
     EasyDatabase db;
 
-    private int userLoggedInID;
+    private User user;
 
     // Register JItems
 
@@ -20,7 +20,8 @@ public class MainPanel extends JPanel {
     protected JTextField registerUsernameField = new JTextField(column);
     protected JTextField registerEmailField = new JTextField(column);
     protected JPasswordField registerPasswordField = new JPasswordField(column);
-    protected JTextField registerConfirmField = new JTextField(column);
+    protected JPasswordField registerConfirmField = new JPasswordField(column);
+    protected JLabel registerIssues = new JLabel();
 
     // Register2 JItems
 
@@ -31,16 +32,22 @@ public class MainPanel extends JPanel {
     protected JTextField registerAddress2 = new JTextField(column);
     protected JTextField registerAddress3 = new JTextField(column);
     protected JTextField registerPostcode = new JTextField(column);
+    protected JLabel registerIssues2 = new JLabel();
 
     // Login JItems
     protected JButton loginSubmitButton = new JButton("Submit");
     protected JTextField loginEmailField = new JTextField(column);
     protected JPasswordField loginPasswordField = new JPasswordField(column);
+    protected JLabel loginIssues = new JLabel();
 
     // Constructor
     public MainPanel(){
 
         this.setLayout(new CardLayout());
+
+        registerIssues.setForeground(Color.RED);
+        registerIssues2.setForeground(Color.RED);
+        loginIssues.setForeground(Color.RED);
 
         JLabel emptyLine = new JLabel("");
         emptyLine.setPreferredSize(new Dimension(3000,0));
@@ -54,6 +61,7 @@ public class MainPanel extends JPanel {
         registerPanel.add(new JLabel("Confirm Password: "));
         registerPanel.add(registerConfirmField);
         registerPanel.add(registerContinueButton);
+        registerPanel.add(registerIssues);
 
         JPanel register2Panel = new JPanel();
         register2Panel.setLayout(new BoxLayout(register2Panel, BoxLayout.Y_AXIS));
@@ -70,6 +78,7 @@ public class MainPanel extends JPanel {
         register2Panel.add(new JLabel("Postcode: "));
         register2Panel.add(registerPostcode);
         register2Panel.add(registerSubmitButton);
+        register2Panel.add(registerIssues2);
 
         JPanel loginPanel = new JPanel();
         loginPanel.setLayout(new BoxLayout(loginPanel, BoxLayout.Y_AXIS));
@@ -78,6 +87,7 @@ public class MainPanel extends JPanel {
         loginPanel.add(new JLabel("Password: "));
         loginPanel.add(loginPasswordField);
         loginPanel.add(loginSubmitButton);
+        loginPanel.add(loginIssues);
         
         JPanel registerContainer = new JPanel();
         registerContainer.add(registerPanel);
@@ -99,14 +109,17 @@ public class MainPanel extends JPanel {
     	registerContinueButton.addActionListener(new ActionListener() {
     		public void actionPerformed(ActionEvent e) {
     			System.out.println("Plz work register2");
-                c1.show(p,"Register2");
+                String accountCreation = createAccountA();
+                if(accountCreation == "") c1.show(p,"Register2");
+                else registerIssues.setText(accountCreation);
     		}
         });
         registerSubmitButton.addActionListener(new ActionListener() {
     		public void actionPerformed(ActionEvent e) {
     			System.out.println("Plz submit data!");
-                createAccount();
-                c1.show(p,"Login");
+                String accountCreation = createAccountB();
+                if(accountCreation == "") c1.show(p,"Splash");
+                else registerIssues2.setText(accountCreation);
     		}
         });
         loginSubmitButton.addActionListener(new ActionListener() {
@@ -114,50 +127,85 @@ public class MainPanel extends JPanel {
     			System.out.println("Plz login using data!");
                 String loginResult = login();
                 if(loginResult == "") c1.show(p,"Splash");
-                else System.out.println(loginResult);
-                System.out.println(userLoggedInID);
+                else loginIssues.setText(loginResult);
+                if(user != null) System.out.println(user.getID());
     		}
         });
     }
-    void createAccount() {
-        
-    }
-    
-    String login() {
+    String createAccountA() {
+        String email, password, confirmation;
+        email = registerEmailField.getText();
+        password = registerPasswordField.getText();
+        confirmation = registerConfirmField.getText();
         for (String i : invalidChars)
-            if(loginEmailField.getText().contains(i) || loginPasswordField.getText().contains(i)) {
+            if(email.contains(i) || password.contains(i)) {
                 return "Characters used were invalid.";
             }
-        System.out.println(loginEmailField.getText() + loginPasswordField.getText());
+        if(email == "") return "Please enter an email.";
+        if(password == "") return "Please enter a password.";
+        if(password != confirmation) return "Passwords don't match";
+        
+        return "";
+    }
+    String createAccountB() {
+        String name, surname, street, city, postcode;
+        int house;
+        try {
+            house = Integer.parseInt(registerAddress1.getText());
+        } catch (Throwable e) {
+            return "Please enter numbers only into this field: House number";
+        }
+        name = registerFirstNameField.getText();
+        surname = registerLastNameField.getText();
+        street = registerAddress2.getText();
+        city = registerAddress3.getText();
+        postcode = registerPostcode.getText();
+        for(String i : invalidChars) {
+            if(name.contains(i) || surname.contains(i) || street.contains(i) || city.contains(i)) 
+                return "Please check fields: Invalid characters used";
+        }
+        if(!isPostcodeValid(postcode)) return "Postcode is invalid.";
+        return "";
+    }
+    Boolean isPostcodeValid(String x) {
+        if (x.length() < 5 || x.length() > 7) return false;
+        return true;
+    }
+    String login() {
+        String email, password;
+        email = loginEmailField.getText();
+        password = loginPasswordField.getText();
+        for (String i : invalidChars)
+            if(email.contains(i) || password.contains(i)) {
+                return "Characters used were invalid.";
+            }
+        if(email == "") return "Please enter an email.";
+        if(password == "") return "Please enter a password.";
 
         db = new EasyDatabase();
         try {
-            Connection connection = db.getConnection();
             try {
 
-                String selectSQL = "SELECT COUNT(userID) FROM UserTable WHERE userEmail = '" + loginEmailField.getText() 
-                                + "'";
-                PreparedStatement preparedStatement = connection.prepareStatement(selectSQL);
-                ResultSet resultSet = preparedStatement.executeQuery();
-                while(resultSet.next()) {
-                    if(Integer.parseInt(resultSet.getString(1)) < 1) return "Invalid email";
-                    else if(Integer.parseInt(resultSet.getString(1)) > 1) return "what";
+                String selectSQL = "SELECT COUNT(userID) FROM UserTable WHERE userEmail = '" + email 
+                                + "'";;
+                db.executeQuery(selectSQL);
+                while(db.resultSet.next()) {
+                    if(Integer.parseInt(db.resultSet.getString(1)) < 1) return "Invalid email";
+                    else if(Integer.parseInt(db.resultSet.getString(1)) > 1) return "what";
                 }
 
-                selectSQL = "SELECT COUNT(userID) FROM UserTable WHERE userEmail = '" + loginEmailField.getText() 
-                                + "' AND userPassword = '" + loginPasswordField.getText() + "'";
-                preparedStatement = connection.prepareStatement(selectSQL);
-                resultSet = preparedStatement.executeQuery();
-                while(resultSet.next()) {
-                    if(Integer.parseInt(resultSet.getString(1)) < 1) return "Invalid password";
+                selectSQL = "SELECT COUNT(userID) FROM UserTable WHERE userEmail = '" + email 
+                                + "' AND userPassword = '" + password + "'";
+                db.executeQuery(selectSQL);
+                while(db.resultSet.next()) {
+                    if(Integer.parseInt(db.resultSet.getString(1)) < 1) return "Invalid password";
                 }
 
-                selectSQL = "SELECT userID FROM UserTable WHERE userEmail = '" + loginEmailField.getText() 
-                                + "' AND userPassword = '" + loginPasswordField.getText() + "'";
-                preparedStatement = connection.prepareStatement(selectSQL);
-                resultSet = preparedStatement.executeQuery();
-                while(resultSet.next()) {
-                    userLoggedInID = Integer.parseInt(resultSet.getString("userID"));
+                selectSQL = "SELECT userID FROM UserTable WHERE userEmail = '" + email
+                                + "' AND userPassword = '" + password + "'";
+                db.executeQuery(selectSQL);
+                while(db.resultSet.next()) {
+                    user = new User(Integer.parseInt(db.resultSet.getString("userID")));
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
