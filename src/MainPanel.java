@@ -1,6 +1,8 @@
 package src;
 import javax.swing.*;
 
+import src.User.Role;
+
 import java.sql.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -117,8 +119,27 @@ public class MainPanel extends JPanel {
         registerSubmitButton.addActionListener(new ActionListener() {
     		public void actionPerformed(ActionEvent e) {
     			System.out.println("Plz submit data!");
-                String accountCreation = createAccountB();
-                if(accountCreation == "") c1.show(p,"Splash");
+                String name, surname, street, city, postcode;
+                int house = 0;
+                String email = registerEmailField.getText();
+                String password = registerPasswordField.getText();
+                name = registerFirstNameField.getText();
+                surname = registerLastNameField.getText();
+                street = registerAddress2.getText();
+                city = registerAddress3.getText();
+                postcode = registerPostcode.getText();
+                String accountCreation;
+                try {
+                    house = Integer.parseInt(registerAddress1.getText());
+                    accountCreation = createAccountB(name, surname, street, city, postcode, house);
+                } catch (Throwable t) {
+                    accountCreation = "Please enter numbers only into this field: House number";
+                }
+                if(accountCreation == "") { 
+                    User createdUser = new User(1, email, Role.Customer, house, street, city, postcode);
+                    addUserToDatabase(createdUser, password);
+                    c1.show(p,"Splash");
+                }
                 else registerIssues2.setText(accountCreation);
     		}
         });
@@ -132,37 +153,44 @@ public class MainPanel extends JPanel {
     		}
         });
     }
+    int getNextID()
+    {
+        db = new EasyDatabase();
+        String selectSQL = "SELECT COUNT(userID) FROM UserTable";
+        db.executeQuery(selectSQL);
+        try {
+            while(db.resultSet.next()) {
+                return Integer.parseInt(db.resultSet.getString(1));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {            
+            db.close();
+        }
+        return -1;
+
+    }
     String createAccountA() {
         String email, password, confirmation;
         email = registerEmailField.getText();
         password = registerPasswordField.getText();
         confirmation = registerConfirmField.getText();
+        System.out.println(password+confirmation);
         for (String i : invalidChars)
             if(email.contains(i) || password.contains(i)) {
                 return "Characters used were invalid.";
             }
         if(email == "") return "Please enter an email.";
         if(password == "") return "Please enter a password.";
-        if(password != confirmation) return "Passwords don't match";
+        if(!password.equals(confirmation)) return "Passwords don't match";
         
         return "";
     }
-    String createAccountB() {
-        String name, surname, street, city, postcode;
-        int house;
-        try {
-            house = Integer.parseInt(registerAddress1.getText());
-        } catch (Throwable e) {
-            return "Please enter numbers only into this field: House number";
-        }
-        name = registerFirstNameField.getText();
-        surname = registerLastNameField.getText();
-        street = registerAddress2.getText();
-        city = registerAddress3.getText();
-        postcode = registerPostcode.getText();
+    String createAccountB(String name, String surname, String street, String city, String postcode, int house) {
+        
         for(String i : invalidChars) {
-            if(name.contains(i) || surname.contains(i) || street.contains(i) || city.contains(i)) 
-                return "Please check fields: Invalid characters used";
+            if(name.contains(i) || surname.contains(i))
+                return "Please check fields: Invalid characters used in first and/or last names";
         }
         if(!isPostcodeValid(postcode)) return "Postcode is invalid.";
         return "";
@@ -171,6 +199,8 @@ public class MainPanel extends JPanel {
         if (x.length() < 5 || x.length() > 7) return false;
         return true;
     }
+
+
     String login() {
         String email, password;
         email = loginEmailField.getText();
@@ -185,9 +215,8 @@ public class MainPanel extends JPanel {
         db = new EasyDatabase();
         try {
             try {
-
                 String selectSQL = "SELECT COUNT(userID) FROM UserTable WHERE userEmail = '" + email 
-                                + "'";;
+                                + "'";
                 db.executeQuery(selectSQL);
                 while(db.resultSet.next()) {
                     if(Integer.parseInt(db.resultSet.getString(1)) < 1) return "Invalid email";
@@ -217,4 +246,16 @@ public class MainPanel extends JPanel {
         }
         return "";
     }
+
+    public void addUserToDatabase(User addUser,String password)
+    {
+        db = new EasyDatabase();
+        String selectSQL = "INSERT INTO UserTable (userEmail, userPassword, userRole, houseNumber, roadName, city, postCode) VALUES ('"
+                            + addUser.getEmail()+"','"+ password+"','Customer','"+ addUser.getHouseNumber()
+                            +"','"+addUser.getRoadName() +"','"+addUser.getCity()+"','"+addUser.getPostCode()+"')";
+        db.executeUpdate(selectSQL);
+        db.close();
+        
+    }
 }
+
