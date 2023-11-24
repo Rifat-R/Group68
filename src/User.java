@@ -105,10 +105,11 @@ public class User {
 
     public User(int id) throws SQLException{
         EasyDatabase db = new EasyDatabase();
-        db.executeQuery("SELECT * FROM UserTable WHERE userID={id}");
+        db.executeQuery("SELECT * FROM UserTable WHERE userID= " + id);
         this.userID = id;
-        this.userEmail = db.resultSet.getString(1);
-        switch(db.resultSet.getString(3)){
+        db.resultSet.next();
+        this.userEmail = db.resultSet.getString(2);
+        switch(db.resultSet.getString(4)){
             case "Customer":
                 this.userRole = Role.Customer;
                 break;
@@ -122,10 +123,10 @@ public class User {
                 this.userRole = Role.Customer;
                 break;
         }
-        this.houseNumber = db.resultSet.getInt(4);
-        this.roadName = db.resultSet.getString(5);
-        this.city = db.resultSet.getString(6);
-        this.postCode = db.resultSet.getString(7);
+        this.houseNumber = db.resultSet.getInt(5);
+        this.roadName = db.resultSet.getString(6);
+        this.city = db.resultSet.getString(7);
+        this.postCode = db.resultSet.getString(8);
     }
 
     public User(String email) throws SQLException{
