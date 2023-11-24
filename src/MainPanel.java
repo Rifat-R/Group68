@@ -98,10 +98,13 @@ public class MainPanel extends JPanel {
         JPanel loginContainer = new JPanel();
         loginContainer.add(loginPanel);
 
+        JPanel customerHome = new HomePage();
+
         this.add(new JPanel(),"Splash");
         this.add(registerContainer, "Register");
         this.add(register2Container, "Register2");
         this.add(loginContainer,"Login");
+        this.add(customerHome, "HomePage");
 
         addListeners(this);
     }    
@@ -149,7 +152,7 @@ public class MainPanel extends JPanel {
                 String loginResult = login();
                 if(loginResult == "") c1.show(p,"Splash");
                 else loginIssues.setText(loginResult);
-                if(user != null) System.out.println(user.getID());
+                if(user != null) c1.show(p, "HomePage");
     		}
         });
     }
