@@ -10,7 +10,7 @@ import java.awt.*;
 
 public class MainPanel extends JPanel {
     final int column = 20;
-    final String[] invalidChars = {"!","*", " "};
+    final String[] invalidChars = {"!","*", " ","_","-","'","+","<",">","(",")","[","]","{","}","&","="};
 
     EasyDatabase db;
 
@@ -176,18 +176,20 @@ public class MainPanel extends JPanel {
         password = registerPasswordField.getText();
         confirmation = registerConfirmField.getText();
         System.out.println(password+confirmation);
+        if(!isEmailValid(email)) return "Invalid email address, please revise";
         for (String i : invalidChars)
             if(email.contains(i) || password.contains(i)) {
                 return "Characters used were invalid.";
             }
-        if(email == "") return "Please enter an email.";
-        if(password == "") return "Please enter a password.";
+        if(email.equals("")) return "Please enter an email.";
+        if(password.equals("")) return "Please enter a password.";
         if(!password.equals(confirmation)) return "Passwords don't match";
         
         return "";
     }
     String createAccountB(String name, String surname, String street, String city, String postcode, int house) {
-        
+        if(name.equals("") || surname.equals("") || street.equals("") || city.equals("") || postcode.equals(""))
+            return "Please check fields: One or more fields have been left blank.";
         for(String i : invalidChars) {
             if(name.contains(i) || surname.contains(i))
                 return "Please check fields: Invalid characters used in first and/or last names";
@@ -198,6 +200,19 @@ public class MainPanel extends JPanel {
     Boolean isPostcodeValid(String x) {
         if (x.length() < 5 || x.length() > 7) return false;
         return true;
+    }
+    Boolean isEmailValid(String x) {
+        if(!x.contains("@")) return false;
+        if(!x.contains(".")) return false;
+        boolean flag = false;
+        for(int i=x.indexOf("@");i<x.length();i++) {
+            if(x.charAt(i) == '.') {
+                flag = true;
+            }
+            if(x.charAt(i)=='.'&& i>=x.length()-1) return false;
+        }
+        if(flag) return true;
+        else return false;
     }
 
 
