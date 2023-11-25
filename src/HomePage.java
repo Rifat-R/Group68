@@ -1,5 +1,7 @@
 package src;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 import src.User.Role;
 
@@ -11,59 +13,48 @@ import java.awt.*;
 public class HomePage extends JPanel {
 
     EasyDatabase db;
+    JTable table;
 
     // Only for registered users
     public HomePage() {
+        //this.setLayout(new GridBagLayout());
+        // GridBagConstraints c = new GridBagConstraints();
 
-        this.setBackground(Color.black);
-        /*
-        this.setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
+        DefaultTableModel model = new DefaultTableModel();
+        JTable table = new JTable(model);
+        //table.setFillsViewportHeight(true);
 
-        String[][] newArray = new String[1][3];
-        newArray[0][0] = "77";
-        newArray[0][1] = "Meadow Road";
-        newArray[0][2] = "Leeds";
+        model.addColumn("Name"); 
+        model.addColumn("Brand");
+        model.addColumn("Price"); 
+        model.addColumn("Gauge"); 
+        model.addColumn("Era"); 
+        model.addColumn("dCCCode");
 
-        String[] columnNames = new String [3];
-        columnNames[0] = "Number";
-        columnNames[1] = "Street";
-        columnNames[2] = "City";
+
+        db = new EasyDatabase();
+
+        try {
+            ResultSet rs = db.getProducts();
+            while (rs.next()){
+                String name = rs.getString(2);
+                String brand = rs.getString(3);
+                String price = rs.getString(4);
+                String gauge = rs.getString(5);
+                String era = rs.getString(6);
+                String dcc = rs.getString(7);
+                model.addRow(new Object[]{name, brand, price, gauge, era, dcc});
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
 
         
-        JTable table = new JTable(newArray, columnNames);
-
+        
         JScrollPane scrollPane = new JScrollPane(table);
-        table.setFillsViewportHeight(true);
 
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 0;
-        c.gridy = 0;
-        c.weighty = 0;
-        this.add(scrollPane, c);
-        */
+        this.add(scrollPane);
+        
     }
-
-    /*
-    ResultSet getItems() {
-        db = new EasyDatabase();
-        try {
-            try {
-                String selectSQL = "SELECT * FROM ProducTable";
-                db.executeQuery(selectSQL);
-                while(db.resultSet.next()) {
-
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        } catch (Throwable e) {
-            e.printStackTrace();
-        } finally {            
-            db.close();
-        }
-    }
-    }
-    */
-
 }
