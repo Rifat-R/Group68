@@ -9,9 +9,10 @@ public class SwingWindow extends JFrame {
     MainPanel panel;    
         
     JMenuBar menubar = new JMenuBar();
-    JMenu menu = new JMenu("Login/Register");
+    JMenu menu = new JMenu("Account");
     JMenuItem register = new JMenuItem("Register");
     JMenuItem login = new JMenuItem("Login");
+    JMenuItem order = new JMenuItem("Order");
 
     public SwingWindow(String text) {
         super(text);
@@ -22,6 +23,7 @@ public class SwingWindow extends JFrame {
 
         menu.add(register);
         menu.add(login);
+        menu.add(order);
         menubar.add(menu);
         this.setJMenuBar(menubar);
         panel = new MainPanel();
@@ -50,6 +52,12 @@ public class SwingWindow extends JFrame {
     		public void actionPerformed(ActionEvent e) {
     			System.out.println("Plz work login!");
                 c1.show(panel,"Login");
+    		}
+        });
+        order.addActionListener(new ActionListener() {
+    		public void actionPerformed(ActionEvent e) {
+    			System.out.println("Plz work order!");
+                c1.show(panel,"CustomerOrder");
     		}
         });
     }

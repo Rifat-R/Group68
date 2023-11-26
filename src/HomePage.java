@@ -22,7 +22,8 @@ public class HomePage extends JPanel {
 
         DefaultTableModel model = new DefaultTableModel();
         JTable table = new JTable(model);
-        //table.setFillsViewportHeight(true);
+        table.setDefaultEditor(Object.class, null);
+        table.setFillsViewportHeight(true);
 
         model.addColumn("Name"); 
         model.addColumn("Brand");
@@ -33,7 +34,6 @@ public class HomePage extends JPanel {
 
 
         db = new EasyDatabase();
-
         try {
             ResultSet rs = db.getProducts();
             while (rs.next()){
@@ -48,13 +48,9 @@ public class HomePage extends JPanel {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-
-        
         
         JScrollPane scrollPane = new JScrollPane(table);
 
-        this.add(scrollPane);
-        
+        this.add(scrollPane);   
     }
 }

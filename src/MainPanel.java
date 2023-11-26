@@ -99,12 +99,14 @@ public class MainPanel extends JPanel {
         loginContainer.add(loginPanel);
 
         JPanel customerHome = new HomePage();
+        JPanel customerOrder = new CustomerOrder();
 
         this.add(new JPanel(),"Splash");
         this.add(registerContainer, "Register");
         this.add(register2Container, "Register2");
         this.add(loginContainer,"Login");
         this.add(customerHome, "HomePage");
+        this.add(customerOrder, "CustomerOrder");
 
         addListeners(this);
     }    
