@@ -38,6 +38,13 @@ public class EasyDatabase {
         catch(SQLException e){e.printStackTrace();}
     }
 
+    public ResultSet getProducts() throws SQLException {
+        String selectSQL = "SELECT * FROM ProductTable";
+        PreparedStatement preparedStatement = con.prepareStatement(selectSQL);
+        ResultSet rs = preparedStatement.executeQuery();
+        return rs;
+    }
+
     public void printQuery(){
         try{
             ResultSetMetaData metaData = resultSet.getMetaData();
