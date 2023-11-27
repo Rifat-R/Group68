@@ -141,15 +141,17 @@ public class HomePage extends JPanel {
 
         JScrollPane scrollPane = new JScrollPane(individualProduct);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.getViewport().setMinimumSize(new Dimension(450, 500));
-        scrollPane.getViewport().setPreferredSize(new Dimension(450, 500));
+        scrollPane.getViewport().setMinimumSize(new Dimension(450, 2000));
+        scrollPane.getViewport().setPreferredSize(new Dimension(450, 2000));
         scrollPane.setBorder(null);
 
-        c.anchor = GridBagConstraints.PAGE_START;
+        c.anchor = GridBagConstraints.FIRST_LINE_START;
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
         c.gridy = 0;
-        c.insets = new Insets(0,0,40,0);
+        //c.weightx = 1;
+        c.weighty = 1;
+        c.insets = new Insets(20,0,20,0);
         this.add(scrollPane, c);
 
     }
