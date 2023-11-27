@@ -56,9 +56,10 @@ public class HomePage extends JPanel {
 
                 JPanel f = new JPanel();
                 f.setLayout(new GridBagLayout());
-
+                
                 JLabel label1 = new JLabel(name);
-                label1.setText(name);
+                //label1.setText(name);
+
                 c.anchor = GridBagConstraints.FIRST_LINE_START;
                 c.fill = GridBagConstraints.HORIZONTAL;
                 c.gridx = 0;
@@ -66,6 +67,11 @@ public class HomePage extends JPanel {
                 c.gridwidth = 1;
                 c.insets = new Insets(0,0,0,0);
                 f.add(label1, c);
+
+                //System.out.println(name);
+                //System.out.println(250 - label1.getPreferredSize().width);
+                Component invs = Box.createHorizontalStrut(250 - (label1.getPreferredSize().width));
+                f.add(invs);
 
                 JLabel label2 = new JLabel(brand);
                 label2.setText(brand);
@@ -75,8 +81,8 @@ public class HomePage extends JPanel {
                 c.gridwidth = 1;
                 f.add(label2, c);
 
-                JLabel label3 = new JLabel(price);
-                label3.setText(price);
+                JLabel label3 = new JLabel("£" + price);
+                label3.setText("£" + price);
                 c.fill = GridBagConstraints.HORIZONTAL;
                 c.gridx = 1;
                 c.gridy = 1;
@@ -95,6 +101,7 @@ public class HomePage extends JPanel {
 
                 SpinnerModel model = new SpinnerNumberModel(1, 1, 100, 1);     
                 JSpinner spinner = new JSpinner(model);
+                spinner.setEditor(new JSpinner.DefaultEditor(spinner));
                 c.fill = GridBagConstraints.VERTICAL;
                 c.gridx = 3;
                 c.gridy = 0;
