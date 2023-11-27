@@ -70,8 +70,6 @@ public class HomePage extends JPanel {
 
                 //System.out.println(name);
                 //System.out.println(250 - label1.getPreferredSize().width);
-                Component invs = Box.createHorizontalStrut(250 - (label1.getPreferredSize().width));
-                f.add(invs);
 
                 JLabel label2 = new JLabel(brand);
                 label2.setText(brand);
@@ -89,6 +87,18 @@ public class HomePage extends JPanel {
                 c.gridwidth = 1;
                 f.add(label3, c);
 
+                int nameWidth = label1.getPreferredSize().width;
+                int brandWidth = label2.getPreferredSize().width;
+                int pound = label3.getPreferredSize().width;
+
+                if (nameWidth >= brandWidth) {
+                    Component invs = Box.createHorizontalStrut(300 - (nameWidth + pound));
+                    f.add(invs);
+                } else {
+                    Component invs = Box.createHorizontalStrut(300 - (brandWidth + pound));
+                    f.add(invs);
+                }
+
                 
                 JButton bag = new JButton("Add");
                 c.fill = GridBagConstraints.VERTICAL;
@@ -96,7 +106,7 @@ public class HomePage extends JPanel {
                 c.gridy = 0;
                 c.gridheight = 2;
                 c.gridwidth = 1;
-                c.insets = new Insets(0,30,0,0);
+                c.insets = new Insets(0,0,0,0);
                 f.add(bag, c);
 
                 SpinnerModel model = new SpinnerNumberModel(1, 1, 100, 1);     
@@ -133,6 +143,7 @@ public class HomePage extends JPanel {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.getViewport().setMinimumSize(new Dimension(450, 500));
         scrollPane.getViewport().setPreferredSize(new Dimension(450, 500));
+        scrollPane.setBorder(null);
 
         c.anchor = GridBagConstraints.PAGE_START;
         c.fill = GridBagConstraints.HORIZONTAL;
