@@ -1,41 +1,38 @@
 package src;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 import src.User.Role;
 
 import java.sql.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Flow;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.*;
 
+import java.time.LocalDateTime;  
+
 public class HomePage extends JPanel {
 
     EasyDatabase db;
     JTable table;
+    User user;
+
+    Map map = new HashMap<String, Integer>();
 
     // Only for registered users
+
     public HomePage() {
 
+
         this.setLayout(new GridBagLayout());
-        /*
-        DefaultTableModel model = new DefaultTableModel();
-        JTable table = new JTable(model);
-        table.setDefaultEditor(Object.class, null);
-        table.setFillsViewportHeight(true);
-
-        model.addColumn("Name"); 
-        model.addColumn("Brand");
-        model.addColumn("Price"); 
-        model.addColumn("Gauge"); 
-        model.addColumn("Era"); 
-        model.addColumn("dCCCode");
-        */
         GridBagConstraints c = new GridBagConstraints();
-
-        Box container = Box.createVerticalBox();
         
 
         JPanel individualProduct = new JPanel();
@@ -46,6 +43,7 @@ public class HomePage extends JPanel {
         try {
             ResultSet rs = db.getProducts();
             while (rs.next()){
+                String productID = rs.getString(1);
                 String name = rs.getString(2);
                 String brand = rs.getString(3);
                 String price = rs.getString(4);
@@ -53,6 +51,8 @@ public class HomePage extends JPanel {
                 String era = rs.getString(6);
                 String dcc = rs.getString(7);
                 //model.addRow(new Object[]{name, brand, price, gauge, era, dcc});
+
+                map.put(productID, 0);
 
                 JPanel f = new JPanel();
                 f.setLayout(new GridBagLayout());
@@ -101,6 +101,8 @@ public class HomePage extends JPanel {
 
                 
                 JButton bag = new JButton("Add");
+                bag.setName(productID);
+                bag.addActionListener(new buttonListener());
                 c.fill = GridBagConstraints.VERTICAL;
                 c.gridx = 2;
                 c.gridy = 0;
@@ -109,9 +111,11 @@ public class HomePage extends JPanel {
                 c.insets = new Insets(0,0,0,0);
                 f.add(bag, c);
 
-                SpinnerModel model = new SpinnerNumberModel(1, 1, 100, 1);     
+                SpinnerModel model = new SpinnerNumberModel(0, 0, 100, 1);     
                 JSpinner spinner = new JSpinner(model);
                 spinner.setEditor(new JSpinner.DefaultEditor(spinner));
+                spinner.setName(productID);
+                spinner.addChangeListener(new spinnerListener());
                 c.fill = GridBagConstraints.VERTICAL;
                 c.gridx = 3;
                 c.gridy = 0;
@@ -145,14 +149,62 @@ public class HomePage extends JPanel {
         scrollPane.getViewport().setPreferredSize(new Dimension(450, 2000));
         scrollPane.setBorder(null);
 
-        c.anchor = GridBagConstraints.FIRST_LINE_START;
+        /*
+        JLabel title = new JLabel("View Products");
+        title.setFont(new Font("Arial", Font.PLAIN, 30));
+        title.setText("View Products");
+        c.anchor = GridBagConstraints.PAGE_START;
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
         c.gridy = 0;
+        c.gridheight = 1;
+        c.gridwidth = 1;
         //c.weightx = 1;
         c.weighty = 1;
-        c.insets = new Insets(20,0,20,0);
+        c.insets = new Insets(20,0,0,10);
+        this.add(title, c);
+        */
+
+        c.anchor = GridBagConstraints.CENTER;
+        c.fill = GridBagConstraints.NONE;
+        c.gridx = 0;
+        c.gridy = GridBagConstraints.RELATIVE;
+        //c.weightx = 1;
+        c.weighty = 1;
+        c.insets = new Insets(10,0,20,0);
         this.add(scrollPane, c);
 
+    }
+
+    public void setUserName(User user) {
+        this.user=user;
+    }
+
+    class buttonListener implements ActionListener {
+        public void actionPerformed(ActionEvent event){
+            Object src = event.getSource();
+            Integer userID2 = user.getID();
+            System.out.println(userID2);
+            Integer quantity = (Integer)map.get(((JButton)src).getName());
+
+            if (quantity == 0) {
+                return;
+            }
+            Date todayDate = new Date();
+            //db.executeQuery("");
+
+
+
+        }
+    }
+
+    class spinnerListener implements ChangeListener {
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            JSpinner spinner = (JSpinner)e.getSource();
+            int value = (int)spinner.getValue();
+            String spinnerName = (String)spinner.getName();
+            map.put(spinnerName, value);
+        }
     }
 }
