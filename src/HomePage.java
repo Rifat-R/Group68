@@ -22,9 +22,6 @@ public class HomePage extends JPanel {
 
     EasyDatabase db;
     JTable table;
-    User user;
-
-    Map map = new HashMap<String, Integer>();
 
     // Only for registered users
 
@@ -176,35 +173,7 @@ public class HomePage extends JPanel {
 
     }
 
-    public void setUserName(User user) {
-        this.user=user;
-    }
-
-    class buttonListener implements ActionListener {
-        public void actionPerformed(ActionEvent event){
-            Object src = event.getSource();
-            Integer userID2 = user.getID();
-            System.out.println(userID2);
-            Integer quantity = (Integer)map.get(((JButton)src).getName());
-
-            if (quantity == 0) {
-                return;
-            }
-            Date todayDate = new Date();
-            //db.executeQuery("");
-
-
-
-        }
-    }
-
-    class spinnerListener implements ChangeListener {
-        @Override
-        public void stateChanged(ChangeEvent e) {
-            JSpinner spinner = (JSpinner)e.getSource();
-            int value = (int)spinner.getValue();
-            String spinnerName = (String)spinner.getName();
-            map.put(spinnerName, value);
-        }
+    public void setUser(User user) {
+        this.user = user;
     }
 }

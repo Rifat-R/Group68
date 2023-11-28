@@ -10,7 +10,7 @@ import java.awt.*;
 
 public class MainPanel extends JPanel {
     final int column = 20;
-    final String[] invalidChars = {"!","*", " "};
+    final String[] invalidChars = {"!","*", " ","_","-","'","+","<",">","(",")","[","]","{","}","&","="};
 
     EasyDatabase db;
 
@@ -42,8 +42,9 @@ public class MainPanel extends JPanel {
     protected JPasswordField loginPasswordField = new JPasswordField(column);
     protected JLabel loginIssues = new JLabel();
 
-
-    JPanel customerHome;
+    //More JPanels
+    protected HomePage customerHome;
+    protected ManagerPage ManagerPage;
 
     // Constructor
     public MainPanel(){
@@ -101,9 +102,10 @@ public class MainPanel extends JPanel {
         JPanel loginContainer = new JPanel();
         loginContainer.add(loginPanel);
 
-
         customerHome = new HomePage();
         JPanel customerOrder = new CustomerOrder();
+
+        ManagerPage = new ManagerPage();
 
         this.add(new JPanel(),"Splash");
         this.add(registerContainer, "Register");
@@ -111,6 +113,7 @@ public class MainPanel extends JPanel {
         this.add(loginContainer,"Login");
         this.add(customerHome, "HomePage");
         this.add(customerOrder, "CustomerOrder");
+        this.add(ManagerPage, "ManagerPage");
 
         addListeners(this);
     }    
@@ -156,10 +159,18 @@ public class MainPanel extends JPanel {
     		public void actionPerformed(ActionEvent e) {
     			System.out.println("Plz login using data!");
                 String loginResult = login();
-                if(loginResult == "") c1.show(p,"Splash");
-                else loginIssues.setText(loginResult);
-                if(user != null){
-                    c1.show(p, "HomePage");
+                if(loginResult != "") loginIssues.setText(loginResult);
+                if(user != null) {
+                    if(user.getRole() == Role.Customer) {
+                        customerHome.setUser(user);
+                        c1.show(p, "HomePage");
+                    }
+                    else if(user.getRole() == Role.Staff)
+                        c1.show(p, "Splash");
+                    else {
+                        ManagerPage.setUser(user);
+                        c1.show(p, "ManagerPage");
+                    }
                 }
     		}
         });
@@ -187,18 +198,20 @@ public class MainPanel extends JPanel {
         password = registerPasswordField.getText();
         confirmation = registerConfirmField.getText();
         System.out.println(password+confirmation);
+        if(!isEmailValid(email)) return "Invalid email address, please revise";
         for (String i : invalidChars)
             if(email.contains(i) || password.contains(i)) {
                 return "Characters used were invalid.";
             }
-        if(email == "") return "Please enter an email.";
-        if(password == "") return "Please enter a password.";
+        if(email.equals("")) return "Please enter an email.";
+        if(password.equals("")) return "Please enter a password.";
         if(!password.equals(confirmation)) return "Passwords don't match";
         
         return "";
     }
     String createAccountB(String name, String surname, String street, String city, String postcode, int house) {
-        
+        if(name.equals("") || surname.equals("") || street.equals("") || city.equals("") || postcode.equals(""))
+            return "Please check fields: One or more fields have been left blank.";
         for(String i : invalidChars) {
             if(name.contains(i) || surname.contains(i))
                 return "Please check fields: Invalid characters used in first and/or last names";
@@ -209,6 +222,19 @@ public class MainPanel extends JPanel {
     Boolean isPostcodeValid(String x) {
         if (x.length() < 5 || x.length() > 7) return false;
         return true;
+    }
+    Boolean isEmailValid(String x) {
+        if(!x.contains("@")) return false;
+        if(!x.contains(".")) return false;
+        boolean flag = false;
+        for(int i=x.indexOf("@");i<x.length();i++) {
+            if(x.charAt(i) == '.') {
+                flag = true;
+            }
+            if(x.charAt(i)=='.'&& i>=x.length()-1) return false;
+        }
+        if(flag) return true;
+        else return false;
     }
 
 
