@@ -108,7 +108,7 @@ public class User {
         db.executeQuery("SELECT * FROM UserTable WHERE userID= " + id);
         this.userID = id;
         db.resultSet.next();
-        this.userEmail = db.resultSet.getString(2);
+        this.userEmail = db.resultSet.getString(1);
         switch(db.resultSet.getString(4)){
             case "Customer":
                 this.userRole = Role.Customer;

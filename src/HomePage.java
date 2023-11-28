@@ -16,6 +16,8 @@ public class HomePage extends JPanel {
     EasyDatabase db;
     JTable table;
 
+    User user;
+
     // Only for registered users
     public HomePage() {
 
@@ -154,5 +156,9 @@ public class HomePage extends JPanel {
         c.insets = new Insets(20,0,20,0);
         this.add(scrollPane, c);
 
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

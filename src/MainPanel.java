@@ -42,6 +42,10 @@ public class MainPanel extends JPanel {
     protected JPasswordField loginPasswordField = new JPasswordField(column);
     protected JLabel loginIssues = new JLabel();
 
+    //More JPanels
+    protected HomePage customerHome;
+    protected ManagerPage ManagerPage;
+
     // Constructor
     public MainPanel(){
 
@@ -98,8 +102,10 @@ public class MainPanel extends JPanel {
         JPanel loginContainer = new JPanel();
         loginContainer.add(loginPanel);
 
-        JPanel customerHome = new HomePage();
+        customerHome = new HomePage();
         JPanel customerOrder = new CustomerOrder();
+
+        ManagerPage = new ManagerPage();
 
         this.add(new JPanel(),"Splash");
         this.add(registerContainer, "Register");
@@ -107,6 +113,7 @@ public class MainPanel extends JPanel {
         this.add(loginContainer,"Login");
         this.add(customerHome, "HomePage");
         this.add(customerOrder, "CustomerOrder");
+        this.add(ManagerPage, "ManagerPage");
 
         addListeners(this);
     }    
@@ -152,9 +159,19 @@ public class MainPanel extends JPanel {
     		public void actionPerformed(ActionEvent e) {
     			System.out.println("Plz login using data!");
                 String loginResult = login();
-                if(loginResult == "") c1.show(p,"Splash");
-                else loginIssues.setText(loginResult);
-                if(user != null) c1.show(p, "HomePage");
+                if(loginResult != "") loginIssues.setText(loginResult);
+                if(user != null) {
+                    if(user.getRole() == Role.Customer) {
+                        customerHome.setUser(user);
+                        c1.show(p, "HomePage");
+                    }
+                    else if(user.getRole() == Role.Staff)
+                        c1.show(p, "Splash");
+                    else {
+                        ManagerPage.setUser(user);
+                        c1.show(p, "ManagerPage");
+                    }
+                }
     		}
         });
     }
