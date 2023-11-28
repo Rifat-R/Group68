@@ -44,7 +44,7 @@ public class MainPanel extends JPanel {
 
     //More JPanels
     protected HomePage customerHome;
-    protected ManagerPage ManagerPage;
+    //protected ManagerPage ManagerPage;
 
     // Constructor
     public MainPanel(){
@@ -105,7 +105,7 @@ public class MainPanel extends JPanel {
         customerHome = new HomePage();
         JPanel customerOrder = new CustomerOrder();
 
-        ManagerPage = new ManagerPage();
+        //ManagerPage = new ManagerPage();
 
         this.add(new JPanel(),"Splash");
         this.add(registerContainer, "Register");
@@ -113,7 +113,7 @@ public class MainPanel extends JPanel {
         this.add(loginContainer,"Login");
         this.add(customerHome, "HomePage");
         this.add(customerOrder, "CustomerOrder");
-        this.add(ManagerPage, "ManagerPage");
+        //this.add(ManagerPage, "ManagerPage");
 
         addListeners(this);
     }    
@@ -168,8 +168,8 @@ public class MainPanel extends JPanel {
                     else if(user.getRole() == Role.Staff)
                         c1.show(p, "Splash");
                     else {
-                        ManagerPage.setUser(user);
-                        c1.show(p, "ManagerPage");
+                        //ManagerPage.setUser(user);
+                        //c1.show(p, "ManagerPage");
                     }
                 }
     		}

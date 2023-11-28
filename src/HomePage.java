@@ -16,7 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.*;
 
-import java.time.LocalDateTime;  
+import java.time.LocalDateTime;
 
 public class HomePage extends JPanel {
 
@@ -24,6 +24,10 @@ public class HomePage extends JPanel {
     JTable table;
 
     // Only for registered users
+
+    User user;
+
+    Map map = new HashMap<String, Integer>();
 
     public HomePage() {
 
@@ -175,5 +179,32 @@ public class HomePage extends JPanel {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    class buttonListener implements ActionListener {
+        public void actionPerformed(ActionEvent event){
+            Object src = event.getSource();
+            Integer userID = user.getID();
+            Integer quantity = (Integer)map.get(((JButton)src).getName());
+
+            if (quantity == 0) {
+                return;
+            }
+            Date todayDate = new Date();
+            //db.executeQuery("");
+
+
+
+        }
+    }
+
+    class spinnerListener implements ChangeListener {
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            JSpinner spinner = (JSpinner)e.getSource();
+            int value = (int)spinner.getValue();
+            String spinnerName = (String)spinner.getName();
+            map.put(spinnerName, value);
+        }
     }
 }
