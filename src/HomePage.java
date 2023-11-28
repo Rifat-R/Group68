@@ -31,7 +31,6 @@ public class HomePage extends JPanel {
 
     public HomePage() {
 
-
         this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         
@@ -51,7 +50,11 @@ public class HomePage extends JPanel {
                 String gauge = rs.getString(5);
                 String era = rs.getString(6);
                 String dcc = rs.getString(7);
-                //model.addRow(new Object[]{name, brand, price, gauge, era, dcc});
+                Integer numberInStock = rs.getInt(8);
+
+                if (numberInStock == 0) {
+                    continue;
+                }
 
                 map.put(productID, 0);
 
@@ -146,11 +149,11 @@ public class HomePage extends JPanel {
 
         JScrollPane scrollPane = new JScrollPane(individualProduct);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.getViewport().setMinimumSize(new Dimension(450, 2000));
-        scrollPane.getViewport().setPreferredSize(new Dimension(450, 2000));
+        scrollPane.getViewport().setMinimumSize(new Dimension(450, 500));
+        scrollPane.getViewport().setPreferredSize(new Dimension(450, 500));
         scrollPane.setBorder(null);
 
-        /*
+        
         JLabel title = new JLabel("View Products");
         title.setFont(new Font("Arial", Font.PLAIN, 30));
         title.setText("View Products");
@@ -164,7 +167,7 @@ public class HomePage extends JPanel {
         c.weighty = 1;
         c.insets = new Insets(20,0,0,10);
         this.add(title, c);
-        */
+        
 
         c.anchor = GridBagConstraints.CENTER;
         c.fill = GridBagConstraints.NONE;
@@ -183,18 +186,25 @@ public class HomePage extends JPanel {
 
     class buttonListener implements ActionListener {
         public void actionPerformed(ActionEvent event){
-            Object src = event.getSource();
-            Integer userID = user.getID();
-            Integer quantity = (Integer)map.get(((JButton)src).getName());
 
-            if (quantity == 0) {
+            // Order Line
+            Object src = event.getSource();
+            String productID = ((JButton)src).getName();  
+            Integer orderQuantity = (Integer)map.get(productID);   
+            if (orderQuantity == 0) {
                 return;
             }
-            Date todayDate = new Date();
-            //db.executeQuery("");
 
-
-
+            try {
+                Product orderLineProduct = new Product(productID);
+                Double orderLinePriceIndividual = orderLineProduct.getPrice();
+                String orderLineBrand = orderLineProduct.getBrand();
+                String orderLineName = orderLineProduct.getName();
+                Double orderLinePrice = orderLinePriceIndividual * orderQuantity;
+                db.addOrderLine(productID, orderLineBrand, orderLineName, orderQuantity, orderLinePrice);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 

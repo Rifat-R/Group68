@@ -44,6 +44,7 @@ public class MainPanel extends JPanel {
 
     //More JPanels
     protected HomePage customerHome;
+    protected UpdateAccountDetails updateAccount;
     //protected ManagerPage ManagerPage;
 
     // Constructor
@@ -103,6 +104,7 @@ public class MainPanel extends JPanel {
         loginContainer.add(loginPanel);
 
         customerHome = new HomePage();
+        updateAccount = new UpdateAccountDetails();
         JPanel customerOrder = new CustomerOrder();
 
         //ManagerPage = new ManagerPage();
@@ -113,6 +115,7 @@ public class MainPanel extends JPanel {
         this.add(loginContainer,"Login");
         this.add(customerHome, "HomePage");
         this.add(customerOrder, "CustomerOrder");
+        this.add(updateAccount, "UpdateAccount");
         //this.add(ManagerPage, "ManagerPage");
 
         addListeners(this);
@@ -163,6 +166,8 @@ public class MainPanel extends JPanel {
                 if(user != null) {
                     if(user.getRole() == Role.Customer) {
                         customerHome.setUser(user);
+                        updateAccount.setUser(user);
+                        updateAccount.renderLoggedInPage();
                         c1.show(p, "HomePage");
                     }
                     else if(user.getRole() == Role.Staff)

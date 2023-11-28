@@ -89,44 +89,48 @@ public class Product {
 
     public Product(String id) throws SQLException{
         EasyDatabase db = new EasyDatabase();
-        db.executeQuery("SELECT * FROM ProductTable WHERE productID={id}");
-        this.productID = id;
-        this.productName = db.resultSet.getString(1);
-        this.productBrand = db.resultSet.getString(2);
-        this.productPrice = db.resultSet.getDouble(3);
-        switch(db.resultSet.getString(4)){
-            case "OO Gauge":
-                this.productGauge = Gauge.OO;
-                break;
-            case "TT Gauge":
-                this.productGauge = Gauge.TT;
-                break;
-            case "N Gauge":
-                this.productGauge = Gauge.N;
-                break;
-            default:
-                this.productGauge = null;
-                break;
+        try {
+            ResultSet rs = db.getProduct(id); 
+            this.productName = rs.getString(1);
+            this.productBrand = rs.getString(2);
+            this.productPrice = db.resultSet.getDouble(3);
+            switch(db.resultSet.getString(4)){
+                case "OO Gauge":
+                    this.productGauge = Gauge.OO;
+                    break;
+                case "TT Gauge":
+                    this.productGauge = Gauge.TT;
+                    break;
+                case "N Gauge":
+                    this.productGauge = Gauge.N;
+                    break;
+                default:
+                    this.productGauge = null;
+                    break;
+            }
+            this.productEra = db.resultSet.getString(5);
+            switch(db.resultSet.getString(6)){
+                case "Analogue":
+                    this.dCCCode = DCCCode.Analogue;
+                    break;
+                case "DCC-Ready":
+                    this.dCCCode = DCCCode.DCC_Ready;
+                    break;
+                case "DCC-Fitted":
+                    this.dCCCode = DCCCode.DCC_Fitted;
+                    break;
+                case "DCC-Sound":
+                    this.dCCCode = DCCCode.DCC_Sound;
+                    break;
+                default:
+                    this.dCCCode = null;
+                    break;
+            }
+            this.numberInStock = db.resultSet.getInt(7);
+        } catch (SQLException e) {
+            return;
+            //
         }
-        this.productEra = db.resultSet.getString(5);
-        switch(db.resultSet.getString(6)){
-            case "Analogue":
-                this.dCCCode = DCCCode.Analogue;
-                break;
-            case "DCC-Ready":
-                this.dCCCode = DCCCode.DCC_Ready;
-                break;
-            case "DCC-Fitted":
-                this.dCCCode = DCCCode.DCC_Fitted;
-                break;
-            case "DCC-Sound":
-                this.dCCCode = DCCCode.DCC_Sound;
-                break;
-            default:
-                this.dCCCode = null;
-                break;
-        }
-        this.numberInStock = db.resultSet.getInt(7);
     }
 
     /**

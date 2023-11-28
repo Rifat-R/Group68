@@ -13,6 +13,7 @@ public class SwingWindow extends JFrame {
     JMenuItem register = new JMenuItem("Register");
     JMenuItem login = new JMenuItem("Login");
     JMenuItem order = new JMenuItem("Order");
+    JMenuItem updateAccount = new JMenuItem("Update account details");
 
     public SwingWindow(String text) {
         super(text);
@@ -24,6 +25,7 @@ public class SwingWindow extends JFrame {
         menu.add(register);
         menu.add(login);
         menu.add(order);
+        menu.add(updateAccount);
         menubar.add(menu);
         this.setJMenuBar(menubar);
         panel = new MainPanel();
@@ -42,7 +44,7 @@ public class SwingWindow extends JFrame {
     }
     public void addListeners() {
         CardLayout c1 = (CardLayout)(panel.getLayout());
-    	register.addActionListener(new ActionListener() {
+    	  register.addActionListener(new ActionListener() {
     		public void actionPerformed(ActionEvent e) {
     			System.out.println("Plz work register");
                 c1.show(panel,"Register");
@@ -58,6 +60,12 @@ public class SwingWindow extends JFrame {
     		public void actionPerformed(ActionEvent e) {
     			System.out.println("Plz work order!");
                 c1.show(panel,"CustomerOrder");
+    		}
+        });
+        updateAccount.addActionListener(new ActionListener() {
+    		public void actionPerformed(ActionEvent e) {
+    			System.out.println("Plz work order!");
+          c1.show(panel,"UpdateAccount");
     		}
         });
     }

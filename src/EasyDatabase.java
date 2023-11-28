@@ -38,6 +38,19 @@ public class EasyDatabase {
         catch(SQLException e){e.printStackTrace();}
     }
 
+    public ResultSet getProduct(String productID) throws SQLException {
+        String selectSQL = "SELECT * FROM ProductTable WHERE productID = ?";
+        PreparedStatement preparedStatement = con.prepareStatement(selectSQL);
+        preparedStatement.setString(1, productID);
+        ResultSet rs = preparedStatement.executeQuery();
+        return rs;
+    }
+
+    public void addOrderLine(String productID, String brand, String name, Integer Quantity, Double Price) throws SQLException {
+        try {statement.executeQuery("SELECT * FROM ProductTable");}
+        catch (SQLException e) {e.printStackTrace();}
+    }
+
     public ResultSet getProducts() throws SQLException {
         String selectSQL = "SELECT * FROM ProductTable";
         PreparedStatement preparedStatement = con.prepareStatement(selectSQL);
