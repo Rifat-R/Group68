@@ -13,6 +13,8 @@ public class User {
     private String userEmail = null;
     private String userPassword = null;
     private Role userRole = Role.Customer;
+    private String firstName = null;
+    private String lastName = null;
     private int houseNumber = 0;
     private String roadName = null;
     private String city = null;
@@ -39,6 +41,13 @@ public class User {
     }
 
     public String getRoadName() {
+        return roadName;
+    }
+
+    public String getFirstName() {
+        return roadName;
+    }
+    public String getLastName() {
         return roadName;
     }
 
@@ -92,10 +101,12 @@ public class User {
 
     
     
-    public User(int id, String email, Role role, int houseNumber, String roadName, String city, String postCode){
+    public User(int id, String email, Role role, String firstName, String lastName, int houseNumber, String roadName, String city, String postCode){
         this.userID = id;
         this.userEmail = email;
         this.userRole = role;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.houseNumber = houseNumber;
         this.roadName = roadName;
         this.city = city;
@@ -123,10 +134,12 @@ public class User {
                 this.userRole = Role.Customer;
                 break;
         }
-        this.houseNumber = db.resultSet.getInt(5);
-        this.roadName = db.resultSet.getString(6);
-        this.city = db.resultSet.getString(7);
-        this.postCode = db.resultSet.getString(8);
+        this.houseNumber = db.resultSet.getInt(4);
+        this.firstName = db.resultSet.getString(5);
+        this.lastName = db.resultSet.getString(6);
+        this.roadName = db.resultSet.getString(7);
+        this.city = db.resultSet.getString(8);
+        this.postCode = db.resultSet.getString(9);
     }
 
     public User(String email) throws SQLException{
@@ -149,8 +162,10 @@ public class User {
                 break;
         }
         this.houseNumber = db.resultSet.getInt(4);
-        this.roadName = db.resultSet.getString(5);
-        this.city = db.resultSet.getString(6);
-        this.postCode = db.resultSet.getString(7);
+        this.firstName = db.resultSet.getString(5);
+        this.lastName = db.resultSet.getString(6);
+        this.roadName = db.resultSet.getString(7);
+        this.city = db.resultSet.getString(8);
+        this.postCode = db.resultSet.getString(9);
     }
 }
