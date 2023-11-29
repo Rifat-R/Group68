@@ -45,7 +45,7 @@ public class MainPanel extends JPanel {
     //More JPanels
     protected HomePage customerHome;
     protected UpdateAccountDetails updateAccount;
-    //protected ManagerPage ManagerPage;
+    protected ManagerPage ManagerPage;
 
     // Constructor
     public MainPanel(){
@@ -107,7 +107,7 @@ public class MainPanel extends JPanel {
         updateAccount = new UpdateAccountDetails();
         JPanel customerOrder = new CustomerOrder();
 
-        //ManagerPage = new ManagerPage();
+        ManagerPage = new ManagerPage();
 
         this.add(new JPanel(),"Splash");
         this.add(registerContainer, "Register");
@@ -116,7 +116,7 @@ public class MainPanel extends JPanel {
         this.add(customerHome, "HomePage");
         this.add(customerOrder, "CustomerOrder");
         this.add(updateAccount, "UpdateAccount");
-        //this.add(ManagerPage, "ManagerPage");
+        this.add(ManagerPage, "ManagerPage");
 
         addListeners(this);
     }    
@@ -151,7 +151,7 @@ public class MainPanel extends JPanel {
                     accountCreation = "Please enter numbers only into this field: House number";
                 }
                 if(accountCreation == "") { 
-                    User createdUser = new User(1, email, Role.Customer, house, street, city, postcode);
+                    User createdUser = new User(1, email, Role.Customer, name, surname, house, street, city, postcode);
                     addUserToDatabase(createdUser, password);
                     c1.show(p,"Splash");
                 }
@@ -173,8 +173,8 @@ public class MainPanel extends JPanel {
                     else if(user.getRole() == Role.Staff)
                         c1.show(p, "Splash");
                     else {
-                        //ManagerPage.setUser(user);
-                        //c1.show(p, "ManagerPage");
+                        ManagerPage.setUser(user);
+                        c1.show(p, "ManagerPage");
                     }
                 }
     		}
@@ -292,9 +292,9 @@ public class MainPanel extends JPanel {
     public void addUserToDatabase(User addUser,String password)
     {
         db = new EasyDatabase();
-        String selectSQL = "INSERT INTO UserTable (userEmail, userPassword, userRole, houseNumber, roadName, city, postCode) VALUES ('"
-                            + addUser.getEmail()+"','"+ password+"','Customer','"+ addUser.getHouseNumber()
-                            +"','"+addUser.getRoadName() +"','"+addUser.getCity()+"','"+addUser.getPostCode()+"')";
+        String selectSQL = "INSERT INTO UserTable (userEmail, userPassword, userRole, firstName, lastName, houseNumber, roadName, city, postCode) VALUES ('"
+                            + addUser.getEmail()+"','"+ password+"','Customer','"+ addUser.getFirstName()+"','"+ addUser.getLastName()+"','"
+                            + addUser.getHouseNumber()+"','"+addUser.getRoadName() +"','"+addUser.getCity()+"','"+addUser.getPostCode()+"')";
         db.executeUpdate(selectSQL);
         db.close();
         
