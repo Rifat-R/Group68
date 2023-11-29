@@ -178,6 +178,8 @@ public class HomePage extends JPanel {
         c.insets = new Insets(10,0,20,0);
         this.add(scrollPane, c);
 
+        db.close();
+
     }
 
     public void setUser(User user) {
@@ -202,6 +204,7 @@ public class HomePage extends JPanel {
                 String orderLineName = orderLineProduct.getName();
                 Double orderLinePrice = orderLinePriceIndividual * orderQuantity;
                 db.addOrderLine(productID, orderLineBrand, orderLineName, orderQuantity, orderLinePrice);
+                db.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }

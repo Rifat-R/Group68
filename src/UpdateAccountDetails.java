@@ -172,29 +172,75 @@ public class UpdateAccountDetails extends JPanel {
     
     class updateDetailsListener implements ActionListener {
         public void actionPerformed(ActionEvent event){
-            String newEmail = email.getText();
-            String newFirstName = firstName.getText();
-            String newSurname = surname.getText();
             try {
-                db.updateUserDetails(user.getID(), newEmail, newFirstName, newSurname);
+                db = new EasyDatabase();
+                ResultSet rs = db.GetUserDetails(user.getID());
+                rs.next();
+                String previousEmail = rs.getString(2);
+                String previousFirstName = rs.getString(6);
+                String previousSurname = rs.getString(7);
+
+                String newEmail = email.getText();
+                String newFirstName = firstName.getText();
+                String newSurname = surname.getText();
+
+                if ((previousEmail.equals(newEmail)) 
+                && (previousFirstName.equals(newFirstName)) 
+                && (previousSurname.equals(newSurname))) {
+                    //failed
+                    return;
+                } else {
+                    try {
+                        db.updateUserDetails(user.getID(), newEmail, newFirstName, newSurname);
+                        db.close();
+                    } catch (SQLException e) {
+                        //failed
+                        return;
+                    }
+                }
             } catch (SQLException e) {
                 //failed
+                return;
             }
         }
     }
 
     class updateAddressListener implements ActionListener {
         public void actionPerformed(ActionEvent event){
-            String newHouseNumber = houseNumber.getText(); //String not int
-            String newRoadName = roadName.getText();
-            String newCity = city.getText();
-            String newPostcode = postcode.getText();
             try {
-                db.updateUserAddress(user.getID(), newHouseNumber, newRoadName, newCity, newPostcode);
+                db = new EasyDatabase();
+                ResultSet rs = db.GetUserDetails(user.getID());
+                rs.next();
+
+                String previousHouseNumber = rs.getString(5);
+                String previousRoadName = rs.getString(8);
+                String previousCity = rs.getString(9);
+                String previousPostcode = rs.getString(10);
+
+                String newHouseNumber = houseNumber.getText(); //String not int
+                String newRoadName = roadName.getText();
+                String newCity = city.getText();
+                String newPostcode = postcode.getText();
+
+                if ((previousHouseNumber.equals(newHouseNumber)) 
+                && (previousRoadName.equals(newRoadName)) 
+                && (previousCity.equals(newCity))
+                && (previousPostcode.equals(newPostcode))) {
+                    //failed
+                    return;
+                } else {
+                    try {
+                        db.updateUserAddress(user.getID(), newHouseNumber, newRoadName, newCity, newPostcode);
+                        db.close();
+                    } catch (SQLException e) {
+                        //failed
+                        return;
+                    }
+                }
             } catch (SQLException e) {
                 //failed
+                return;
             }
         }
     }
-
 }

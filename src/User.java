@@ -45,10 +45,10 @@ public class User {
     }
 
     public String getFirstName() {
-        return roadName;
+        return firstName;
     }
     public String getLastName() {
-        return roadName;
+        return lastName;
     }
 
     public String getCity() {

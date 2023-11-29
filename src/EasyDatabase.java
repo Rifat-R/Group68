@@ -59,18 +59,21 @@ public class EasyDatabase {
             ps.setString(2, name);
             ps.setString(3, surname);
             ps.setInt(4, userID);
+            ps.executeUpdate();
         }
         catch (SQLException e) {e.printStackTrace();}
     }
 
     public void updateUserAddress(Integer userID, String houseNumber, String roadName, String city, String postcode) throws SQLException{
         try {
-            String selectSQL = "UPDATE UserTable SET userEmail = ?, firstName = ?, lastName = ? WHERE userID = ?";
+            String selectSQL = "UPDATE UserTable SET houseNumber = ?, roadName = ?, city = ?, postCode = ? WHERE userID = ?";
             PreparedStatement ps = con.prepareStatement(selectSQL);
-            ps.setString(1, email);
-            ps.setString(2, name);
-            ps.setString(3, surname);
-            ps.setInt(4, userID);
+            ps.setString(1, houseNumber);
+            ps.setString(2, roadName);
+            ps.setString(3, city);
+            ps.setString(4, postcode);
+            ps.setInt(5, userID);
+            ps.executeUpdate();
         }
         catch (SQLException e) {e.printStackTrace();}
     }
@@ -78,6 +81,14 @@ public class EasyDatabase {
     public ResultSet getProducts() throws SQLException {
         String selectSQL = "SELECT * FROM ProductTable";
         PreparedStatement preparedStatement = con.prepareStatement(selectSQL);
+        ResultSet rs = preparedStatement.executeQuery();
+        return rs;
+    }
+
+    public ResultSet GetUserDetails(Integer userID) throws SQLException {
+        String selectSQL = "SELECT * FROM UserTable WHERE userID = ?";
+        PreparedStatement preparedStatement = con.prepareStatement(selectSQL);
+        preparedStatement.setInt(1, userID);
         ResultSet rs = preparedStatement.executeQuery();
         return rs;
     }
