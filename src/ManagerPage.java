@@ -61,9 +61,29 @@ public class ManagerPage extends JPanel {
     {
         for(JPanel iU : individualUser) {
             JButton b = (JButton) iU.getComponent(4);
+            JLabel role = (JLabel) iU.getComponent(3);
+            String text;
+            if(role.getText().equals("Customer")) {
+                text = "Staff";
+            }
+            else {
+                text = "Customer";
+            }
+            JLabel n = (JLabel) iU.getComponent(1);
+            String name = n.getText();
             b.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("Please work!");
+                    db = new EasyDatabase();
+                    String selectSQL = "UPDATE UserTable SET userRole='"+text+"' WHERE userEmail='"+name+"'";
+                    db.executeUpdate(selectSQL);
+                    db.close();
+                    if(role.getText().equals("Customer")) {
+                        role.setText("Staff");
+                    }
+                    else {
+                        role.setText("Customer");
+                    }                    
                 }
             });
         }
