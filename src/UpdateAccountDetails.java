@@ -23,6 +23,8 @@ public class UpdateAccountDetails extends JPanel {
 
     EasyDatabase db;
 
+    private String status;
+
     public void setUser(User user) {
         this.user = user;
 
@@ -59,23 +61,32 @@ public class UpdateAccountDetails extends JPanel {
         String initialPostcode = user.getPostCode();
 
 
+        String statusText = "";
+        Color statusColour = Color.BLACK;
+        Color green = new Color(4,175,112);
+
+        if (status == "Updated details") {
+            statusColour = green;
+            statusText = "Updated details";
+        } else if (status == "Error") {
+            statusColour = Color.RED;
+            statusText = "Error";
+        } else if (status == "Refreshed") {
+            statusColour = green;
+            statusText = "Refreshed";
+        } else if (status == "No changes made") {
+            statusColour = Color.ORANGE;
+            statusText = "No changes made";
+        }
+        else {
+            statusColour = Color.BLACK;
+            statusText = "";
+        }
 
 
-        email = new JTextField(initialEmail);
-        c.anchor = GridBagConstraints.PAGE_START;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 0;
-        c.gridy = 0;
-        c.gridheight = 1;
-        c.gridwidth = 1;
-        c.weightx = 0.4;
-        c.weighty = 0.4;
-        c.insets = new Insets(50,50,0,0);
-        this.add(email, c);
-
-        JButton refresh = new JButton("Refresh");
-        refresh.addActionListener(new refreshListener());
-        c.anchor = GridBagConstraints.PAGE_START;
+        JLabel status = new JLabel(statusText);
+        status.setForeground(statusColour);
+        c.anchor = GridBagConstraints.FIRST_LINE_END;
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 2;
         c.gridy = 0;
@@ -83,7 +94,32 @@ public class UpdateAccountDetails extends JPanel {
         c.gridwidth = 1;
         c.weightx = 0.4;
         c.weighty = 0.4;
-        c.insets = new Insets(50,0,0,50);
+        c.insets = new Insets(0,50,0,0);
+        this.add(status, c);
+
+        email = new JTextField(initialEmail);
+        c.anchor = GridBagConstraints.PAGE_START;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 0;
+        c.gridy = 1;
+        c.gridheight = 1;
+        c.gridwidth = 1;
+        c.weightx = 0.4;
+        c.weighty = 0.4;
+        c.insets = new Insets(0,50,0,0);
+        this.add(email, c);
+
+        JButton refresh = new JButton("Refresh");
+        refresh.addActionListener(new refreshListener());
+        c.anchor = GridBagConstraints.PAGE_START;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 2;
+        c.gridy = 1;
+        c.gridheight = 1;
+        c.gridwidth = 1;
+        c.weightx = 0.4;
+        c.weighty = 0.4;
+        c.insets = new Insets(0,0,0,50);
         this.add(refresh, c);
 
 
@@ -91,7 +127,7 @@ public class UpdateAccountDetails extends JPanel {
         c.anchor = GridBagConstraints.PAGE_START;
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
-        c.gridy = 1;
+        c.gridy = 2;
         c.gridheight = 1;
         c.gridwidth = 1;
         c.weightx = 0.4;
@@ -103,7 +139,7 @@ public class UpdateAccountDetails extends JPanel {
         c.anchor = GridBagConstraints.PAGE_START;
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
-        c.gridy = 1;
+        c.gridy = 2;
         c.gridheight = 1;
         c.gridwidth = 1;
         c.weightx = 0.4;
@@ -116,7 +152,7 @@ public class UpdateAccountDetails extends JPanel {
         c.anchor = GridBagConstraints.PAGE_START;
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 2;
-        c.gridy = 1;
+        c.gridy = 2;
         c.gridheight = 1;
         c.gridwidth = 1;
         c.weightx = 0.4;
@@ -128,7 +164,7 @@ public class UpdateAccountDetails extends JPanel {
         c.anchor = GridBagConstraints.PAGE_START;
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
-        c.gridy = 2;
+        c.gridy = 3;
         c.gridheight = 1;
         c.gridwidth = 1;
         c.weightx = 0.2;
@@ -140,7 +176,7 @@ public class UpdateAccountDetails extends JPanel {
         c.anchor = GridBagConstraints.PAGE_START;
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
-        c.gridy = 2;
+        c.gridy = 3;
         c.gridheight = 1;
         c.gridwidth = 1;
         c.weightx = 0.2;
@@ -152,7 +188,7 @@ public class UpdateAccountDetails extends JPanel {
         c.anchor = GridBagConstraints.PAGE_START;
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
-        c.gridy = 3;
+        c.gridy = 4;
         c.gridheight = 1;
         c.gridwidth = 1;
         c.weightx = 0.2;
@@ -164,7 +200,7 @@ public class UpdateAccountDetails extends JPanel {
         c.anchor = GridBagConstraints.PAGE_START;
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
-        c.gridy = 3;
+        c.gridy = 4;
         c.gridheight = 1;
         c.gridwidth = 1;
         c.weightx = 0.2;
@@ -177,7 +213,7 @@ public class UpdateAccountDetails extends JPanel {
         c.anchor = GridBagConstraints.PAGE_START;
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 2;
-        c.gridy = 3;
+        c.gridy = 4;
         c.gridheight = 1;
         c.gridwidth = 1;
         c.weightx = 0.2;
@@ -206,21 +242,24 @@ public class UpdateAccountDetails extends JPanel {
                 if ((previousEmail.equals(newEmail)) 
                 && (previousFirstName.equals(newFirstName)) 
                 && (previousSurname.equals(newSurname))) {
-                    //failed
-                    return;
+                    status = "No changes made";
+                    refresh();
+                    
                 } else {
                     try {
                         db.updateUserDetails(user.getID(), newEmail, newFirstName, newSurname);
                         user = new User(user.getID());
                         db.close();
+                        status = "Updated details";
+                        refresh();
                     } catch (SQLException e) {
-                        //failed
-                        return;
+                        status = "Error";
+                        refresh();
                     }
                 }
             } catch (SQLException e) {
-                //failed
-                return;
+                status = "Error";
+                refresh();
             }
         }
     }
@@ -246,27 +285,30 @@ public class UpdateAccountDetails extends JPanel {
                 && (previousRoadName.equals(newRoadName)) 
                 && (previousCity.equals(newCity))
                 && (previousPostcode.equals(newPostcode))) {
-                    //failed
-                    return;
+                    status = "No changes made";
+                    refresh();
                 } else {
                     try {
                         db.updateUserAddress(user.getID(), newHouseNumber, newRoadName, newCity, newPostcode);
                         user = new User(user.getID());
                         db.close();
+                        status = "Updated details";
+                        refresh();
                     } catch (SQLException e) {
-                        //failed
-                        return;
+                        status = "Error";
+                        refresh();
                     }
                 }
             } catch (SQLException e) {
-                //failed
-                return;
+                status = "Error";
+                refresh();
             }
         }
     }
 
     class refreshListener implements ActionListener {
         public void actionPerformed(ActionEvent event){
+            status = "Refreshed";
             refresh();
         }
     }
