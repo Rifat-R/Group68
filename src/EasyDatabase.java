@@ -51,6 +51,30 @@ public class EasyDatabase {
         catch (SQLException e) {e.printStackTrace();}
     }
 
+    public void updateUserDetails(Integer userID, String email, String name, String surname) throws SQLException {
+        try {
+            String selectSQL = "UPDATE UserTable SET userEmail = ?, firstName = ?, lastName = ? WHERE userID = ?";
+            PreparedStatement ps = con.prepareStatement(selectSQL);
+            ps.setString(1, email);
+            ps.setString(2, name);
+            ps.setString(3, surname);
+            ps.setInt(4, userID);
+        }
+        catch (SQLException e) {e.printStackTrace();}
+    }
+
+    public void updateUserAddress(Integer userID, String houseNumber, String roadName, String city, String postcode) throws SQLException{
+        try {
+            String selectSQL = "UPDATE UserTable SET userEmail = ?, firstName = ?, lastName = ? WHERE userID = ?";
+            PreparedStatement ps = con.prepareStatement(selectSQL);
+            ps.setString(1, email);
+            ps.setString(2, name);
+            ps.setString(3, surname);
+            ps.setInt(4, userID);
+        }
+        catch (SQLException e) {e.printStackTrace();}
+    }
+
     public ResultSet getProducts() throws SQLException {
         String selectSQL = "SELECT * FROM ProductTable";
         PreparedStatement preparedStatement = con.prepareStatement(selectSQL);

@@ -21,6 +21,8 @@ public class UpdateAccountDetails extends JPanel {
     private JTextField city;
     private JTextField postcode;
 
+    EasyDatabase db;
+
     public void setUser(User user) {
         this.user = user;
 
@@ -42,8 +44,8 @@ public class UpdateAccountDetails extends JPanel {
         //Same with bank details -> if not given then allow user to create them
         //When placing order will have to check if bank details already exsists
 
-        //String initialFirstName = user.get
-        //String initialSurname = user.get
+        String initialFirstName = user.getFirstName();
+        String initialSurname = user.getLastName();
         String initialEmail = user.getEmail();
         Integer initialHouseNumber = user.getHouseNumber();
         String initialRoadName = user.getRoadName();
@@ -66,7 +68,7 @@ public class UpdateAccountDetails extends JPanel {
         this.add(email, c);
 
 
-        firstName = new JTextField();
+        firstName = new JTextField(initialFirstName);
         c.anchor = GridBagConstraints.PAGE_START;
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
@@ -78,7 +80,7 @@ public class UpdateAccountDetails extends JPanel {
         c.insets = new Insets(0,50,0,0);
         this.add(firstName, c);
 
-        surname = new JTextField();
+        surname = new JTextField(initialSurname);
         c.anchor = GridBagConstraints.PAGE_START;
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
@@ -103,7 +105,7 @@ public class UpdateAccountDetails extends JPanel {
         c.insets = new Insets(0,0,0,50);
         this.add(updateDetails, c);
 
-        houseNumber = new JTextField(Integer.valueOf(initialHouseNumber));
+        houseNumber = new JTextField(String.valueOf(initialHouseNumber));
         c.anchor = GridBagConstraints.PAGE_START;
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
@@ -173,6 +175,11 @@ public class UpdateAccountDetails extends JPanel {
             String newEmail = email.getText();
             String newFirstName = firstName.getText();
             String newSurname = surname.getText();
+            try {
+                db.updateUserDetails(user.getID(), newEmail, newFirstName, newSurname);
+            } catch (SQLException e) {
+                //failed
+            }
         }
     }
 
@@ -182,6 +189,11 @@ public class UpdateAccountDetails extends JPanel {
             String newRoadName = roadName.getText();
             String newCity = city.getText();
             String newPostcode = postcode.getText();
+            try {
+                db.updateUserAddress(user.getID(), newHouseNumber, newRoadName, newCity, newPostcode);
+            } catch (SQLException e) {
+                //failed
+            }
         }
     }
 

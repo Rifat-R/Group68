@@ -119,7 +119,7 @@ public class User {
         db.executeQuery("SELECT * FROM UserTable WHERE userID= " + id);
         this.userID = id;
         db.resultSet.next();
-        this.userEmail = db.resultSet.getString(1);
+        this.userEmail = db.resultSet.getString(2);
         switch(db.resultSet.getString(4)){
             case "Customer":
                 this.userRole = Role.Customer;
@@ -134,12 +134,12 @@ public class User {
                 this.userRole = Role.Customer;
                 break;
         }
-        this.houseNumber = db.resultSet.getInt(4);
-        this.firstName = db.resultSet.getString(5);
-        this.lastName = db.resultSet.getString(6);
-        this.roadName = db.resultSet.getString(7);
-        this.city = db.resultSet.getString(8);
-        this.postCode = db.resultSet.getString(9);
+        this.houseNumber = db.resultSet.getInt(5);
+        this.firstName = db.resultSet.getString(6);
+        this.lastName = db.resultSet.getString(7);
+        this.roadName = db.resultSet.getString(8);
+        this.city = db.resultSet.getString(9);
+        this.postCode = db.resultSet.getString(10);
     }
 
     public User(String email) throws SQLException{
