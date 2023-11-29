@@ -35,6 +35,12 @@ public class UpdateAccountDetails extends JPanel {
         this.add(warning);
     }
 
+    public void refresh() {
+        revalidate();
+        renderLoggedInPage();
+        repaint();
+    }
+
     public void renderLoggedInPage() {
         this.removeAll();
         this.setLayout(new GridBagLayout());
@@ -66,6 +72,19 @@ public class UpdateAccountDetails extends JPanel {
         c.weighty = 0.4;
         c.insets = new Insets(50,50,0,0);
         this.add(email, c);
+
+        JButton refresh = new JButton("Refresh");
+        refresh.addActionListener(new refreshListener());
+        c.anchor = GridBagConstraints.PAGE_START;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 2;
+        c.gridy = 0;
+        c.gridheight = 1;
+        c.gridwidth = 1;
+        c.weightx = 0.4;
+        c.weighty = 0.4;
+        c.insets = new Insets(50,0,0,50);
+        this.add(refresh, c);
 
 
         firstName = new JTextField(initialFirstName);
@@ -192,6 +211,7 @@ public class UpdateAccountDetails extends JPanel {
                 } else {
                     try {
                         db.updateUserDetails(user.getID(), newEmail, newFirstName, newSurname);
+                        user = new User(user.getID());
                         db.close();
                     } catch (SQLException e) {
                         //failed
@@ -231,6 +251,7 @@ public class UpdateAccountDetails extends JPanel {
                 } else {
                     try {
                         db.updateUserAddress(user.getID(), newHouseNumber, newRoadName, newCity, newPostcode);
+                        user = new User(user.getID());
                         db.close();
                     } catch (SQLException e) {
                         //failed
@@ -241,6 +262,12 @@ public class UpdateAccountDetails extends JPanel {
                 //failed
                 return;
             }
+        }
+    }
+
+    class refreshListener implements ActionListener {
+        public void actionPerformed(ActionEvent event){
+            refresh();
         }
     }
 }
