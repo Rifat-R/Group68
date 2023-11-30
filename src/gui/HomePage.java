@@ -387,6 +387,7 @@ public class HomePage extends JPanel {
                 String orderLineBrand = orderLineProduct.getBrand();
                 String orderLineName = orderLineProduct.getName();
                 Double orderLinePrice = orderLinePriceIndividual * orderQuantity;
+                
                 db.addOrderLine(productID, orderLineBrand, orderLineName, orderQuantity, orderLinePrice);
 
                 status = "Success";

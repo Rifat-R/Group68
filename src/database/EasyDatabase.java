@@ -47,8 +47,39 @@ public class EasyDatabase {
     }
 
     public void addOrderLine(String productID, String brand, String name, Integer Quantity, Double Price) throws SQLException {
-        try {statement.executeQuery("SELECT * FROM Product");}
+        try {
+            String selectSQL = "INSERT INTO OrderLines email = ?, firstName = ?, lastName = ? WHERE id = ?";
+            PreparedStatement ps = con.prepareStatement(selectSQL);
+            ps.setString(1, email);
+            ps.setString(2, name);
+            ps.setString(3, surname);
+            ps.setInt(4, userID);
+            ps.executeUpdate();
+        }
         catch (SQLException e) {e.printStackTrace();}
+    }
+
+    public void addOrder(Date date, Order.Status status, Integer userid) {
+
+    }
+
+    public boolean checkIfOrderExsistsForCustomer(Integer userID) {
+        try {
+            String selectSQL = "SELECT * FROM Order WHERE userID = ?";
+            PreparedStatement ps = con.prepareStatement(selectSQL);
+            ps.setInt(1, userID);
+            ResultSet rs = ps.executeQuery();
+
+            if (!rs.isBeforeFirst() ) {    
+                return false; 
+            } else {
+                return true;
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return true;
+        }
     }
 
     public void updateUserDetails(Integer userID, String email, String name, String surname) throws SQLException {
