@@ -14,6 +14,7 @@ import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -400,10 +401,13 @@ public class HomePage extends JPanel {
 
                 System.out.println(date);
 
-                Integer OrderNumber = 
+                Integer OrderNumber = new Random().nextInt(90000000) + 10000000;
+
+                src.database.Order myorder = new Order();
+
                 
                 db.addOrder(date, Status.Pending, );
-                db.addOrderLine(productID, orderLineBrand, orderLineName, orderQuantity, orderLinePrice);
+                //db.addOrderLine(productID, orderLineBrand, orderLineName, orderQuantity, orderLinePrice);
 
 
                 status = "Success";
