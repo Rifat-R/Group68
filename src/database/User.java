@@ -1,10 +1,10 @@
-package src;
+package src.database;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 
 public class User {
 
-    enum Role{
+    public enum Role{
         Customer,
         Staff,
         Manager
@@ -133,7 +133,7 @@ public class User {
 
     public User(int id) throws SQLException{
         EasyDatabase db = new EasyDatabase();
-        db.executeQuery("SELECT * FROM UserTable WHERE userID= " + id);
+        db.executeQuery("SELECT * FROM User WHERE userID= " + id);
         this.userID = id;
         db.resultSet.next();
         this.userEmail = db.resultSet.getString(2);
@@ -166,7 +166,7 @@ public class User {
 
     public User(String email) throws SQLException{
         EasyDatabase db = new EasyDatabase();
-        db.executeQuery("SELECT * FROM UserTable WHERE userEmail={email}");
+        db.executeQuery("SELECT * FROM User WHERE userEmail={email}");
         this.userID = db.resultSet.getInt(0);
         this.userEmail = email;
         switch(db.resultSet.getString(3)){

@@ -1,7 +1,7 @@
-package src;
+package src.database;
 import java.sql.*;
 
-import src.User.Role;
+import src.database.User.Role;
 
 public class Order {
 
@@ -56,7 +56,7 @@ public class Order {
 
     public Order(int id) throws SQLException{
         EasyDatabase db = new EasyDatabase();
-        db.executeQuery("SELECT * FROM OrderTable WHERE orderID={id}");
+        db.executeQuery("SELECT * FROM Order WHERE orderID={id}");
         this.orderID = id;
         this.userID = db.resultSet.getInt(1);
         this.productID = db.resultSet.getInt(2);

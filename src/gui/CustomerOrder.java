@@ -1,9 +1,7 @@
-package src;
+package src.gui;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
-
-import src.User.Role;
 
 import java.sql.*;
 import java.awt.event.ActionEvent;

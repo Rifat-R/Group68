@@ -1,7 +1,10 @@
-package src;
+package src.gui;
+
 import javax.swing.*;
 
-import src.User.Role;
+import src.database.EasyDatabase;
+import src.database.User;
+import src.database.User.Role;
 
 import java.sql.*;
 import java.awt.event.ActionEvent;
@@ -23,7 +26,7 @@ public class ManagerPage extends JPanel {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         db = new EasyDatabase();
-        String selectSQL = "SELECT * FROM UserTable";
+        String selectSQL = "SELECT * FROM User";
         db.executeQuery(selectSQL);
         try {
             while(db.resultSet.next()) {
@@ -61,9 +64,29 @@ public class ManagerPage extends JPanel {
     {
         for(JPanel iU : individualUser) {
             JButton b = (JButton) iU.getComponent(4);
+            JLabel role = (JLabel) iU.getComponent(3);
+            String text;
+            if(role.getText().equals("Customer")) {
+                text = "Staff";
+            }
+            else {
+                text = "Customer";
+            }
+            JLabel n = (JLabel) iU.getComponent(1);
+            String name = n.getText();
             b.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("Please work!");
+                    db = new EasyDatabase();
+                    String selectSQL = "UPDATE User SET userRole='"+text+"' WHERE userEmail='"+name+"'";
+                    db.executeUpdate(selectSQL);
+                    db.close();
+                    if(role.getText().equals("Customer")) {
+                        role.setText("Staff");
+                    }
+                    else {
+                        role.setText("Customer");
+                    }                    
                 }
             });
         }

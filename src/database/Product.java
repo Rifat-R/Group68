@@ -1,7 +1,7 @@
-package src;
+package src.database;
 import java.sql.*;
 
-import src.User.Role;
+import src.database.User.Role;
 
 public class Product {
 
