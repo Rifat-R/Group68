@@ -29,7 +29,6 @@ public class HomePage extends JPanel {
     String status = "";
 
     public HomePage() {
-
         this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         
