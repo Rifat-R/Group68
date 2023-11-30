@@ -79,6 +79,7 @@ public class UpdateAccountDetails extends JPanel {
 
 
 
+
         String statusText = "";
         Color statusColour = Color.BLACK;
         Color green = new Color(4,175,112);
@@ -241,7 +242,9 @@ public class UpdateAccountDetails extends JPanel {
 
 
 
-
+        if (initialCardTypeName == null) {
+            return;
+        }
 
         cardTypeName = new JTextField(initialCardTypeName);
         c.anchor = GridBagConstraints.PAGE_START;
