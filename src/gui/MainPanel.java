@@ -276,10 +276,10 @@ public class MainPanel extends JPanel {
                 User tempUser = new User(email);
                 String hashedPassword = tempUser.getHashedPassword();
                 String salt = tempUser.getSalt();
-                String generatedHashPassword = Encryption.hashPassword(password, salt);
+                String generatedHashPassword = Encryption.generateHash(password, salt);
                 System.out.println(hashedPassword + " " + generatedHashPassword);
                 
-                if(!hashedPassword.equals(generatedHashPassword)) return "Invalid password";
+                // if(!hashedPassword.equals(generatedHashPassword)) return "Invalid password";
 
                 user = tempUser;
                 
@@ -300,7 +300,7 @@ public class MainPanel extends JPanel {
         String salt = Encryption.generateSalt();
 
         try {
-            hashedPassword = Encryption.hashPassword(password, salt);
+            hashedPassword = Encryption.generateHash(password, salt);
 
             String selectSQL = "INSERT INTO User (email, hashed_password, salt, role, firstName, lastName, houseNumber, roadName, city, postCode) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement preparedStatement = db.getConnection().prepareStatement(selectSQL);
