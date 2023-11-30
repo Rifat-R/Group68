@@ -17,9 +17,10 @@ public class SwingWindow extends JFrame {
     JMenu menu = new JMenu("Account");
     JMenuItem register = new JMenuItem("Register");
     JMenuItem login = new JMenuItem("Login");
-    JMenuItem order = new JMenuItem("Order");
+    JMenuItem order = new JMenuItem("View orders");
     JMenuItem updateAccount = new JMenuItem("Update account details");
     JMenuItem signOut = new JMenuItem("Sign Out");
+    JMenuItem viewProducts = new JMenuItem("View Products");
 
     JMenu staff = new JMenu("Staff options");
     JMenuItem updateProduct = new JMenuItem("Update product details");
@@ -37,8 +38,7 @@ public class SwingWindow extends JFrame {
 
         menu.add(register);
         menu.add(login);
-        menu.add(order);
-        menu.add(updateAccount);
+
         menubar.add(menu);
 
         staff.add(updateProduct);
@@ -94,10 +94,18 @@ public class SwingWindow extends JFrame {
           c1.show(panel,"ManagerPage");
     		}
         });
+        viewProducts.addActionListener(new ActionListener() {
+          public void actionPerformed(ActionEvent e) {
+            c1.show(panel, "HomePage");
+          }
+        });
         signOut.addActionListener(new ActionListener() {
     		public void actionPerformed(ActionEvent e) {
     			userLoggedIn = null;
           menu.remove(signOut);
+          menu.remove(order);
+          menu.remove(updateAccount);
+          menu.remove(viewProducts);
           menu.add(register);
           menu.add(login);
 
@@ -126,10 +134,13 @@ public class SwingWindow extends JFrame {
                         panel.customerHome.setUser(userLoggedIn);
                         panel.updateAccount.setUser(userLoggedIn);
                         panel.ManagerPage.setUser(userLoggedIn);
+                        menu.add(viewProducts);
+                        menu.add(order);
+                        menu.add(updateAccount);
                         menu.add(signOut);
                         menu.remove(register);
                         menu.remove(login);
-                        panel.updateAccount.renderLoggedInPage();
+                        //panel.updateAccount.renderLoggedInPage();
                         if(userLoggedIn.getRole() != Role.Customer) {
                           menubar.add(staff);
                           if(userLoggedIn.getRole() == Role.Manager) {
@@ -137,7 +148,6 @@ public class SwingWindow extends JFrame {
                           }
 
                         }
-                        c1.show(panel, "HomePage");
                       }
                   } catch (InterruptedException e1) {
                       e1.printStackTrace();
