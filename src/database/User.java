@@ -125,7 +125,11 @@ public class User {
 
     public User(int id) throws SQLException{
         EasyDatabase db = new EasyDatabase();
-        db.executeQuery("SELECT * FROM User WHERE id= " + id);
+        // Using preparedStatement to prevent SQL injection
+        String selectSQL = "SELECT * FROM User WHERE id = ?";
+        PreparedStatement preparedStatement = db.getConnection().prepareStatement(selectSQL);
+        preparedStatement.setInt(1, id);
+
         this.userID = id;
         db.resultSet.next();
         this.userEmail = db.resultSet.getString("email");
@@ -156,7 +160,9 @@ public class User {
     public User(String email) throws SQLException{
         EasyDatabase db = new EasyDatabase();
         // Fixed query
-        db.executeQuery("SELECT * FROM User WHERE email= '" + email + "'");
+        String selectSQL = "SELECT * FROM User WHERE email = ?";
+        PreparedStatement preparedStatement = db.getConnection().prepareStatement(selectSQL);
+        preparedStatement.setString(1, email);
         db.resultSet.next();
         this.userID = db.resultSet.getInt("id");
         this.userEmail = email;
