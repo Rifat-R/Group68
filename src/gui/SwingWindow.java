@@ -100,6 +100,11 @@ public class SwingWindow extends JFrame {
           menu.remove(signOut);
           menu.add(register);
           menu.add(login);
+
+          panel.customerHome.setUser(null);
+          panel.updateAccount.setUser(null);
+          panel.ManagerPage.setUser(null);
+          panel.updateAccount.renderLoggedInPage();
           try {
             menubar.remove(staff);
             staff.remove(changeStaff);
@@ -122,13 +127,17 @@ public class SwingWindow extends JFrame {
                         panel.updateAccount.setUser(userLoggedIn);
                         panel.ManagerPage.setUser(userLoggedIn);
                         menu.add(signOut);
+                        menu.remove(register);
+                        menu.remove(login);
                         panel.updateAccount.renderLoggedInPage();
                         if(userLoggedIn.getRole() != Role.Customer) {
                           menubar.add(staff);
-                          menu.remove(register);
-                          menu.remove(login);
-                          if(userLoggedIn.getRole() == Role.Manager) staff.add(changeStaff);              
+                          if(userLoggedIn.getRole() == Role.Manager) {
+                            staff.add(changeStaff);
+                          }
+
                         }
+                        c1.show(panel, "HomePage");
                       }
                   } catch (InterruptedException e1) {
                       e1.printStackTrace();

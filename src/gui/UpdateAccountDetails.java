@@ -54,6 +54,10 @@ public class UpdateAccountDetails extends JPanel {
         //Same with bank details -> if not given then allow user to create them
         //When placing order will have to check if bank details already exsists
 
+        if (user == null) {
+            return;
+        }
+
         String initialFirstName = user.getFirstName();
         String initialSurname = user.getLastName();
         String initialEmail = user.getEmail();
