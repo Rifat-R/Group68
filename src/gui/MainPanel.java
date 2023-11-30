@@ -5,9 +5,6 @@ import src.database.EasyDatabase;
 import src.database.User;
 import src.database.User.Role;
 
-import src.database.Encryption;
-import java.security.NoSuchAlgorithmException;
-
 import java.sql.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,7 +16,7 @@ public class MainPanel extends JPanel {
 
     EasyDatabase db;
 
-    private User user;
+    protected User user;
 
     // Register JItems
 
@@ -51,6 +48,7 @@ public class MainPanel extends JPanel {
     protected HomePage customerHome;
     protected UpdateAccountDetails updateAccount;
     protected ManagerPage ManagerPage;
+    protected StaffPage staffPage;
 
     // Constructor
     public MainPanel(){
@@ -113,6 +111,7 @@ public class MainPanel extends JPanel {
         JPanel customerOrder = new CustomerOrder();
 
         ManagerPage = new ManagerPage();
+        staffPage = new StaffPage();
 
         this.add(new JPanel(),"Splash");
         this.add(registerContainer, "Register");
@@ -122,6 +121,7 @@ public class MainPanel extends JPanel {
         this.add(customerOrder, "CustomerOrder");
         this.add(updateAccount, "UpdateAccount");
         this.add(ManagerPage, "ManagerPage");
+        this.add(staffPage, "StaffPage");
 
         addListeners(this);
     }    
@@ -130,7 +130,6 @@ public class MainPanel extends JPanel {
         CardLayout c1 = (CardLayout)(this.getLayout());
     	registerContinueButton.addActionListener(new ActionListener() {
     		public void actionPerformed(ActionEvent e) {
-    			System.out.println("Plz work register2");
                 String accountCreation = createAccountA();
                 if(accountCreation == "") c1.show(p,"Register2");
                 else registerIssues.setText(accountCreation);
@@ -138,7 +137,6 @@ public class MainPanel extends JPanel {
         });
         registerSubmitButton.addActionListener(new ActionListener() {
     		public void actionPerformed(ActionEvent e) {
-    			System.out.println("Plz submit data!");
                 String name, surname, street, city, postcode;
                 int house = 0;
                 String email = registerEmailField.getText();
@@ -164,23 +162,12 @@ public class MainPanel extends JPanel {
     		}
         });
         loginSubmitButton.addActionListener(new ActionListener() {
-    		public void actionPerformed(ActionEvent e) {
-    			System.out.println("Plz login using data!");
+    		public void actionPerformed(ActionEvent e) {                
                 String loginResult = login();
                 if(loginResult != "") loginIssues.setText(loginResult);
                 if(user != null) {
-                    if(user.getRole() == Role.Customer) {
-                        customerHome.setUser(user);
-                        updateAccount.setUser(user);
-                        updateAccount.renderLoggedInPage();
-                        c1.show(p, "HomePage");
-                    }
-                    else if(user.getRole() == Role.Staff)
-                        c1.show(p, "Splash");
-                    else {
-                        ManagerPage.setUser(user);
-                        c1.show(p, "ManagerPage");
-                    }
+                    
+                    c1.show(p, "HomePage");
                 }
     		}
         });
@@ -191,7 +178,7 @@ public class MainPanel extends JPanel {
         db.executeQuery(selectSQL);
         try {
             while(db.resultSet.next()) {
-                return Integer.parseInt(db.resultSet.getString("id"));
+                return Integer.parseInt(db.resultSet.getString(1));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -206,7 +193,6 @@ public class MainPanel extends JPanel {
         email = registerEmailField.getText();
         password = registerPasswordField.getText();
         confirmation = registerConfirmField.getText();
-        System.out.println(password+confirmation);
         if(!isEmailValid(email)) return "Invalid email address, please revise";
         for (String i : invalidChars)
             if(email.contains(i) || password.contains(i)) {
@@ -261,19 +247,19 @@ public class MainPanel extends JPanel {
         db = new EasyDatabase();
         try {
             try {
-                String selectSQL = "SELECT COUNT(id) AS total_rows FROM User WHERE email = '" + email 
+                String selectSQL = "SELECT COUNT(id) FROM User WHERE email = '" + email 
                                 + "'";
                 db.executeQuery(selectSQL);
                 while(db.resultSet.next()) {
-                    if(Integer.parseInt(db.resultSet.getString("total_rows")) < 1) return "Invalid email";
-                    else if(Integer.parseInt(db.resultSet.getString("total_rows")) > 1) return "what";
+                    if(Integer.parseInt(db.resultSet.getString(1)) < 1) return "Invalid email";
+                    else if(Integer.parseInt(db.resultSet.getString(1)) > 1) return "what";
                 }
 
-                selectSQL = "SELECT COUNT(id) AS total_rows FROM User WHERE email = '" + email 
+                selectSQL = "SELECT COUNT(id) FROM User WHERE email = '" + email 
                                 + "' AND hashed_password = '" + password + "'";
                 db.executeQuery(selectSQL);
                 while(db.resultSet.next()) {
-                    if(Integer.parseInt(db.resultSet.getString("total_rows")) < 1) return "Invalid password";
+                    if(Integer.parseInt(db.resultSet.getString(1)) < 1) return "Invalid password";
                 }
 
                 selectSQL = "SELECT id FROM User WHERE email = '" + email
@@ -296,22 +282,11 @@ public class MainPanel extends JPanel {
     public void addUserToDatabase(User addUser,String password)
     {
         db = new EasyDatabase();
-        String salt = Encryption.generateSalt();
-
-        try {
-            password = Encryption.hashPassword(password, salt);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-
-        String selectSQL = "INSERT INTO User (email, hashed_password, role, firstName, lastName, houseNumber, roadName, city, postCode, salt) VALUES ('"
-                            + addUser.getEmail()+"','"+ password +"','Customer','"+ addUser.getFirstName()+"','"+ addUser.getLastName()+"','"
-                            + addUser.getHouseNumber()+"','"+addUser.getRoadName() +"','"+addUser.getCity()+"','"+addUser.getPostCode()+ "," + salt +"')";
-
-        
+        String selectSQL = "INSERT INTO User (email, hashed_password, role, firstName, lastName, houseNumber, roadName, city, postCode) VALUES ('"
+                            + addUser.getEmail()+"','"+ password+"','Customer','"+ addUser.getFirstName()+"','"+ addUser.getLastName()+"','"
+                            + addUser.getHouseNumber()+"','"+addUser.getRoadName() +"','"+addUser.getCity()+"','"+addUser.getPostCode()+"')";
         db.executeUpdate(selectSQL);
         db.close();
         
     }
 }
-
