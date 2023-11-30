@@ -52,6 +52,7 @@ public class MainPanel extends JPanel {
     protected UpdateAccountDetails updateAccount;
     protected ManagerPage ManagerPage;
     protected StaffPage staffPage;
+    protected AfterLogin afterLogin;
 
     // Constructor
     public MainPanel(){
@@ -110,6 +111,7 @@ public class MainPanel extends JPanel {
         loginContainer.add(loginPanel);
 
         customerHome = new HomePage();
+        afterLogin = new AfterLogin();
         updateAccount = new UpdateAccountDetails();
         JPanel customerOrder = new CustomerOrder();
 
@@ -123,6 +125,7 @@ public class MainPanel extends JPanel {
         this.add(customerOrder, "CustomerOrder");
         this.add(updateAccount, "UpdateAccount");
         this.add(ManagerPage, "ManagerPage");
+        this.add(afterLogin, "AfterLogin");
 
         addListeners(this);
     }    
@@ -172,11 +175,13 @@ public class MainPanel extends JPanel {
                 if(user != null) {
                     loginEmailField.setText("");
                     loginPasswordField.setText("");
-                    
                     if(user.getRole() == Role.Customer) {
                         customerHome.setUser(user);
                         updateAccount.setUser(user);
                         updateAccount.renderLoggedInPage();
+                        //customerHome.rednerLoggedInPage(); ??
+                        c1.show(p, "AfterLogin");
+
                     }
                     else if(user.getRole() == Role.Staff)
                         c1.show(p, "Splash");
@@ -276,7 +281,7 @@ public class MainPanel extends JPanel {
                 User tempUser = new User(email);
                 String hashedPassword = tempUser.getHashedPassword();
                 String salt = tempUser.getSalt();
-                String generatedHashPassword = Encryption.hashPassword(password, salt);
+                String generatedHashPassword = Encryption.generateHash(password, salt);
                 System.out.println(hashedPassword + " " + generatedHashPassword);
                 
                 // if(!hashedPassword.equals(generatedHashPassword)) return "Invalid password";
@@ -300,7 +305,7 @@ public class MainPanel extends JPanel {
         String salt = Encryption.generateSalt();
 
         try {
-            hashedPassword = Encryption.hashPassword(password, salt);
+            hashedPassword = Encryption.generateHash(password, salt);
 
             String selectSQL = "INSERT INTO User (email, hashed_password, salt, role, firstName, lastName, houseNumber, roadName, city, postCode) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement preparedStatement = db.getConnection().prepareStatement(selectSQL);
