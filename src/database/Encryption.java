@@ -1,5 +1,4 @@
 package src.database;
-import src.database.User;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
