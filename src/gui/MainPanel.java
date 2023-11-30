@@ -170,11 +170,13 @@ public class MainPanel extends JPanel {
                 String loginResult = login();
                 if(loginResult != "") loginIssues.setText(loginResult);
                 if(user != null) {
+                    loginEmailField.setText("");
+                    loginPasswordField.setText("");
+                    
                     if(user.getRole() == Role.Customer) {
                         customerHome.setUser(user);
                         updateAccount.setUser(user);
                         updateAccount.renderLoggedInPage();
-                        c1.show(p, "HomePage");
                     }
                     else if(user.getRole() == Role.Staff)
                         c1.show(p, "Splash");
