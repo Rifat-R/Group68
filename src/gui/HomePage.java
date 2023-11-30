@@ -3,11 +3,12 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import com.mysql.cj.x.protobuf.MysqlxCrud.Order;
 
 import src.database.EasyDatabase;
 import src.database.Product;
 import src.database.User;
+import src.database.Order;
+import src.database.OrderLine;
 import src.gui.HomePage.spinnerListener;
 
 import java.sql.*;
@@ -20,7 +21,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.*;
 
-import java.util.Date;  
 
 import src.database.Order.Status;
 
@@ -401,9 +401,12 @@ public class HomePage extends JPanel {
 
                 System.out.println(date);
 
-                Integer OrderNumber = new Random().nextInt(90000000) + 10000000;
+                int OrderNumber = new Random().nextInt(90000000) + 10000000;
 
-                src.database.Order myorder = new Order();
+                Order myorder = new Order(OrderNumber, user.getID(), Status.Pending, date);
+
+                newOrderLine = new OrderLine(#####, orderQuantity, orderNumber, productID);
+                myorder.addOrderLine(newOrderLine);
 
                 
                 db.addOrder(date, Status.Pending, );
