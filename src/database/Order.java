@@ -43,11 +43,20 @@ public class Order {
         db.executeQuery("SELECT * FROM Order WHERE orderNumber= " + this.orderNumber);
         if (db.resultSet.next()){
             db.executeUpdate("UPDATE Order SET orderStatus = " + this.orderStatus + " WHERE orderNumber= " + this.orderNumber);
-        }else{
-            db.executeUpdate("INSERT INTO Order (orderNumber, userID, orderStatus, orderDate) Values (" + this.orderNumber + ", " + this.userID + ", " + this.orderStatus + ", " + this.orderDate + ")");
             for (int i = 0; i < this.orderLines.size(); i++) {
                 OrderLine line = this.orderLines.get(i);
-                db.executeUpdate("INSERT INTO OrderLines (orderLineNumber, quantity, orderNumber, productCode) Values (" + line.getOrderLineNumber() + ", " + line.getQuantity() + ", " + line.getOrderNumber() + ", " + line.getProductCode() + ")");
+                db.executeQuery("SELECT * FROM OrderLines WHERE orderLineNumber= " + line.getOrderLineNumber());
+                if (db.resultSet.next()){
+                    db.executeUpdate("UPDATE OrderLines orderLineNumber= " + line.getOrderLineNumber() + ", quantity= " + line.getQuantity() + ", orderNumber= " + line.getOrderNumber() + ", productCode=  " + line.getProductCode() + " WHERE orderLineNumber= " + line.getOrderLineNumber());
+                }
+                
+            }
+            db.executeQuery("SELECT * FROM Order WHERE orderNumber= " + this.orderNumber);
+        }else{
+            db.executeUpdate("INSERT INTO Order (orderNumber, userID, orderStatus, orderDate) VALUES (" + this.orderNumber + ", " + this.userID + ", " + this.orderStatus + ", " + this.orderDate + ")");
+            for (int i = 0; i < this.orderLines.size(); i++) {
+                OrderLine line = this.orderLines.get(i);
+                db.executeUpdate("INSERT INTO OrderLines (orderLineNumber, quantity, orderNumber, productCode) VALUES (" + line.getOrderLineNumber() + ", " + line.getQuantity() + ", " + line.getOrderNumber() + ", " + line.getProductCode() + ")");
             }
         }
     }
