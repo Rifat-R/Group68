@@ -26,6 +26,8 @@ public class HomePage extends JPanel {
 
     Map map = new HashMap<String, Integer>();
 
+    String status = "";
+
     public HomePage() {
 
         this.setLayout(new GridBagLayout());
@@ -195,6 +197,7 @@ public class HomePage extends JPanel {
             }
 
             try {
+                db = new EasyDatabase();
                 Product orderLineProduct = new Product(productID);
                 Double orderLinePriceIndividual = orderLineProduct.getPrice();
                 String orderLineBrand = orderLineProduct.getBrand();
