@@ -39,7 +39,7 @@ public class EasyDatabase {
     }
 
     public ResultSet getProduct(String productID) throws SQLException {
-        String selectSQL = "SELECT * FROM ProductTable WHERE productID = ?";
+        String selectSQL = "SELECT * FROM Product WHERE productID = ?";
         PreparedStatement preparedStatement = con.prepareStatement(selectSQL);
         preparedStatement.setString(1, productID);
         ResultSet rs = preparedStatement.executeQuery();
@@ -47,7 +47,7 @@ public class EasyDatabase {
     }
 
     public void addOrderLine(String productID, String brand, String name, Integer Quantity, Double Price) throws SQLException {
-        try {statement.executeQuery("SELECT * FROM ProductTable");}
+        try {statement.executeQuery("SELECT * FROM Product");}
         catch (SQLException e) {e.printStackTrace();}
     }
 
@@ -79,7 +79,7 @@ public class EasyDatabase {
     }
 
     public ResultSet getProducts() throws SQLException {
-        String selectSQL = "SELECT * FROM ProductTable";
+        String selectSQL = "SELECT * FROM Product";
         PreparedStatement preparedStatement = con.prepareStatement(selectSQL);
         ResultSet rs = preparedStatement.executeQuery();
         return rs;
