@@ -6,7 +6,7 @@ import src.database.User.Role;
 
 public class Order {
 
-    enum Status{
+    public enum Status{
         Pending,
         Confirmed,
         Fulfilled

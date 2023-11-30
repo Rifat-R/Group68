@@ -3,18 +3,25 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import com.mysql.cj.x.protobuf.MysqlxCrud.Order;
+
 import src.database.EasyDatabase;
 import src.database.Product;
 import src.database.User;
 import src.gui.HomePage.spinnerListener;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.*;
+
+import java.util.Date;  
+
+import src.database.Order.Status;
 
 
 public class HomePage extends JPanel {
@@ -387,8 +394,17 @@ public class HomePage extends JPanel {
                 String orderLineBrand = orderLineProduct.getBrand();
                 String orderLineName = orderLineProduct.getName();
                 Double orderLinePrice = orderLinePriceIndividual * orderQuantity;
+
+                SimpleDateFormat formatter = new SimpleDateFormat("mm/yy");  
+                Date date = new Date();
+
+                System.out.println(date);
+
+                Integer OrderNumber = 
                 
+                db.addOrder(date, Status.Pending, );
                 db.addOrderLine(productID, orderLineBrand, orderLineName, orderQuantity, orderLinePrice);
+
 
                 status = "Success";
 
