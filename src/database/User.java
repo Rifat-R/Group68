@@ -11,7 +11,8 @@ public class User {
 
     private int userID = 0;
     private String userEmail = null;
-    private String userPassword = null;
+    private String hashedPassword = null;
+    private String salt = null;
     private Role userRole = Role.Customer;
     private String firstName = null;
     private String lastName = null;
@@ -30,6 +31,14 @@ public class User {
 
     public String getEmail() {
         return userEmail;
+    }
+
+    public String getHashedPassword() {
+        return hashedPassword;
+    }
+
+    public String getSalt() {
+        return salt;
     }
 
     public Role getRole() {
@@ -63,8 +72,8 @@ public class User {
         this.userEmail = email;
     }
 
-    public void setPassword(String password) {
-        this.userPassword = password;
+    public void setHashedPassword(String password) {
+        this.hashedPassword = password;
     }
 
     public void setRole(Role role) {
@@ -120,6 +129,8 @@ public class User {
         this.userID = id;
         db.resultSet.next();
         this.userEmail = db.resultSet.getString("email");
+        this.hashedPassword = db.resultSet.getString("hashed_password");
+        this.salt = db.resultSet.getString("salt");
         switch(db.resultSet.getString("role")){
             case "Customer":
                 this.userRole = Role.Customer;
@@ -144,9 +155,13 @@ public class User {
 
     public User(String email) throws SQLException{
         EasyDatabase db = new EasyDatabase();
-        db.executeQuery("SELECT * FROM User WHERE email={email}");
+        // Fixed query
+        db.executeQuery("SELECT * FROM User WHERE email= '" + email + "'");
+        db.resultSet.next();
         this.userID = db.resultSet.getInt("id");
         this.userEmail = email;
+        this.hashedPassword = db.resultSet.getString("hashed_password");
+        this.salt = db.resultSet.getString("salt");
         switch(db.resultSet.getString("role")){
             case "Customer":
                 this.userRole = Role.Customer;
@@ -167,5 +182,6 @@ public class User {
         this.roadName = db.resultSet.getString("roadName");
         this.city = db.resultSet.getString("city");
         this.postCode = db.resultSet.getString("postCode");
+        db.close();
     }
 }
