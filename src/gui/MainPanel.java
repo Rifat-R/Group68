@@ -269,9 +269,9 @@ public class MainPanel extends JPanel {
         db = new EasyDatabase();
         try {
             try {
-                String selectSQL = "SELECT COUNT(id) AS total_rows FROM User WHERE email = '" + email 
-                                + "'";
-                db.executeQuery(selectSQL);
+                String selectSQL = "SELECT COUNT(id) AS total_rows FROM User WHERE email = ?";
+                PreparedStatement preparedStatement = db.getConnection().prepareStatement(selectSQL);
+                preparedStatement.setString(1, email);
                 while(db.resultSet.next()) {
                     if(Integer.parseInt(db.resultSet.getString("total_rows")) < 1) return "Invalid email";
                     else if(Integer.parseInt(db.resultSet.getString("total_rows")) > 1) return "what";

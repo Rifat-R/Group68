@@ -78,7 +78,16 @@ public class ManagerPage extends JPanel {
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("Please work!");
                     db = new EasyDatabase();
-                    String selectSQL = "UPDATE User SET userRole='"+ text +"' WHERE email='"+name+"'";
+                    String selectSQL = "UPDATE User SET role = ? WHERE email = ?";
+                    try {
+                        PreparedStatement ps = db.getConnection().prepareStatement(selectSQL);
+                        ps.setString(1, text);
+                        ps.setString(2, name);
+                        ps.executeUpdate();
+                    } catch (SQLException e1) {
+                        e1.printStackTrace();
+                    }
+
                     db.executeUpdate(selectSQL);
                     db.close();
                     if(role.getText().equals("Customer")) {
