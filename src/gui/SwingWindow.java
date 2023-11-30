@@ -96,7 +96,7 @@ public class SwingWindow extends JFrame {
         });
         viewProducts.addActionListener(new ActionListener() {
           public void actionPerformed(ActionEvent e) {
-            c1.show(panel, "CustomerHome");
+            c1.show(panel, "HomePage");
           }
         });
         signOut.addActionListener(new ActionListener() {
