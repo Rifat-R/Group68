@@ -1,5 +1,6 @@
 package src;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 
 public class User {
 
@@ -57,6 +58,22 @@ public class User {
 
     public String getPostCode() {
         return postCode;
+    }
+
+    public String getCardTypeNumber() {
+        return cardTypeName;
+    }
+
+    public Integer getCardNumber() {
+        return cardNumber;
+    }
+
+    public Date getCardExpiryDate() {
+        return cardExpiryDate;
+    }
+
+    public Integer getCardSecurityCode() {
+        return cardSecurityCode;
     }
 
     public void setEmail(String email) {
@@ -134,12 +151,17 @@ public class User {
                 this.userRole = Role.Customer;
                 break;
         }
+
         this.houseNumber = db.resultSet.getInt(5);
         this.firstName = db.resultSet.getString(6);
         this.lastName = db.resultSet.getString(7);
         this.roadName = db.resultSet.getString(8);
         this.city = db.resultSet.getString(9);
         this.postCode = db.resultSet.getString(10);
+        this.cardTypeName = db.resultSet.getString(11);
+        this.cardNumber = db.resultSet.getInt(11);
+        this.cardExpiryDate = db.resultSet.getDate(11);
+        this.cardSecurityCode = db.resultSet.getInt(11);
     }
 
     public User(String email) throws SQLException{
