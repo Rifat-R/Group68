@@ -44,4 +44,31 @@ public class Order {
         this.orderStatus = status;
         this.orderDate = date;
     }
+
+    public Order(int orderNumber) throws SQLException{
+        EasyDatabase db = new EasyDatabase();
+        db.executeQuery("SELECT * FROM Order WHERE orderNumber= " + orderNumber);
+        this.orderNumber = orderNumber;
+        db.resultSet.next();
+        this.userID = db.resultSet.getInt("userID");
+        this.orderDate = db.resultSet.getDate("orderDate");
+        switch(db.resultSet.getString("orderStatus")){
+            case "Pending":
+                this.orderStatus = Status.Pending;
+                break;
+            case "Confirmed":
+                this.orderStatus = Status.Confirmed;
+                break;
+            case "Fulfilled":
+                this.orderStatus = Status.Fulfilled;
+                break;
+            default:
+                this.orderStatus = Status.Fulfilled;
+                break;
+        }
+        db.executeQuery("SELECT * FROM OrderLines WHERE orderNumber= " + orderNumber);
+        while(db.resultSet.next()){
+            this.addOrderLine(new OrderLine(db.resultSet.getInt("orderLineNumber"), db.resultSet.getInt("quantity"), db.resultSet.getInt("orderNumber"), db.resultSet.getString("productionCode")));
+        }
+    }
 }
