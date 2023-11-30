@@ -58,8 +58,8 @@ public class Order {
         EasyDatabase db = new EasyDatabase();
         db.executeQuery("SELECT * FROM Order WHERE orderID={id}");
         this.orderID = id;
-        this.userID = db.resultSet.getInt(1);
-        this.productID = db.resultSet.getInt(2);
+        this.userID = db.resultSet.getInt("id");
+        this.productID = db.resultSet.getInt("productID");
         switch(db.resultSet.getString(3)){
             case "Pending":
                 this.orderStatus = Status.Pending;

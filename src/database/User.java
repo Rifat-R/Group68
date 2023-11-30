@@ -116,11 +116,11 @@ public class User {
 
     public User(int id) throws SQLException{
         EasyDatabase db = new EasyDatabase();
-        db.executeQuery("SELECT * FROM User WHERE userID= " + id);
+        db.executeQuery("SELECT * FROM User WHERE id= " + id);
         this.userID = id;
         db.resultSet.next();
-        this.userEmail = db.resultSet.getString(2);
-        switch(db.resultSet.getString(4)){
+        this.userEmail = db.resultSet.getString("email");
+        switch(db.resultSet.getString("role")){
             case "Customer":
                 this.userRole = Role.Customer;
                 break;
@@ -134,20 +134,20 @@ public class User {
                 this.userRole = Role.Customer;
                 break;
         }
-        this.houseNumber = db.resultSet.getInt(5);
-        this.firstName = db.resultSet.getString(6);
-        this.lastName = db.resultSet.getString(7);
-        this.roadName = db.resultSet.getString(8);
-        this.city = db.resultSet.getString(9);
-        this.postCode = db.resultSet.getString(10);
+        this.houseNumber = db.resultSet.getInt("houseNumber");
+        this.firstName = db.resultSet.getString("firstName");
+        this.lastName = db.resultSet.getString("lastName");
+        this.roadName = db.resultSet.getString("roadName");
+        this.city = db.resultSet.getString("city");
+        this.postCode = db.resultSet.getString("postCode");
     }
 
     public User(String email) throws SQLException{
         EasyDatabase db = new EasyDatabase();
-        db.executeQuery("SELECT * FROM User WHERE userEmail={email}");
-        this.userID = db.resultSet.getInt(0);
+        db.executeQuery("SELECT * FROM User WHERE email={email}");
+        this.userID = db.resultSet.getInt("id");
         this.userEmail = email;
-        switch(db.resultSet.getString(3)){
+        switch(db.resultSet.getString("role")){
             case "Customer":
                 this.userRole = Role.Customer;
                 break;
@@ -161,11 +161,11 @@ public class User {
                 this.userRole = Role.Customer;
                 break;
         }
-        this.houseNumber = db.resultSet.getInt(4);
-        this.firstName = db.resultSet.getString(5);
-        this.lastName = db.resultSet.getString(6);
-        this.roadName = db.resultSet.getString(7);
-        this.city = db.resultSet.getString(8);
-        this.postCode = db.resultSet.getString(9);
+        this.houseNumber = db.resultSet.getInt("houseNumber");
+        this.firstName = db.resultSet.getString("firstName");
+        this.lastName = db.resultSet.getString("lastName");
+        this.roadName = db.resultSet.getString("roadName");
+        this.city = db.resultSet.getString("city");
+        this.postCode = db.resultSet.getString("postCode");
     }
 }

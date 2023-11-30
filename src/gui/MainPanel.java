@@ -5,6 +5,9 @@ import src.database.EasyDatabase;
 import src.database.User;
 import src.database.User.Role;
 
+import src.database.Encryption;
+import java.security.NoSuchAlgorithmException;
+
 import java.sql.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -184,11 +187,11 @@ public class MainPanel extends JPanel {
     }
     int getNextID(){
         db = new EasyDatabase();
-        String selectSQL = "SELECT COUNT(userID) FROM User";
+        String selectSQL = "SELECT COUNT(id) FROM User";
         db.executeQuery(selectSQL);
         try {
             while(db.resultSet.next()) {
-                return Integer.parseInt(db.resultSet.getString(1));
+                return Integer.parseInt(db.resultSet.getString("id"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -258,26 +261,26 @@ public class MainPanel extends JPanel {
         db = new EasyDatabase();
         try {
             try {
-                String selectSQL = "SELECT COUNT(userID) FROM User WHERE userEmail = '" + email 
+                String selectSQL = "SELECT COUNT(id) AS total_rows FROM User WHERE email = '" + email 
                                 + "'";
                 db.executeQuery(selectSQL);
                 while(db.resultSet.next()) {
-                    if(Integer.parseInt(db.resultSet.getString(1)) < 1) return "Invalid email";
-                    else if(Integer.parseInt(db.resultSet.getString(1)) > 1) return "what";
+                    if(Integer.parseInt(db.resultSet.getString("total_rows")) < 1) return "Invalid email";
+                    else if(Integer.parseInt(db.resultSet.getString("total_rows")) > 1) return "what";
                 }
 
-                selectSQL = "SELECT COUNT(userID) FROM User WHERE userEmail = '" + email 
-                                + "' AND userPassword = '" + password + "'";
+                selectSQL = "SELECT COUNT(id) AS total_rows FROM User WHERE email = '" + email 
+                                + "' AND hashed_password = '" + password + "'";
                 db.executeQuery(selectSQL);
                 while(db.resultSet.next()) {
-                    if(Integer.parseInt(db.resultSet.getString(1)) < 1) return "Invalid password";
+                    if(Integer.parseInt(db.resultSet.getString("total_rows")) < 1) return "Invalid password";
                 }
 
-                selectSQL = "SELECT userID FROM User WHERE userEmail = '" + email
-                                + "' AND userPassword = '" + password + "'";
+                selectSQL = "SELECT id FROM User WHERE email = '" + email
+                                + "' AND hashed_password = '" + password + "'";
                 db.executeQuery(selectSQL);
                 while(db.resultSet.next()) {
-                    user = new User(Integer.parseInt(db.resultSet.getString("userID")));
+                    user = new User(Integer.parseInt(db.resultSet.getString("id")));
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -293,9 +296,19 @@ public class MainPanel extends JPanel {
     public void addUserToDatabase(User addUser,String password)
     {
         db = new EasyDatabase();
-        String selectSQL = "INSERT INTO User (userEmail, userPassword, userRole, firstName, lastName, houseNumber, roadName, city, postCode) VALUES ('"
-                            + addUser.getEmail()+"','"+ password+"','Customer','"+ addUser.getFirstName()+"','"+ addUser.getLastName()+"','"
-                            + addUser.getHouseNumber()+"','"+addUser.getRoadName() +"','"+addUser.getCity()+"','"+addUser.getPostCode()+"')";
+        String salt = Encryption.generateSalt();
+
+        try {
+            password = Encryption.hashPassword(password, salt);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        String selectSQL = "INSERT INTO User (email, hashed_password, role, firstName, lastName, houseNumber, roadName, city, postCode, salt) VALUES ('"
+                            + addUser.getEmail()+"','"+ password +"','Customer','"+ addUser.getFirstName()+"','"+ addUser.getLastName()+"','"
+                            + addUser.getHouseNumber()+"','"+addUser.getRoadName() +"','"+addUser.getCity()+"','"+addUser.getPostCode()+ "," + salt +"')";
+
+        
         db.executeUpdate(selectSQL);
         db.close();
         

@@ -91,10 +91,10 @@ public class Product {
         EasyDatabase db = new EasyDatabase();
         try {
             ResultSet rs = db.getProduct(id); 
-            this.productName = rs.getString(1);
-            this.productBrand = rs.getString(2);
-            this.productPrice = db.resultSet.getDouble(3);
-            switch(db.resultSet.getString(4)){
+            this.productName = rs.getString("productID");
+            this.productBrand = rs.getString("productName");
+            this.productPrice = db.resultSet.getDouble("productPrice");
+            switch(db.resultSet.getString("productGauge")){
                 case "OO Gauge":
                     this.productGauge = Gauge.OO;
                     break;
@@ -108,8 +108,8 @@ public class Product {
                     this.productGauge = null;
                     break;
             }
-            this.productEra = db.resultSet.getString(5);
-            switch(db.resultSet.getString(6)){
+            this.productEra = db.resultSet.getString("productEra");
+            switch(db.resultSet.getString("dCCCode")){
                 case "Analogue":
                     this.dCCCode = DCCCode.Analogue;
                     break;
@@ -126,7 +126,7 @@ public class Product {
                     this.dCCCode = null;
                     break;
             }
-            this.numberInStock = db.resultSet.getInt(7);
+            this.numberInStock = db.resultSet.getInt("numberInStock");
         } catch (SQLException e) {
             return;
             //
