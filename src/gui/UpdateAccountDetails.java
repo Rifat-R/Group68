@@ -1,8 +1,10 @@
-package src;
+package src.gui;
 import javax.swing.*;
 
-import src.HomePage.buttonListener;
-import src.User.Role;
+import src.database.EasyDatabase;
+import src.database.User;
+import src.database.User.Role;
+import src.gui.HomePage.buttonListener;
 
 import java.sql.*;
 import java.awt.event.ActionEvent;

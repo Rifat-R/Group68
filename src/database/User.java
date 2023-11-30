@@ -1,9 +1,9 @@
-package src;
+package src.database;
 import java.sql.*;
 
 public class User {
 
-    enum Role{
+    public enum Role{
         Customer,
         Staff,
         Manager

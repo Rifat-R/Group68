@@ -1,8 +1,11 @@
-package src;
+package src.gui;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import src.database.EasyDatabase;
+import src.database.Product;
+import src.database.User;
 
 import java.sql.*;
 import java.util.HashMap;
