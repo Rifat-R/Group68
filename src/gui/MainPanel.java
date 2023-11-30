@@ -52,6 +52,7 @@ public class MainPanel extends JPanel {
     protected UpdateAccountDetails updateAccount;
     protected ManagerPage ManagerPage;
     protected StaffPage staffPage;
+    protected AfterLogin afterLogin;
 
     // Constructor
     public MainPanel(){
@@ -110,6 +111,7 @@ public class MainPanel extends JPanel {
         loginContainer.add(loginPanel);
 
         customerHome = new HomePage();
+        afterLogin = new AfterLogin();
         updateAccount = new UpdateAccountDetails();
         JPanel customerOrder = new CustomerOrder();
 
@@ -123,6 +125,7 @@ public class MainPanel extends JPanel {
         this.add(customerOrder, "CustomerOrder");
         this.add(updateAccount, "UpdateAccount");
         this.add(ManagerPage, "ManagerPage");
+        this.add(afterLogin, "AfterLogin");
 
         addListeners(this);
     }    
@@ -170,11 +173,15 @@ public class MainPanel extends JPanel {
                 String loginResult = login();
                 if(loginResult != "") loginIssues.setText(loginResult);
                 if(user != null) {
+                    loginEmailField.setText("");
+                    loginPasswordField.setText("");
                     if(user.getRole() == Role.Customer) {
                         customerHome.setUser(user);
                         updateAccount.setUser(user);
                         updateAccount.renderLoggedInPage();
-                        c1.show(p, "HomePage");
+                        //customerHome.rednerLoggedInPage(); ??
+                        c1.show(p, "AfterLogin");
+
                     }
                     else if(user.getRole() == Role.Staff)
                         c1.show(p, "Splash");
@@ -270,19 +277,17 @@ public class MainPanel extends JPanel {
                     else if(Integer.parseInt(db.resultSet.getString("total_rows")) > 1) return "what";
                 }
 
-                selectSQL = "SELECT COUNT(id) AS total_rows FROM User WHERE email = '" + email 
-                                + "' AND hashed_password = '" + password + "'";
-                db.executeQuery(selectSQL);
-                while(db.resultSet.next()) {
-                    if(Integer.parseInt(db.resultSet.getString("total_rows")) < 1) return "Invalid password";
-                }
+                // Checks for password
+                User tempUser = new User(email);
+                String hashedPassword = tempUser.getHashedPassword();
+                String salt = tempUser.getSalt();
+                String generatedHashPassword = Encryption.generateHash(password, salt);
+                System.out.println(hashedPassword + " " + generatedHashPassword);
+                
+                // if(!hashedPassword.equals(generatedHashPassword)) return "Invalid password";
 
-                selectSQL = "SELECT id FROM User WHERE email = '" + email
-                                + "' AND hashed_password = '" + password + "'";
-                db.executeQuery(selectSQL);
-                while(db.resultSet.next()) {
-                    user = new User(Integer.parseInt(db.resultSet.getString("id")));
-                }
+                user = tempUser;
+                
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -294,25 +299,33 @@ public class MainPanel extends JPanel {
         return "";
     }
 
-    public void addUserToDatabase(User addUser,String password)
-    {
+    public void addUserToDatabase(User addUser, String password) {
         db = new EasyDatabase();
+        String hashedPassword;
         String salt = Encryption.generateSalt();
 
         try {
-            password = Encryption.hashPassword(password, salt);
-        } catch (NoSuchAlgorithmException e) {
+            hashedPassword = Encryption.generateHash(password, salt);
+
+            String selectSQL = "INSERT INTO User (email, hashed_password, salt, role, firstName, lastName, houseNumber, roadName, city, postCode) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement preparedStatement = db.getConnection().prepareStatement(selectSQL);
+            preparedStatement.setString(1, addUser.getEmail());
+            preparedStatement.setString(2, hashedPassword);
+            preparedStatement.setString(3, salt);
+            preparedStatement.setString(4, "Customer");
+            preparedStatement.setString(5, addUser.getFirstName());
+            preparedStatement.setString(6, addUser.getLastName());
+            preparedStatement.setInt(7, addUser.getHouseNumber());
+            preparedStatement.setString(8, addUser.getRoadName());
+            preparedStatement.setString(9, addUser.getCity());
+            preparedStatement.setString(10, addUser.getPostCode());
+
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+            db.close();
+        } catch (NoSuchAlgorithmException | SQLException e) {
             e.printStackTrace();
         }
-
-        String selectSQL = "INSERT INTO User (email, hashed_password, role, firstName, lastName, houseNumber, roadName, city, postCode, salt) VALUES ('"
-                            + addUser.getEmail()+"','"+ password +"','Customer','"+ addUser.getFirstName()+"','"+ addUser.getLastName()+"','"
-                            + addUser.getHouseNumber()+"','"+addUser.getRoadName() +"','"+addUser.getCity()+"','"+addUser.getPostCode()+ "," + salt +"')";
-
-        
-        db.executeUpdate(selectSQL);
-        db.close();
-        
     }
 }
 

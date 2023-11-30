@@ -17,9 +17,10 @@ public class SwingWindow extends JFrame {
     JMenu menu = new JMenu("Account");
     JMenuItem register = new JMenuItem("Register");
     JMenuItem login = new JMenuItem("Login");
-    JMenuItem order = new JMenuItem("Order");
+    JMenuItem order = new JMenuItem("View orders");
     JMenuItem updateAccount = new JMenuItem("Update account details");
     JMenuItem signOut = new JMenuItem("Sign Out");
+    JMenuItem viewProducts = new JMenuItem("View Products");
 
     JMenu staff = new JMenu("Staff options");
     JMenuItem updateProduct = new JMenuItem("Update product details");
@@ -37,8 +38,7 @@ public class SwingWindow extends JFrame {
 
         menu.add(register);
         menu.add(login);
-        menu.add(order);
-        menu.add(updateAccount);
+
         menubar.add(menu);
 
         staff.add(updateProduct);
@@ -94,12 +94,25 @@ public class SwingWindow extends JFrame {
           c1.show(panel,"ManagerPage");
     		}
         });
+        viewProducts.addActionListener(new ActionListener() {
+          public void actionPerformed(ActionEvent e) {
+            c1.show(panel, "HomePage");
+          }
+        });
         signOut.addActionListener(new ActionListener() {
     		public void actionPerformed(ActionEvent e) {
     			userLoggedIn = null;
           menu.remove(signOut);
+          menu.remove(order);
+          menu.remove(updateAccount);
+          menu.remove(viewProducts);
           menu.add(register);
           menu.add(login);
+
+          panel.customerHome.setUser(null);
+          panel.updateAccount.setUser(null);
+          panel.ManagerPage.setUser(null);
+          panel.updateAccount.renderLoggedInPage();
           try {
             menubar.remove(staff);
             staff.remove(changeStaff);
@@ -121,13 +134,19 @@ public class SwingWindow extends JFrame {
                         panel.customerHome.setUser(userLoggedIn);
                         panel.updateAccount.setUser(userLoggedIn);
                         panel.ManagerPage.setUser(userLoggedIn);
+                        menu.add(viewProducts);
+                        menu.add(order);
+                        menu.add(updateAccount);
                         menu.add(signOut);
-                        panel.updateAccount.renderLoggedInPage();
+                        menu.remove(register);
+                        menu.remove(login);
+                        //panel.updateAccount.renderLoggedInPage();
                         if(userLoggedIn.getRole() != Role.Customer) {
                           menubar.add(staff);
-                          menu.remove(register);
-                          menu.remove(login);
-                          if(userLoggedIn.getRole() == Role.Manager) staff.add(changeStaff);              
+                          if(userLoggedIn.getRole() == Role.Manager) {
+                            staff.add(changeStaff);
+                          }
+
                         }
                       }
                   } catch (InterruptedException e1) {
