@@ -12,15 +12,15 @@ public class OrderLine {
         return orderLineNumber;
     }
 
-    public int getUserID() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public int getProductID() {
+    public int getOrderNumber() {
         return orderNumber;
     }
 
-    public String getQuantity() {
+    public String getProductCode() {
         return productCode;
     }
 
@@ -34,4 +34,9 @@ public class OrderLine {
         this.orderNumber = orderNumber;
         this.productCode = productCode;
     }
+
+    public OrderLine(int int1, int int2, int int3, int int4) {
+    }
+
+    
 }

@@ -45,6 +45,10 @@ public class Order {
             db.executeUpdate("UPDATE Order SET orderStatus = " + this.orderStatus + " WHERE orderNumber= " + this.orderNumber);
         }else{
             db.executeUpdate("INSERT INTO Order (orderNumber, userID, orderStatus, orderDate) Values (" + this.orderNumber + ", " + this.userID + ", " + this.orderStatus + ", " + this.orderDate + ")");
+            for (int i = 0; i < this.orderLines.size(); i++) {
+                OrderLine line = this.orderLines.get(i);
+                db.executeUpdate("INSERT INTO OrderLines (orderLineNumber, quantity, orderNumber, productCode) Values (" + line.getOrderLineNumber() + ", " + line.getQuantity() + ", " + line.getOrderNumber() + ", " + line.getProductCode() + ")");
+            }
         }
     }
 
