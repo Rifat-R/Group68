@@ -31,7 +31,7 @@ public class ManagerPage extends JPanel {
         try {
             while(db.resultSet.next()) {
                 String name = db.resultSet.getString(2);
-                String role = db.resultSet.getString(4);
+                String role = db.resultSet.getString(5);
                 if(role.equals("Manager")) continue;
 
                 JLabel tempLabel1 = new JLabel("User: ");
@@ -78,7 +78,7 @@ public class ManagerPage extends JPanel {
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("Please work!");
                     db = new EasyDatabase();
-                    String selectSQL = "UPDATE User SET userRole='"+text+"' WHERE userEmail='"+name+"'";
+                    String selectSQL = "UPDATE User SET role='"+text+"' WHERE email='"+name+"'";
                     db.executeUpdate(selectSQL);
                     db.close();
                     if(role.getText().equals("Customer")) {

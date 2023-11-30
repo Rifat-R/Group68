@@ -1,6 +1,9 @@
 package src.gui;
 import javax.swing.*;
 
+import src.database.User;
+import src.database.User.Role;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.*;
@@ -10,11 +13,18 @@ public class SwingWindow extends JFrame {
     MainPanel panel;    
         
     JMenuBar menubar = new JMenuBar();
+
     JMenu menu = new JMenu("Account");
     JMenuItem register = new JMenuItem("Register");
     JMenuItem login = new JMenuItem("Login");
     JMenuItem order = new JMenuItem("Order");
     JMenuItem updateAccount = new JMenuItem("Update account details");
+
+    JMenu staff = new JMenu("Staff options");
+    JMenuItem updateProduct = new JMenuItem("Update product details");
+    JMenuItem changeStaff = new JMenuItem("Update staff (Manager only)");
+
+    User userLoggedIn;
 
     public SwingWindow(String text) {
         super(text);
@@ -47,13 +57,11 @@ public class SwingWindow extends JFrame {
         CardLayout c1 = (CardLayout)(panel.getLayout());
     	  register.addActionListener(new ActionListener() {
     		public void actionPerformed(ActionEvent e) {
-    			System.out.println("Plz work register");
                 c1.show(panel,"Register");
     		}
         });
         login.addActionListener(new ActionListener() {
     		public void actionPerformed(ActionEvent e) {
-    			System.out.println("Plz work login!");
                 c1.show(panel,"Login");
     		}
         });
@@ -68,6 +76,46 @@ public class SwingWindow extends JFrame {
     			System.out.println("Plz work order!");
           c1.show(panel,"UpdateAccount");
     		}
+        });
+        updateProduct.addActionListener(new ActionListener() {
+    		public void actionPerformed(ActionEvent e) {
+    			System.out.println("Plz work products!");
+          c1.show(panel,"StaffPage");
+    		}
+        });
+        changeStaff.addActionListener(new ActionListener() {
+    		public void actionPerformed(ActionEvent e) {
+    			System.out.println("Plz work staff!");
+          c1.show(panel,"ManagerPage");
+    		}
+        });
+        panel.loginSubmitButton.addActionListener(new ActionListener() {
+          public void actionPerformed(ActionEvent e) {
+            Thread t = new Thread(new Runnable() {
+
+              @Override
+              public void run() {
+                  try {
+                      Thread.sleep(1000);
+                      userLoggedIn = panel.user;
+                      if(userLoggedIn != null) {
+                        panel.customerHome.setUser(userLoggedIn);
+                        panel.updateAccount.setUser(userLoggedIn);
+                        panel.ManagerPage.setUser(userLoggedIn);
+                        if(userLoggedIn.getRole() != Role.Customer) {
+                          staff.add(updateProduct);
+                          menubar.add(staff);
+                          if(userLoggedIn.getRole() == Role.Manager) staff.add(changeStaff);              
+                        }
+                      }
+                  } catch (InterruptedException e1) {
+                      e1.printStackTrace();
+                  }                  
+              }              
+            });
+          t.start(); 
+            
+          }
         });
     }
 }
