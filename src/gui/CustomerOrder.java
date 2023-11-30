@@ -26,7 +26,8 @@ public class CustomerOrder extends JPanel {
         pastOrders.setBorder(null);
     }
 
-    public void createPanelForOrderLine() {
-        
+    public JPanel createPanelForOrderLine() {
+        this.setLayout(new GridBagLayout());
+        return this;
     }
 }
