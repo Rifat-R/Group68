@@ -183,7 +183,7 @@ public class MainPanel extends JPanel {
     int getNextID()
     {
         db = new EasyDatabase();
-        String selectSQL = "SELECT COUNT(userID) FROM UserTable";
+        String selectSQL = "SELECT COUNT(userID) FROM User";
         db.executeQuery(selectSQL);
         try {
             while(db.resultSet.next()) {
@@ -257,7 +257,7 @@ public class MainPanel extends JPanel {
         db = new EasyDatabase();
         try {
             try {
-                String selectSQL = "SELECT COUNT(userID) FROM UserTable WHERE userEmail = '" + email 
+                String selectSQL = "SELECT COUNT(userID) FROM User WHERE userEmail = '" + email 
                                 + "'";
                 db.executeQuery(selectSQL);
                 while(db.resultSet.next()) {
@@ -265,14 +265,14 @@ public class MainPanel extends JPanel {
                     else if(Integer.parseInt(db.resultSet.getString(1)) > 1) return "what";
                 }
 
-                selectSQL = "SELECT COUNT(userID) FROM UserTable WHERE userEmail = '" + email 
+                selectSQL = "SELECT COUNT(userID) FROM User WHERE userEmail = '" + email 
                                 + "' AND userPassword = '" + password + "'";
                 db.executeQuery(selectSQL);
                 while(db.resultSet.next()) {
                     if(Integer.parseInt(db.resultSet.getString(1)) < 1) return "Invalid password";
                 }
 
-                selectSQL = "SELECT userID FROM UserTable WHERE userEmail = '" + email
+                selectSQL = "SELECT userID FROM User WHERE userEmail = '" + email
                                 + "' AND userPassword = '" + password + "'";
                 db.executeQuery(selectSQL);
                 while(db.resultSet.next()) {
@@ -292,7 +292,7 @@ public class MainPanel extends JPanel {
     public void addUserToDatabase(User addUser,String password)
     {
         db = new EasyDatabase();
-        String selectSQL = "INSERT INTO UserTable (userEmail, userPassword, userRole, firstName, lastName, houseNumber, roadName, city, postCode) VALUES ('"
+        String selectSQL = "INSERT INTO User (userEmail, userPassword, userRole, firstName, lastName, houseNumber, roadName, city, postCode) VALUES ('"
                             + addUser.getEmail()+"','"+ password+"','Customer','"+ addUser.getFirstName()+"','"+ addUser.getLastName()+"','"
                             + addUser.getHouseNumber()+"','"+addUser.getRoadName() +"','"+addUser.getCity()+"','"+addUser.getPostCode()+"')";
         db.executeUpdate(selectSQL);

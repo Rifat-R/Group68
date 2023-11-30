@@ -53,7 +53,7 @@ public class EasyDatabase {
 
     public void updateUserDetails(Integer userID, String email, String name, String surname) throws SQLException {
         try {
-            String selectSQL = "UPDATE UserTable SET userEmail = ?, firstName = ?, lastName = ? WHERE userID = ?";
+            String selectSQL = "UPDATE User SET userEmail = ?, firstName = ?, lastName = ? WHERE userID = ?";
             PreparedStatement ps = con.prepareStatement(selectSQL);
             ps.setString(1, email);
             ps.setString(2, name);
@@ -66,7 +66,7 @@ public class EasyDatabase {
 
     public void updateUserAddress(Integer userID, String houseNumber, String roadName, String city, String postcode) throws SQLException{
         try {
-            String selectSQL = "UPDATE UserTable SET houseNumber = ?, roadName = ?, city = ?, postCode = ? WHERE userID = ?";
+            String selectSQL = "UPDATE User SET houseNumber = ?, roadName = ?, city = ?, postCode = ? WHERE userID = ?";
             PreparedStatement ps = con.prepareStatement(selectSQL);
             ps.setString(1, houseNumber);
             ps.setString(2, roadName);
@@ -86,7 +86,7 @@ public class EasyDatabase {
     }
 
     public ResultSet GetUserDetails(Integer userID) throws SQLException {
-        String selectSQL = "SELECT * FROM UserTable WHERE userID = ?";
+        String selectSQL = "SELECT * FROM User WHERE userID = ?";
         PreparedStatement preparedStatement = con.prepareStatement(selectSQL);
         preparedStatement.setInt(1, userID);
         ResultSet rs = preparedStatement.executeQuery();

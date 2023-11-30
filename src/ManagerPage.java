@@ -23,7 +23,7 @@ public class ManagerPage extends JPanel {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         db = new EasyDatabase();
-        String selectSQL = "SELECT * FROM UserTable";
+        String selectSQL = "SELECT * FROM User";
         db.executeQuery(selectSQL);
         try {
             while(db.resultSet.next()) {
@@ -75,7 +75,7 @@ public class ManagerPage extends JPanel {
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("Please work!");
                     db = new EasyDatabase();
-                    String selectSQL = "UPDATE UserTable SET userRole='"+text+"' WHERE userEmail='"+name+"'";
+                    String selectSQL = "UPDATE User SET userRole='"+text+"' WHERE userEmail='"+name+"'";
                     db.executeUpdate(selectSQL);
                     db.close();
                     if(role.getText().equals("Customer")) {
