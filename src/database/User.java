@@ -133,11 +133,11 @@ public class User {
 
     public User(int id) throws SQLException{
         EasyDatabase db = new EasyDatabase();
-        db.executeQuery("SELECT * FROM User WHERE userID= " + id);
+        db.executeQuery("SELECT * FROM User WHERE id= " + id);
         this.userID = id;
         db.resultSet.next();
         this.userEmail = db.resultSet.getString(2);
-        switch(db.resultSet.getString(4)){
+        switch(db.resultSet.getString(5)){
             case "Customer":
                 this.userRole = Role.Customer;
                 break;
@@ -152,24 +152,24 @@ public class User {
                 break;
         }
 
-        this.houseNumber = db.resultSet.getInt(5);
-        this.firstName = db.resultSet.getString(6);
-        this.lastName = db.resultSet.getString(7);
-        this.roadName = db.resultSet.getString(8);
-        this.city = db.resultSet.getString(9);
-        this.postCode = db.resultSet.getString(10);
-        this.cardTypeName = db.resultSet.getString(11);
-        this.cardNumber = db.resultSet.getInt(11);
-        this.cardExpiryDate = db.resultSet.getDate(11);
-        this.cardSecurityCode = db.resultSet.getInt(11);
+        this.houseNumber = db.resultSet.getInt(6);
+        this.firstName = db.resultSet.getString(7);
+        this.lastName = db.resultSet.getString(8);
+        this.roadName = db.resultSet.getString(9);
+        this.city = db.resultSet.getString(10);
+        this.postCode = db.resultSet.getString(11);
+        this.cardTypeName = db.resultSet.getString(12);
+        this.cardNumber = db.resultSet.getInt(13);
+        this.cardExpiryDate = db.resultSet.getDate(14);
+        this.cardSecurityCode = db.resultSet.getInt(15);
     }
 
     public User(String email) throws SQLException{
         EasyDatabase db = new EasyDatabase();
-        db.executeQuery("SELECT * FROM User WHERE userEmail={email}");
-        this.userID = db.resultSet.getInt(0);
+        db.executeQuery("SELECT * FROM User WHERE email={email}");
+        this.userID = db.resultSet.getInt(1);
         this.userEmail = email;
-        switch(db.resultSet.getString(3)){
+        switch(db.resultSet.getString(5)){
             case "Customer":
                 this.userRole = Role.Customer;
                 break;
@@ -183,11 +183,11 @@ public class User {
                 this.userRole = Role.Customer;
                 break;
         }
-        this.houseNumber = db.resultSet.getInt(4);
-        this.firstName = db.resultSet.getString(5);
-        this.lastName = db.resultSet.getString(6);
-        this.roadName = db.resultSet.getString(7);
-        this.city = db.resultSet.getString(8);
-        this.postCode = db.resultSet.getString(9);
+        this.houseNumber = db.resultSet.getInt(6);
+        this.firstName = db.resultSet.getString(7);
+        this.lastName = db.resultSet.getString(8);
+        this.roadName = db.resultSet.getString(9);
+        this.city = db.resultSet.getString(10);
+        this.postCode = db.resultSet.getString(11);
     }
 }

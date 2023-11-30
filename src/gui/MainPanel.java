@@ -16,7 +16,7 @@ public class MainPanel extends JPanel {
 
     EasyDatabase db;
 
-    private User user;
+    protected User user;
 
     // Register JItems
 
@@ -48,6 +48,7 @@ public class MainPanel extends JPanel {
     protected HomePage customerHome;
     protected UpdateAccountDetails updateAccount;
     protected ManagerPage ManagerPage;
+    protected StaffPage staffPage;
 
     // Constructor
     public MainPanel(){
@@ -110,6 +111,7 @@ public class MainPanel extends JPanel {
         JPanel customerOrder = new CustomerOrder();
 
         ManagerPage = new ManagerPage();
+        staffPage = new StaffPage();
 
         this.add(new JPanel(),"Splash");
         this.add(registerContainer, "Register");
@@ -119,6 +121,7 @@ public class MainPanel extends JPanel {
         this.add(customerOrder, "CustomerOrder");
         this.add(updateAccount, "UpdateAccount");
         this.add(ManagerPage, "ManagerPage");
+        this.add(staffPage, "StaffPage");
 
         addListeners(this);
     }    
@@ -127,7 +130,6 @@ public class MainPanel extends JPanel {
         CardLayout c1 = (CardLayout)(this.getLayout());
     	registerContinueButton.addActionListener(new ActionListener() {
     		public void actionPerformed(ActionEvent e) {
-    			System.out.println("Plz work register2");
                 String accountCreation = createAccountA();
                 if(accountCreation == "") c1.show(p,"Register2");
                 else registerIssues.setText(accountCreation);
@@ -135,7 +137,6 @@ public class MainPanel extends JPanel {
         });
         registerSubmitButton.addActionListener(new ActionListener() {
     		public void actionPerformed(ActionEvent e) {
-    			System.out.println("Plz submit data!");
                 String name, surname, street, city, postcode;
                 int house = 0;
                 String email = registerEmailField.getText();
@@ -161,22 +162,17 @@ public class MainPanel extends JPanel {
     		}
         });
         loginSubmitButton.addActionListener(new ActionListener() {
-    		public void actionPerformed(ActionEvent e) {
-    			System.out.println("Plz login using data!");
+    		public void actionPerformed(ActionEvent e) {                
                 String loginResult = login();
                 if(loginResult != "") loginIssues.setText(loginResult);
                 if(user != null) {
                     if(user.getRole() == Role.Customer) {
-                        customerHome.setUser(user);
-                        updateAccount.setUser(user);
                         updateAccount.renderLoggedInPage();
                         c1.show(p, "HomePage");
                     }
                     else if(user.getRole() == Role.Staff)
-                        c1.show(p, "Splash");
+                        c1.show(p, "StaffPage");
                     else {
-                        ManagerPage.setUser(user);
-                        c1.show(p, "ManagerPage");
                     }
                 }
     		}
@@ -184,7 +180,7 @@ public class MainPanel extends JPanel {
     }
     int getNextID(){
         db = new EasyDatabase();
-        String selectSQL = "SELECT COUNT(userID) FROM User";
+        String selectSQL = "SELECT COUNT(id) FROM User";
         db.executeQuery(selectSQL);
         try {
             while(db.resultSet.next()) {
@@ -203,7 +199,6 @@ public class MainPanel extends JPanel {
         email = registerEmailField.getText();
         password = registerPasswordField.getText();
         confirmation = registerConfirmField.getText();
-        System.out.println(password+confirmation);
         if(!isEmailValid(email)) return "Invalid email address, please revise";
         for (String i : invalidChars)
             if(email.contains(i) || password.contains(i)) {
@@ -258,7 +253,7 @@ public class MainPanel extends JPanel {
         db = new EasyDatabase();
         try {
             try {
-                String selectSQL = "SELECT COUNT(userID) FROM User WHERE userEmail = '" + email 
+                String selectSQL = "SELECT COUNT(id) FROM User WHERE email = '" + email 
                                 + "'";
                 db.executeQuery(selectSQL);
                 while(db.resultSet.next()) {
@@ -266,18 +261,18 @@ public class MainPanel extends JPanel {
                     else if(Integer.parseInt(db.resultSet.getString(1)) > 1) return "what";
                 }
 
-                selectSQL = "SELECT COUNT(userID) FROM User WHERE userEmail = '" + email 
-                                + "' AND userPassword = '" + password + "'";
+                selectSQL = "SELECT COUNT(id) FROM User WHERE email = '" + email 
+                                + "' AND hashed_password = '" + password + "'";
                 db.executeQuery(selectSQL);
                 while(db.resultSet.next()) {
                     if(Integer.parseInt(db.resultSet.getString(1)) < 1) return "Invalid password";
                 }
 
-                selectSQL = "SELECT userID FROM User WHERE userEmail = '" + email
-                                + "' AND userPassword = '" + password + "'";
+                selectSQL = "SELECT id FROM User WHERE email = '" + email
+                                + "' AND hashed_password = '" + password + "'";
                 db.executeQuery(selectSQL);
                 while(db.resultSet.next()) {
-                    user = new User(Integer.parseInt(db.resultSet.getString("userID")));
+                    user = new User(Integer.parseInt(db.resultSet.getString("id")));
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -293,7 +288,7 @@ public class MainPanel extends JPanel {
     public void addUserToDatabase(User addUser,String password)
     {
         db = new EasyDatabase();
-        String selectSQL = "INSERT INTO User (userEmail, userPassword, userRole, firstName, lastName, houseNumber, roadName, city, postCode) VALUES ('"
+        String selectSQL = "INSERT INTO User (email, hashed_password, role, firstName, lastName, houseNumber, roadName, city, postCode) VALUES ('"
                             + addUser.getEmail()+"','"+ password+"','Customer','"+ addUser.getFirstName()+"','"+ addUser.getLastName()+"','"
                             + addUser.getHouseNumber()+"','"+addUser.getRoadName() +"','"+addUser.getCity()+"','"+addUser.getPostCode()+"')";
         db.executeUpdate(selectSQL);
