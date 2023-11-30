@@ -20,9 +20,12 @@ public class StaffPage extends JPanel {
     User user;
 
     ArrayList<JPanel> individualProduct = new ArrayList<JPanel>();
+    ArrayList<JPanel> cards = new ArrayList<JPanel>();
+
+    int currentCard = 0;
 
     public StaffPage() {
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        this.setLayout(new CardLayout());
 
         db = new EasyDatabase();
         String selectSQL = "SELECT * FROM Product";
@@ -47,6 +50,7 @@ public class StaffPage extends JPanel {
                 JButton plus = new JButton("+");
                 JButton minus = new JButton("-");
                 JLabel stockLabel = new JLabel(numberInStock.toString());
+                
 
                 JPanel temp = new JPanel();
                 temp.setLayout(new FlowLayout());
@@ -62,20 +66,72 @@ public class StaffPage extends JPanel {
                 temp.add(minus);
                 temp.add(stockLabel);
 
-                individualProduct.add(temp);                
+                individualProduct.add(temp);      
+                          
             }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {            
             db.close();
+        }       
+
+        for(int i=0;i<=individualProduct.size()/12;i++) {
+            JButton next = new JButton("->");
+            JButton previous = new JButton("<-");
+            JPanel p = new JPanel();
+            p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
+            p.add(next);
+            p.add(previous);
+            try {
+                p.add(individualProduct.get(i*12));
+                p.add(individualProduct.get(i*12+1));
+                p.add(individualProduct.get(i*12+2));
+                p.add(individualProduct.get(i*12+3));
+                p.add(individualProduct.get(i*12+4));
+                p.add(individualProduct.get(i*12+5));
+                p.add(individualProduct.get(i*12+6));
+                p.add(individualProduct.get(i*12+7));
+                p.add(individualProduct.get(i*12+8));
+                p.add(individualProduct.get(i*12+9));
+                p.add(individualProduct.get(i*12+10));
+                p.add(individualProduct.get(i*12+11));
+            } catch (Exception e) {
+
+            }
+            finally {
+                cards.add(p);
+            }
         }
-        for(JPanel i : individualProduct) {
-            this.add(i);
+        for(int i=0;i<cards.size();i++) {
+            this.add(cards.get(i),Integer.toString(i));
         }
-        this.addListeners();
+
+        this.addListeners(this);
     }
-    public void addListeners()
+    public void addListeners(StaffPage panel)
     {
+        CardLayout c1 = (CardLayout)(this.getLayout());
+        for(JPanel c : cards) {
+            JButton nxt = (JButton) c.getComponent(0);
+            JButton pre = (JButton) c.getComponent(1);
+            nxt.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    currentCard++;
+                    if(currentCard > cards.size()) currentCard--;
+                    c1.show(panel, Integer.toString(currentCard));
+                    System.out.println(currentCard);            
+                }
+            });
+            pre.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    currentCard--;
+                    if(currentCard < 0) currentCard++;
+                    c1.show(panel, Integer.toString(currentCard));
+                    System.out.println(currentCard);            
+                }
+            });
+        }
+
         for(JPanel iU : individualProduct) {
             JButton p = (JButton) iU.getComponent(8);
             JButton m = (JButton) iU.getComponent(9);
