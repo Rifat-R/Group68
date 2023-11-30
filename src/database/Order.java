@@ -42,7 +42,7 @@ public class Order {
         EasyDatabase db = new EasyDatabase();
         db.executeQuery("SELECT * FROM Order WHERE orderNumber= " + this.orderNumber);
         if (db.resultSet.next()){
-            db.executeUpdate("UPDATE Order SET orderStatus = " + this.orderStatus);
+            db.executeUpdate("UPDATE Order SET orderStatus = " + this.orderStatus + " WHERE orderNumber= " + this.orderNumber);
         }else{
             db.executeUpdate("INSERT INTO Order (orderNumber, userID, orderStatus, orderDate) Values (" + this.orderNumber + ", " + this.userID + ", " + this.orderStatus + ", " + this.orderDate + ")");
         }
