@@ -1,8 +1,8 @@
 package src.database;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Date;
 
-import src.database.User.Role;
 
 public class Order {
 
@@ -15,7 +15,7 @@ public class Order {
     private int orderNumber = 0;
     private int userID = 0;
     private Status orderStatus = null;
-    private Date orderDate = null;
+    private java.sql.Date orderDate = null;
     private ArrayList<OrderLine> orderLines = new ArrayList<OrderLine>();
 
     public int getOrderNumber() {
@@ -65,11 +65,11 @@ public class Order {
         }
     }
 
-    public Order(int orderNumber, int userId, Status status, Date date){
+    public Order(int orderNumber, int userId, Status status, java.util.Date date){
         this.orderNumber = orderNumber;
         this.userID = userId;
         this.orderStatus = status;
-        this.orderDate = date;
+        this.orderDate = new java.sql.Date(date.getTime());
     }
 
     public Order(int orderNumber) throws SQLException{
