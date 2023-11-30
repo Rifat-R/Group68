@@ -1,6 +1,8 @@
 package src.gui;
 import javax.swing.*;
 
+import com.mysql.cj.protocol.Resultset;
+
 import src.database.EasyDatabase;
 import src.database.User;
 import src.database.User.Role;
@@ -115,6 +117,7 @@ public class MainPanel extends JPanel {
         updateAccount = new UpdateAccountDetails();
         JPanel customerOrder = new CustomerOrder();
 
+        staffPage = new StaffPage();
         ManagerPage = new ManagerPage();
 
         this.add(new JPanel(),"Splash");
@@ -124,6 +127,7 @@ public class MainPanel extends JPanel {
         this.add(customerHome, "HomePage");
         this.add(customerOrder, "CustomerOrder");
         this.add(updateAccount, "UpdateAccount");
+        this.add(staffPage,"StaffPage");
         this.add(ManagerPage, "ManagerPage");
         this.add(afterLogin, "AfterLogin");
 
@@ -272,9 +276,10 @@ public class MainPanel extends JPanel {
                 String selectSQL = "SELECT COUNT(id) AS total_rows FROM User WHERE email = ?";
                 PreparedStatement preparedStatement = db.getConnection().prepareStatement(selectSQL);
                 preparedStatement.setString(1, email);
-                while(db.resultSet.next()) {
-                    if(Integer.parseInt(db.resultSet.getString("total_rows")) < 1) return "Invalid email";
-                    else if(Integer.parseInt(db.resultSet.getString("total_rows")) > 1) return "what";
+                ResultSet rs = preparedStatement.executeQuery();
+                while(rs.next()) {
+                    if(Integer.parseInt(rs.getString("total_rows")) < 1) return "Invalid email";
+                    else if(Integer.parseInt(rs.getString("total_rows")) > 1) return "what";
                 }
 
                 // Checks for password
