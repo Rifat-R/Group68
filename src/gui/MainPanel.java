@@ -270,12 +270,12 @@ public class MainPanel extends JPanel {
                     else if(Integer.parseInt(db.resultSet.getString("total_rows")) > 1) return "what";
                 }
 
-                selectSQL = "SELECT COUNT(id) AS total_rows FROM User WHERE email = '" + email 
-                                + "' AND hashed_password = '" + password + "'";
-                db.executeQuery(selectSQL);
-                while(db.resultSet.next()) {
-                    if(Integer.parseInt(db.resultSet.getString("total_rows")) < 1) return "Invalid password";
-                }
+                // Checks for password
+                User tempUser = new User(email);
+                String hashedPassword = tempUser.getHashedPassword();
+                String salt = tempUser.getSalt();
+                String generatedHashPassword = Encryption.hashPassword(password, salt);
+                if(!hashedPassword.equals(generatedHashPassword)) return "Invalid password";
 
                 selectSQL = "SELECT id FROM User WHERE email = '" + email
                                 + "' AND hashed_password = '" + password + "'";
