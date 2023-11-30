@@ -38,6 +38,16 @@ public class Order {
         this.orderLines.add(line);
     }
 
+    public void orderToDB() throws SQLException {
+        EasyDatabase db = new EasyDatabase();
+        db.executeQuery("SELECT * FROM Order WHERE orderNumber= " + this.orderNumber);
+        if (db.resultSet.next()){
+            db.executeUpdate("UPDATE Order SET orderStatus = " + this.orderStatus);
+        }else{
+            db.executeUpdate("INSERT INTO Order (orderNumber, userID, orderStatus, orderDate) Values (" + this.orderNumber + ", " + this.userID + ", " + this.orderStatus + ", " + this.orderDate + ")");
+        }
+    }
+
     public Order(int orderNumber, int userId, Status status, Date date){
         this.orderNumber = orderNumber;
         this.userID = userId;
