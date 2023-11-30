@@ -129,13 +129,14 @@ public class User {
         String selectSQL = "SELECT * FROM User WHERE id = ?";
         PreparedStatement preparedStatement = db.getConnection().prepareStatement(selectSQL);
         preparedStatement.setInt(1, id);
+        ResultSet rs = preparedStatement.executeQuery();
 
         this.userID = id;
-        db.resultSet.next();
-        this.userEmail = db.resultSet.getString("email");
-        this.hashedPassword = db.resultSet.getString("hashed_password");
-        this.salt = db.resultSet.getString("salt");
-        switch(db.resultSet.getString("role")){
+        rs.next();
+        this.userEmail = rs.getString("email");
+        this.hashedPassword = rs.getString("hashed_password");
+        this.salt = rs.getString("salt");
+        switch(rs.getString("role")){
             case "Customer":
                 this.userRole = Role.Customer;
                 break;
@@ -149,12 +150,12 @@ public class User {
                 this.userRole = Role.Customer;
                 break;
         }
-        this.houseNumber = db.resultSet.getInt("houseNumber");
-        this.firstName = db.resultSet.getString("firstName");
-        this.lastName = db.resultSet.getString("lastName");
-        this.roadName = db.resultSet.getString("roadName");
-        this.city = db.resultSet.getString("city");
-        this.postCode = db.resultSet.getString("postCode");
+        this.houseNumber = rs.getInt("houseNumber");
+        this.firstName = rs.getString("firstName");
+        this.lastName = rs.getString("lastName");
+        this.roadName = rs.getString("roadName");
+        this.city = rs.getString("city");
+        this.postCode = rs.getString("postCode");
     }
 
     public User(String email) throws SQLException{
@@ -163,12 +164,13 @@ public class User {
         String selectSQL = "SELECT * FROM User WHERE email = ?";
         PreparedStatement preparedStatement = db.getConnection().prepareStatement(selectSQL);
         preparedStatement.setString(1, email);
-        db.resultSet.next();
-        this.userID = db.resultSet.getInt("id");
+        ResultSet rs = preparedStatement.executeQuery();
+        rs.next();
+        this.userID = rs.getInt("id");
         this.userEmail = email;
-        this.hashedPassword = db.resultSet.getString("hashed_password");
-        this.salt = db.resultSet.getString("salt");
-        switch(db.resultSet.getString("role")){
+        this.hashedPassword = rs.getString("hashed_password");
+        this.salt = rs.getString("salt");
+        switch(rs.getString("role")){
             case "Customer":
                 this.userRole = Role.Customer;
                 break;
@@ -182,12 +184,12 @@ public class User {
                 this.userRole = Role.Customer;
                 break;
         }
-        this.houseNumber = db.resultSet.getInt("houseNumber");
-        this.firstName = db.resultSet.getString("firstName");
-        this.lastName = db.resultSet.getString("lastName");
-        this.roadName = db.resultSet.getString("roadName");
-        this.city = db.resultSet.getString("city");
-        this.postCode = db.resultSet.getString("postCode");
+        this.houseNumber = rs.getInt("houseNumber");
+        this.firstName = rs.getString("firstName");
+        this.lastName = rs.getString("lastName");
+        this.roadName = rs.getString("roadName");
+        this.city = rs.getString("city");
+        this.postCode = rs.getString("postCode");
         db.close();
     }
 }
