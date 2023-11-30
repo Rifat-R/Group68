@@ -22,6 +22,10 @@ public class Order {
         return orderNumber;
     }
 
+    public int getLinesCount() {
+        return orderLines.size();
+    }
+
     public int getUserID() {
         return userID;
     }
