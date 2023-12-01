@@ -388,6 +388,22 @@ public class UpdateAccountDetails extends JPanel {
             String newCardNumber = cardNumber.getText();
             String newCardExpiryDate = cardExpiryDate.getText();
             String newCardSecurityCode = cardSecurityCode.getText();
+            
+            if(newCardNumber.length() != 16){
+                status = "Error";
+                refresh();
+            }
+
+            if(newCardSecurityCode.length() != 3){
+                status = "Error";
+                refresh();
+            }
+
+            if(newCardExpiryDate.length() != 5){
+                status = "Error";
+                refresh();
+            }
+
         }
     }
 
