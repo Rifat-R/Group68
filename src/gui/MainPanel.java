@@ -288,7 +288,7 @@ public class MainPanel extends JPanel {
                 String generatedHashPassword = Encryption.generateHash(password, salt);
                 System.out.println(hashedPassword + " " + generatedHashPassword);
                 
-                // if(!hashedPassword.equals(generatedHashPassword)) return "Invalid password";
+                if(!hashedPassword.equals(generatedHashPassword)) return "Invalid password";
 
                 user = tempUser;
                 
