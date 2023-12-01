@@ -4,7 +4,6 @@ import javax.swing.*;
 
 import src.database.EasyDatabase;
 import src.database.User;
-import src.database.User.Role;
 
 import java.sql.*;
 import java.awt.event.ActionEvent;

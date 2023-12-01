@@ -3,14 +3,12 @@ package src.gui;
 import javax.swing.*;
 
 import src.database.EasyDatabase;
-import src.database.Encryption;
 import src.database.User;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.security.NoSuchAlgorithmException;
 import java.awt.*;
 
 public class StaffPage extends JPanel {

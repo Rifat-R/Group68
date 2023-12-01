@@ -9,14 +9,12 @@ import src.database.Product;
 import src.database.User;
 import src.database.Order;
 import src.database.OrderLine;
-import src.gui.HomePage.spinnerListener;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.*;
