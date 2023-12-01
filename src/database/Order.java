@@ -47,11 +47,11 @@ public class Order {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
-        preparedStatement = db.getConnection().prepareStatement("SELECT * FROM Order WHERE orderNumber = ?");
+        preparedStatement = db.getConnection().prepareStatement("SELECT * FROM `Order` WHERE orderNumber = ?");
         preparedStatement.setInt(1, this.orderNumber);
         resultSet = preparedStatement.executeQuery();
         if (resultSet.next()) {
-            preparedStatement = db.getConnection().prepareStatement("UPDATE Order SET orderStatus = ? WHERE orderNumber= ?");
+            preparedStatement = db.getConnection().prepareStatement("UPDATE `Order` SET orderStatus = ? WHERE orderNumber= ?");
             preparedStatement.setString(1, this.orderStatus.toString());
             preparedStatement.setInt(2, this.orderNumber);
             preparedStatement.executeUpdate();
@@ -71,12 +71,12 @@ public class Order {
                     preparedStatement.executeUpdate();
                 }
             }
-            preparedStatement = db.getConnection().prepareStatement("SELECT * FROM Order WHERE orderNumber= ?");
+            preparedStatement = db.getConnection().prepareStatement("SELECT * FROM `Order` WHERE orderNumber= ?");
             preparedStatement.setInt(1, this.orderNumber);
             resultSet = preparedStatement.executeQuery();
             preparedStatement.close();
         } else {
-            preparedStatement = db.getConnection().prepareStatement("INSERT INTO Order (orderNumber, userID, orderStatus, orderDate) VALUES (?, ?, ?, ?)");
+            preparedStatement = db.getConnection().prepareStatement("INSERT INTO `Order` (orderNumber, userID, orderStatus, orderDate) VALUES (?, ?, ?, ?)");
             preparedStatement.setInt(1, this.orderNumber);
             preparedStatement.setInt(2, this.userID);
             preparedStatement.setString(3, this.orderStatus.toString());
@@ -108,7 +108,7 @@ public class Order {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
-        preparedStatement = db.getConnection().prepareStatement("SELECT * FROM Order WHERE orderNumber = ?");
+        preparedStatement = db.getConnection().prepareStatement("SELECT * FROM `Order` WHERE orderNumber = ?");
         preparedStatement.setInt(1, orderNumber);
         resultSet = preparedStatement.executeQuery();
         this.orderNumber = orderNumber;
