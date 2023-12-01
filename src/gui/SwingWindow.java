@@ -85,7 +85,7 @@ public class SwingWindow extends JFrame {
         updateProduct.addActionListener(new ActionListener() {
     		public void actionPerformed(ActionEvent e) {
     			System.out.println("Plz work products!");
-          c1.show(panel,"StaffPage");
+          c1.show(panel,"UpdateStock");
     		}
         });
         changeStaff.addActionListener(new ActionListener() {

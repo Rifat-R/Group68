@@ -54,6 +54,7 @@ public class MainPanel extends JPanel {
     protected UpdateAccountDetails updateAccount;
     protected ManagerPage ManagerPage;
     protected StaffPage staffPage;
+    protected StaffOrder staffOrder;
     protected AfterLogin afterLogin;
 
     // Constructor
@@ -127,7 +128,8 @@ public class MainPanel extends JPanel {
         this.add(customerHome, "HomePage");
         this.add(customerOrder, "CustomerOrder");
         this.add(updateAccount, "UpdateAccount");
-        this.add(staffPage,"StaffPage");
+        this.add(staffPage,"UpdateStock");
+        // this.add(staffOrder,"UpdateOrders");
         this.add(ManagerPage, "ManagerPage");
         this.add(afterLogin, "AfterLogin");
 
