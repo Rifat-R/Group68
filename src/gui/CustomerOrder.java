@@ -20,9 +20,14 @@ public class CustomerOrder extends JPanel {
     private User user;
     EasyDatabase db;
     Order currentOrder;
+    String status;
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public void setStatus(String str) {
+        status = str;
     }
 
     public CustomerOrder() {
@@ -33,6 +38,11 @@ public class CustomerOrder extends JPanel {
         this.removeAll();
         this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
+
+        if (!(status == null)){
+            JLabel statusDisplay = new JLabel(status);
+            this.add(statusDisplay);
+        }
 
         db = new EasyDatabase();
         if (db.checkIfOrderExsistsForCustomer(user.getID())) {
@@ -113,18 +123,18 @@ public class CustomerOrder extends JPanel {
                 c.gridwidth = 1;
                 c.weightx = 0.4;
                 c.weighty = 0.4;
-                c.insets = new Insets(0,50,25,0);
+                c.insets = new Insets(0,50,0,0);
 
                 JScrollPane currentOrderPane = new JScrollPane(allOrderLines);
 
                 currentOrderPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-                currentOrderPane.getViewport().setMinimumSize(new Dimension(450, 250));
-                currentOrderPane.getViewport().setPreferredSize(new Dimension(450, 250));
+                currentOrderPane.getViewport().setMinimumSize(new Dimension(450, 100));
+                currentOrderPane.getViewport().setPreferredSize(new Dimension(450, 100));
                 currentOrderPane.setBorder(null);
 
                 this.add(currentOrderPane, c);
 
-                JLabel orderPrice = new JLabel(Integer.toString(currentOrder.getTotalOrderCost()));
+                JLabel orderPrice = new JLabel("£" + Integer.toString(currentOrder.getTotalOrderCost()));
                 c.anchor = GridBagConstraints.FIRST_LINE_START;
                 c.fill = GridBagConstraints.HORIZONTAL;
                 c.gridx = 0;
@@ -214,7 +224,7 @@ public class CustomerOrder extends JPanel {
         c.insets = new Insets(0,10,0,0);
         p.add(productCode, c);  
 
-        JLabel productBrand = new JLabel(orderLine.getProductCode());
+        JLabel productBrand = new JLabel(orderLine.getProduct().getBrand());
         c.anchor = GridBagConstraints.FIRST_LINE_START;
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
@@ -226,7 +236,7 @@ public class CustomerOrder extends JPanel {
         c.insets = new Insets(0,20,0,0);
         p.add(productBrand, c);  
 
-        JLabel productName = new JLabel(orderLine.getProductCode());
+        JLabel productName = new JLabel(orderLine.getProduct().getName());
         c.anchor = GridBagConstraints.FIRST_LINE_START;
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 2;
@@ -250,10 +260,9 @@ public class CustomerOrder extends JPanel {
         c.insets = new Insets(0,20,0,0);
         p.add(quantity, c);  
 
-        //lineCostValue = productCost * quantity
-        Double lineCostValue = 5.99;
+        Double lineCostValue = orderLine.getProduct().getPrice() * orderLine.getQuantity();
 
-        JLabel lineCost = new JLabel(Double.toString(lineCostValue));
+        JLabel lineCost = new JLabel("£" + Double.toString(lineCostValue));
         c.anchor = GridBagConstraints.FIRST_LINE_START;
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 4;
@@ -271,8 +280,13 @@ public class CustomerOrder extends JPanel {
 
     class buttonListener implements ActionListener {
         public void actionPerformed(ActionEvent event){
-            currentOrder.changeStatus();
-            refresh();
+            db = new EasyDatabase();
+            if (db.checkIfCardDetailsExsists(user.getID())) {
+                currentOrder.changeStatus();
+            } else {
+                status = "Please enter card details in account settings";
+                refresh();
+            }
         }
     }
 

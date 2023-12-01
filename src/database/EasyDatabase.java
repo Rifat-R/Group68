@@ -130,6 +130,26 @@ public class EasyDatabase {
         return rs;
     }
 
+    public boolean checkIfCardDetailsExsists(Integer userID) {
+        try {
+            String selectSQL = "SELECT cardNumber FROM User WHERE id = ?";
+            PreparedStatement preparedStatement = con.prepareStatement(selectSQL);
+            preparedStatement.setInt(1, userID);
+            ResultSet rs = preparedStatement.executeQuery();
+            rs.next();
+
+            if (rs.getString("cardNumber") == null) {
+                return false;
+            } else {
+                return true;
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public void printQuery(){
         try{
             ResultSetMetaData metaData = resultSet.getMetaData();

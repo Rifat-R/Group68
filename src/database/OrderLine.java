@@ -40,6 +40,7 @@ public class OrderLine {
         this.productCode = productCode;
         try {
             product = new Product(productCode);
+            System.out.println(product.getBrand());
         } catch (SQLException e) {
             e.printStackTrace();
         }
