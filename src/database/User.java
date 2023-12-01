@@ -16,6 +16,7 @@ public class User {
     private Role userRole = Role.Customer;
     private String firstName = null;
     private String lastName = null;
+    private String fullName = null;
     private int houseNumber = 0;
     private String roadName = null;
     private String city = null;
@@ -58,6 +59,10 @@ public class User {
     }
     public String getLastName() {
         return lastName;
+    }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
     }
 
     public String getCity() {
