@@ -1,7 +1,6 @@
 package src.database;
 import java.sql.*;
 
-import src.database.User.Role;
 
 public class Product {
 

@@ -48,9 +48,10 @@ public class EasyDatabase {
 
     public int getOrderNumber(int userID) {
         try {
-            String selectSQL = "SELECT orderNumber FROM `Order` WHERE userID = ?";
+            String selectSQL = "SELECT orderNumber FROM `Order` WHERE userID = ? AND orderStatus = ?";
             PreparedStatement ps = con.prepareStatement(selectSQL);
             ps.setInt(1, userID);
+            ps.setString(2, Order.Status.Pending.name());
             ResultSet rs = ps.executeQuery();
 
             if(rs.next())
@@ -69,9 +70,10 @@ public class EasyDatabase {
 
     public boolean checkIfOrderExsistsForCustomer(Integer userID) {
         try {
-            String selectSQL = "SELECT * FROM `Order` WHERE userID = ?";
+            String selectSQL = "SELECT * FROM `Order` WHERE userID = ? AND orderStatus = ?";
             PreparedStatement ps = con.prepareStatement(selectSQL);
             ps.setInt(1, userID);
+            ps.setString(2, Order.Status.Pending.name());
             ResultSet rs = ps.executeQuery();
 
             if (!rs.isBeforeFirst() ) {    

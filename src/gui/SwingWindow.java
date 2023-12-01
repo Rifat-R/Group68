@@ -73,6 +73,8 @@ public class SwingWindow extends JFrame {
         order.addActionListener(new ActionListener() {
     		public void actionPerformed(ActionEvent e) {
     			System.out.println("Plz work order!");
+          panel.customerOrder.setUser(userLoggedIn);
+          panel.customerOrder.refresh();
           c1.show(panel,"CustomerOrder");
     		}
         });

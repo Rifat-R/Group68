@@ -3,7 +3,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 
-import com.mysql.cj.xdevapi.SelectStatement;
 
 
 public class Order {
@@ -48,7 +47,30 @@ public class Order {
         this.orderLines.add(line);
     }
 
-    
+    public int getTotalOrderCost() {
+        return 0;
+    }
+
+    public void changeStatus() {
+        try {
+            EasyDatabase db = new EasyDatabase();
+            String selectSQL = "UPDATE `Order` SET orderStatus = ? WHERE orderNumber = ?";
+            PreparedStatement selectStatement = db.con.prepareStatement(selectSQL);
+            selectStatement.setString(1, Status.Confirmed.name());
+            selectStatement.setInt(2, this.orderNumber);
+            selectStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public int getTotalOrderCost() {
+        int total = 0;
+        for(OrderLine ol : orderLines) {
+            total += ol.getQuantity() * ol.getProduct().getPrice();
+        }
+        return total;
+    }    
 
     public int getNextOrderLineNumber() {
         EasyDatabase db = new EasyDatabase();
