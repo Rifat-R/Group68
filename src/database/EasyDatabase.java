@@ -144,6 +144,14 @@ public class EasyDatabase {
         return rs;
     }
 
+    public ResultSet getAllOrdersFromUser(int userID) throws SQLException {
+        String selectSQL = "SELECT * FROM Order WHERE userID = ?";
+        PreparedStatement preparedStatement = con.prepareStatement(selectSQL);
+        preparedStatement.setInt(1, userID);
+        ResultSet rs = preparedStatement.executeQuery();
+        return rs;
+    }
+
     public ResultSet GetUserDetails(Integer userID) throws SQLException {
         String selectSQL = "SELECT * FROM User WHERE id = ?";
         PreparedStatement preparedStatement = con.prepareStatement(selectSQL);

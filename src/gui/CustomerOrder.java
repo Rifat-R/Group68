@@ -36,6 +36,7 @@ public class CustomerOrder extends JPanel {
     }
 
     public void renderLoggedInPage() {
+        this.removeAll();
         this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
 
@@ -126,7 +127,7 @@ public class CustomerOrder extends JPanel {
 
                 JScrollPane currentOrderPane = new JScrollPane(allOrderLines);
 
-                currentOrderPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+                //currentOrderPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
                 currentOrderPane.getViewport().setMinimumSize(new Dimension(450, 100));
                 currentOrderPane.getViewport().setPreferredSize(new Dimension(450, 100));
                 currentOrderPane.setBorder(null);
@@ -183,15 +184,8 @@ public class CustomerOrder extends JPanel {
 
         } else {
             JLabel currentOrderText = new JLabel("You have no current orders");
+            this.add(currentOrderText);
         }
-
-        JScrollPane pastOrders = new JScrollPane();
-
-
-        pastOrders.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        pastOrders.getViewport().setMinimumSize(new Dimension(450, 250));
-        pastOrders.getViewport().setPreferredSize(new Dimension(450, 250));
-        pastOrders.setBorder(null);
     }
 
     public JPanel createPanelForOrderLine(OrderLine orderLine) {
