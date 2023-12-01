@@ -56,6 +56,7 @@ public class MainPanel extends JPanel {
     protected StaffOrder staffOrder;
     protected AfterLogin afterLogin;
     protected CustomerOrder customerOrder;
+    protected PastOrders pastOrders;
 
     // Constructor
     public MainPanel(){
@@ -117,6 +118,8 @@ public class MainPanel extends JPanel {
         afterLogin = new AfterLogin();
         updateAccount = new UpdateAccountDetails();
         customerOrder = new CustomerOrder();
+        pastOrders = new PastOrders();
+
 
         staffPage = new StaffPage();
         staffOrder = new StaffOrder();
@@ -133,6 +136,7 @@ public class MainPanel extends JPanel {
         this.add(staffOrder,"UpdateOrders");
         this.add(ManagerPage, "ManagerPage");
         this.add(afterLogin, "AfterLogin");
+        this.add(pastOrders, "PastOrders");
 
         addListeners(this);
     }    
@@ -188,7 +192,8 @@ public class MainPanel extends JPanel {
                         customerOrder.setUser(user);
                         updateAccount.renderLoggedInPage();
                         customerOrder.renderLoggedInPage();
-                        //customerHome.rednerLoggedInPage(); ??
+                        pastOrders.renderLoggedInPage();
+                        pastOrders.setUser(user);
                         c1.show(p, "AfterLogin");
 
                     }

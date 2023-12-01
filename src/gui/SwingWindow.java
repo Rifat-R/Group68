@@ -21,7 +21,7 @@ public class SwingWindow extends JFrame {
     JMenuItem updateAccount = new JMenuItem("Update account details");
     JMenuItem signOut = new JMenuItem("Sign Out");
     JMenuItem viewProducts = new JMenuItem("View Products");
-
+    JMenuItem pastOrders = new JMenuItem("Past Orders");
     JMenu staff = new JMenu("Staff options");
     JMenuItem updateProduct = new JMenuItem("Update product details");
     JMenuItem updateOrders = new JMenuItem("Update order details");
@@ -110,6 +110,11 @@ public class SwingWindow extends JFrame {
             c1.show(panel, "HomePage");
           }
         });
+        pastOrders.addActionListener(new ActionListener() {
+          public void actionPerformed(ActionEvent e) {
+            c1.show(panel, "PastOrders");
+          }
+        });
         signOut.addActionListener(new ActionListener() {
     		public void actionPerformed(ActionEvent e) {
     			userLoggedIn = null;
@@ -117,12 +122,14 @@ public class SwingWindow extends JFrame {
           menu.remove(order);
           menu.remove(updateAccount);
           menu.remove(viewProducts);
+          menu.remove(pastOrders);
           menu.add(register);
           menu.add(login);
 
           panel.customerHome.setUser(null);
           panel.updateAccount.setUser(null);
           panel.ManagerPage.setUser(null);
+          panel.pastOrders.setUser(null);
           panel.updateAccount.renderLoggedInPage();
           try {
             menubar.remove(staff);
@@ -146,8 +153,10 @@ public class SwingWindow extends JFrame {
                         panel.updateAccount.setUser(userLoggedIn);
                         panel.ManagerPage.setUser(userLoggedIn);
                         panel.customerOrder.setUser(userLoggedIn);
+                        panel.pastOrders.setUser(userLoggedIn);
                         menu.add(viewProducts);
                         menu.add(order);
+                        menu.add(pastOrders);
                         menu.add(updateAccount);
                         menu.add(signOut);
                         menu.remove(register);
