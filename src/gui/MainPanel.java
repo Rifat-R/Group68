@@ -56,6 +56,7 @@ public class MainPanel extends JPanel {
     protected StaffPage staffPage;
     protected StaffOrder staffOrder;
     protected AfterLogin afterLogin;
+    protected CustomerOrder customerOrder;
 
     // Constructor
     public MainPanel(){
@@ -116,7 +117,7 @@ public class MainPanel extends JPanel {
         customerHome = new HomePage();
         afterLogin = new AfterLogin();
         updateAccount = new UpdateAccountDetails();
-        JPanel customerOrder = new CustomerOrder();
+        customerOrder = new CustomerOrder();
 
         staffPage = new StaffPage();
         ManagerPage = new ManagerPage();
@@ -184,7 +185,9 @@ public class MainPanel extends JPanel {
                     if(user.getRole() == Role.Customer) {
                         customerHome.setUser(user);
                         updateAccount.setUser(user);
+                        customerOrder.setUser(user);
                         updateAccount.renderLoggedInPage();
+                        customerOrder.renderLoggedInPage();
                         //customerHome.rednerLoggedInPage(); ??
                         c1.show(p, "AfterLogin");
 

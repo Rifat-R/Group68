@@ -134,6 +134,7 @@ public class SwingWindow extends JFrame {
                         panel.customerHome.setUser(userLoggedIn);
                         panel.updateAccount.setUser(userLoggedIn);
                         panel.ManagerPage.setUser(userLoggedIn);
+                        panel.customerOrder.setUser(userLoggedIn);
                         menu.add(viewProducts);
                         menu.add(order);
                         menu.add(updateAccount);
