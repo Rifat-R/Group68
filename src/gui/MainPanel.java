@@ -119,6 +119,7 @@ public class MainPanel extends JPanel {
         customerOrder = new CustomerOrder();
 
         staffPage = new StaffPage();
+        staffOrder = new StaffOrder();
         ManagerPage = new ManagerPage();
 
         this.add(new JPanel(),"Splash");
@@ -129,7 +130,7 @@ public class MainPanel extends JPanel {
         this.add(customerOrder, "CustomerOrder");
         this.add(updateAccount, "UpdateAccount");
         this.add(staffPage,"UpdateStock");
-        // this.add(staffOrder,"UpdateOrders");
+        this.add(staffOrder,"UpdateOrders");
         this.add(ManagerPage, "ManagerPage");
         this.add(afterLogin, "AfterLogin");
 

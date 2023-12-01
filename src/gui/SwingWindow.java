@@ -24,6 +24,7 @@ public class SwingWindow extends JFrame {
 
     JMenu staff = new JMenu("Staff options");
     JMenuItem updateProduct = new JMenuItem("Update product details");
+    JMenuItem updateOrders = new JMenuItem("Update order details");
     JMenuItem changeStaff = new JMenuItem("Update staff (Manager only)");
 
 
@@ -42,6 +43,7 @@ public class SwingWindow extends JFrame {
         menubar.add(menu);
 
         staff.add(updateProduct);
+        staff.add(updateOrders);
         
         this.setJMenuBar(menubar);
         panel = new MainPanel();
@@ -88,6 +90,12 @@ public class SwingWindow extends JFrame {
     		public void actionPerformed(ActionEvent e) {
     			System.out.println("Plz work products!");
           c1.show(panel,"UpdateStock");
+    		}
+        });
+        updateOrders.addActionListener(new ActionListener() {
+    		public void actionPerformed(ActionEvent e) {
+    			System.out.println("Plz work products!");
+          c1.show(panel,"UpdateOrders");
     		}
         });
         changeStaff.addActionListener(new ActionListener() {
