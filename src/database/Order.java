@@ -3,6 +3,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.mysql.cj.xdevapi.SelectStatement;
+
 
 public class Order {
 
@@ -42,6 +44,8 @@ public class Order {
         this.orderLines.add(line);
     }
 
+    
+
     public int getNextOrderLineNumber() {
         EasyDatabase db = new EasyDatabase();
         String selectSQL = "SELECT * FROM OrderLines WHERE orderNumber = ? ORDER BY orderLineNumber DESC LIMIT 1";
@@ -68,24 +72,41 @@ public class Order {
         }
     }
 
+    public void addOrderLineToDB(OrderLine orderLine) {
+        try {
+            EasyDatabase db = new EasyDatabase();
+            String sqlString = "INSERT INTO OrderLines (orderLineNumber, quantity, orderNumber, productCode) VALUES (?, ?, ?, ?)";
+            PreparedStatement preparedStatement = db.con.prepareStatement(sqlString);
+            preparedStatement.setInt(1, orderLine.getOrderLineNumber());
+            preparedStatement.setInt(2, orderLine.getQuantity());
+            preparedStatement.setInt(3, orderLine.getOrderNumber());
+            preparedStatement.setString(4, orderLine.getProductCode());
+            preparedStatement.execute();
+            db.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void orderToDB() throws SQLException {
         EasyDatabase db = new EasyDatabase();
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
-        preparedStatement = db.getConnection().prepareStatement("SELECT * FROM Order WHERE orderNumber = ?");
+        preparedStatement = db.getConnection().prepareStatement("SELECT * FROM `Order` WHERE orderNumber = ?");
         preparedStatement.setInt(1, this.orderNumber);
         resultSet = preparedStatement.executeQuery();
         if (resultSet.next()) {
-            preparedStatement = db.getConnection().prepareStatement("UPDATE Order SET orderStatus = ? WHERE orderNumber= ?");
+            preparedStatement = db.getConnection().prepareStatement("UPDATE `Order` SET orderStatus = ? WHERE orderNumber= ?");
             preparedStatement.setString(1, this.orderStatus.toString());
             preparedStatement.setInt(2, this.orderNumber);
             preparedStatement.executeUpdate();
 
             for (int i = 0; i < this.orderLines.size(); i++) {
                 OrderLine line = this.orderLines.get(i);
-                preparedStatement = db.getConnection().prepareStatement("SELECT * FROM OrderLines WHERE orderLineNumber= ?");
+                preparedStatement = db.getConnection().prepareStatement("SELECT * FROM OrderLines WHERE orderLineNumber= ? AND orderNumber = ?");
                 preparedStatement.setInt(1, line.getOrderLineNumber());
+                preparedStatement.setInt(2, line.getOrderNumber());
                 resultSet = preparedStatement.executeQuery();
                 if (resultSet.next()) {
                     preparedStatement = db.getConnection().prepareStatement("UPDATE OrderLines SET orderLineNumber= ?, quantity= ?, orderNumber= ?, productCode= ? WHERE orderLineNumber= ?");
@@ -97,12 +118,12 @@ public class Order {
                     preparedStatement.executeUpdate();
                 }
             }
-            preparedStatement = db.getConnection().prepareStatement("SELECT * FROM Order WHERE orderNumber= ?");
+            preparedStatement = db.getConnection().prepareStatement("SELECT * FROM `Order` WHERE orderNumber= ?");
             preparedStatement.setInt(1, this.orderNumber);
             resultSet = preparedStatement.executeQuery();
             preparedStatement.close();
         } else {
-            preparedStatement = db.getConnection().prepareStatement("INSERT INTO Order (orderNumber, userID, orderStatus, orderDate) VALUES (?, ?, ?, ?)");
+            preparedStatement = db.getConnection().prepareStatement("INSERT INTO `Order` (orderNumber, userID, orderStatus, orderDate) VALUES (?, ?, ?, ?)");
             preparedStatement.setInt(1, this.orderNumber);
             preparedStatement.setInt(2, this.userID);
             preparedStatement.setString(3, this.orderStatus.toString());
@@ -134,7 +155,7 @@ public class Order {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
-        preparedStatement = db.getConnection().prepareStatement("SELECT * FROM Order WHERE orderNumber = ?");
+        preparedStatement = db.getConnection().prepareStatement("SELECT * FROM `Order` WHERE orderNumber = ?");
         preparedStatement.setInt(1, orderNumber);
         resultSet = preparedStatement.executeQuery();
         this.orderNumber = orderNumber;
@@ -159,7 +180,7 @@ public class Order {
         preparedStatement.setInt(1, orderNumber);
         resultSet = preparedStatement.executeQuery();
         while (resultSet.next()) {
-            this.addOrderLine(new OrderLine(resultSet.getInt("orderLineNumber"), resultSet.getInt("quantity"), resultSet.getInt("orderNumber"), resultSet.getString("productionCode")));
+            this.addOrderLine(new OrderLine(resultSet.getInt("orderLineNumber"), resultSet.getInt("quantity"), resultSet.getInt("orderNumber"), resultSet.getString("productCode")));
         }
     }
 }

@@ -63,9 +63,30 @@ public class EasyDatabase {
 
     }
 
+    public int getOrderNumber(int userID) {
+        try {
+            String selectSQL = "SELECT orderNumber FROM `Order` WHERE userID = ?";
+            PreparedStatement ps = con.prepareStatement(selectSQL);
+            ps.setInt(1, userID);
+            ResultSet rs = ps.executeQuery();
+
+            if(rs.next())
+                {
+                    // process resultset
+                    return rs.getInt("orderNumber");
+                }else
+                {
+                    return 0;
+                }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
     public boolean checkIfOrderExsistsForCustomer(Integer userID) {
         try {
-            String selectSQL = "SELECT * FROM Order WHERE userID = ?";
+            String selectSQL = "SELECT * FROM `Order` WHERE userID = ?";
             PreparedStatement ps = con.prepareStatement(selectSQL);
             ps.setInt(1, userID);
             ResultSet rs = ps.executeQuery();

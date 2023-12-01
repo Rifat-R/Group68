@@ -401,30 +401,32 @@ public class HomePage extends JPanel {
 
                 //System.out.println(date);
 
-                int orderNumber = new Random().nextInt(90000000) + 10000000;
+                if (db.checkIfOrderExsistsForCustomer(user.getID())) {
+                    int orderNum = db.getOrderNumber(user.getID());
+                    Order myOrder = new Order(orderNum);
+                    int myOrderLineNumber = myOrder.getNextOrderLineNumber();
+                    OrderLine newOrderLine = new OrderLine(myOrderLineNumber + 1, orderQuantity, orderNum, productID);
+                    myOrder.addOrderLine(newOrderLine);
+                    myOrder.addOrderLineToDB(newOrderLine);
+                    //myOrder.orderToDB();
+                    status = "Success";
+                    db.close();
+                    refresh();
 
-                Order myorder = new Order(orderNumber, user.getID(), Status.Pending, date);
+                } else {
+                    int orderNumber = new Random().nextInt(90000000) + 10000000;
+                    Order myOrder = new Order(orderNumber, user.getID(), Status.Pending, date);
+                    int myOrderLineNumber = myOrder.getNextOrderLineNumber();
+                    OrderLine newOrderLine = new OrderLine(myOrderLineNumber, orderQuantity, orderNumber, productID);
+                    myOrder.addOrderLine(newOrderLine);
+                    myOrder.addOrderLineToDB(newOrderLine);
+                    //myOrder.orderToDB();
+                    status = "Success";
+                    db.close();
+                    refresh();
+                } 
 
-                int myOrderLineNumber = myorder.getNextOrderLineNumber();
-
-
-                OrderLine newOrderLine = new OrderLine(myOrderLineNumber, orderQuantity, orderNumber, productID);
                 
-                myorder.addOrderLine(newOrderLine);
-                myorder.orderToDB();
-
-
-                //java.sql.Date(date.getTime());
-
-                
-                //db.addOrder(date, Status.Pending, );
-                //db.addOrderLine(productID, orderLineBrand, orderLineName, orderQuantity, orderLinePrice);
-
-
-                status = "Success";
-
-                db.close();
-                refresh();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
