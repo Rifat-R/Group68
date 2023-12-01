@@ -22,9 +22,9 @@ public class User {
     private String city = null;
     private String postCode = null;
     private String cardTypeName = null;
-    private int cardNumber = 0;
+    private String cardNumber = null;
     private Date cardExpiryDate = null;
-    private int cardSecurityCode = 0;
+    private String cardSecurityCode = null;
 
     public int getID() {
         return userID;
@@ -73,6 +73,22 @@ public class User {
         return postCode;
     }
 
+    public String getCardTypeName() {
+        return cardTypeName;
+    }
+
+    public String getCardNumber() {
+        return cardNumber;
+    }
+
+    public Date getCardExpiryDate() {
+        return cardExpiryDate;
+    }
+
+    public String getCardSecurityCode() {
+        return cardSecurityCode;
+    }
+    
     public void setEmail(String email) {
         this.userEmail = email;
     }
@@ -101,7 +117,7 @@ public class User {
         this.cardTypeName = type;
     }
 
-    public void setCardNumber(int number) {
+    public void setCardNumber(String number) {
         this.cardNumber = number;
     }
 
@@ -109,7 +125,7 @@ public class User {
         this.cardExpiryDate = date;
     }
 
-    public void setCardSecurityCode(int code) {
+    public void setCardSecurityCode(String code) {
         this.cardSecurityCode = code;
     }
 
@@ -161,6 +177,11 @@ public class User {
         this.roadName = rs.getString("roadName");
         this.city = rs.getString("city");
         this.postCode = rs.getString("postCode");
+        this.cardExpiryDate = rs.getDate("expiryDate");
+        this.cardNumber = rs.getString("cardNumber");
+        this.cardSecurityCode = rs.getString("securityCode");
+        this.cardTypeName = rs.getString("cardTypeName");
+        db.close();
     }
 
     public User(String email) throws SQLException{
@@ -195,6 +216,10 @@ public class User {
         this.roadName = rs.getString("roadName");
         this.city = rs.getString("city");
         this.postCode = rs.getString("postCode");
+        this.cardExpiryDate = rs.getDate("expiryDate");
+        this.cardNumber = rs.getString("cardNumber");
+        this.cardSecurityCode = rs.getString("securityCode");
+        this.cardTypeName = rs.getString("cardTypeName");
         db.close();
     }
 }
