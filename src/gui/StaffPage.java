@@ -217,16 +217,8 @@ public class StaffPage extends JPanel {
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("Please plus!");
                     db = new EasyDatabase();
-
-                    String selectSQL = "UPDATE Product SET numberInStock = numberInStock + 1 WHERE productID=?";
-                    try {
-                        PreparedStatement ps = db.getConnection().prepareStatement(selectSQL);
-                        ps.setString(1, id);
-                        ps.executeUpdate();
-                    } catch (SQLException e1) {
-                        e1.printStackTrace();
-                    }
-                    
+                    String selectSQL = "UPDATE Product SET numberInStock = numberInStock + 1 WHERE productID='"+id+"'";
+                    db.executeUpdate(selectSQL);
                     db.close();         
                     int x = (Integer.parseInt(stock.getText()) + 1);
                     stock.setText(Integer.toString(x));                                                
@@ -236,14 +228,8 @@ public class StaffPage extends JPanel {
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("Please minus!");
                     db = new EasyDatabase();
-                    String selectSQL = "UPDATE Product SET numberInStock = numberInStock - 1 WHERE productID=?";
-                    try {
-                        PreparedStatement ps = db.getConnection().prepareStatement(selectSQL);
-                        ps.setString(1, id);
-                        ps.executeUpdate();
-                    } catch (SQLException e1) {
-                        e1.printStackTrace();
-                    }
+                    String selectSQL = "UPDATE Product SET numberInStock = numberInStock - 1 WHERE productID='"+id+"'";
+                    db.executeUpdate(selectSQL);
                     db.close();                        
                     int x = (Integer.parseInt(stock.getText()) - 1);
                     stock.setText(Integer.toString(x));                              
@@ -252,7 +238,17 @@ public class StaffPage extends JPanel {
         }
         submitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                addProductToDatabase();
+                if (!itemID.getText().matches("^[A-Z].*$")) {
+                    errorLabel.setText("Item ID must begin with a letter");
+                }
+                else if (itemID.getText().length() < 4) {
+                    errorLabel.setText("ID is too short");
+                }
+                else if (itemName.getText().isBlank() || itemBrand.getText().isBlank() 
+                        || itemPrice.getText().isBlank() || itemStock.getText().isBlank()) {
+                    errorLabel.setText("Fields cannot be left blank");
+                }
+                else addProductToDatabase();
             }
         });
     }
@@ -273,7 +269,6 @@ public class StaffPage extends JPanel {
             preparedStatement.setString(6, (String)itemEra.getSelectedItem());
             preparedStatement.setString(7, (String)itemDCC.getSelectedItem());
             preparedStatement.setInt(8, Integer.parseInt(itemStock.getText()));
-
             preparedStatement.executeUpdate();
             preparedStatement.close();
             db.close();
