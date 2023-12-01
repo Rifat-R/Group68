@@ -75,13 +75,31 @@ public class Order {
     public void addOrderLineToDB(OrderLine orderLine) {
         try {
             EasyDatabase db = new EasyDatabase();
-            String sqlString = "INSERT INTO OrderLines (orderLineNumber, quantity, orderNumber, productCode) VALUES (?, ?, ?, ?)";
-            PreparedStatement preparedStatement = db.con.prepareStatement(sqlString);
-            preparedStatement.setInt(1, orderLine.getOrderLineNumber());
-            preparedStatement.setInt(2, orderLine.getQuantity());
-            preparedStatement.setInt(3, orderLine.getOrderNumber());
-            preparedStatement.setString(4, orderLine.getProductCode());
-            preparedStatement.execute();
+            String selectSQL = "SELECT * FROM OrderLines WHERE orderNumber = ? AND productCode = ?";
+            PreparedStatement selectStatement = db.con.prepareStatement(selectSQL);
+            selectStatement.setInt(1, orderLine.getOrderNumber());
+            selectStatement.setString(2, orderLine.getProductCode());
+            ResultSet resultSet = selectStatement.executeQuery();
+
+            if (resultSet.next()) {
+                // Order line already exists, update the quantity
+                String updateSQL = "UPDATE OrderLines SET quantity = quantity + ? WHERE productCode = ? AND orderNumber = ?";
+                PreparedStatement updateStatement = db.con.prepareStatement(updateSQL);
+                updateStatement.setInt(1, orderLine.getQuantity());
+                updateStatement.setString(2, orderLine.getProductCode());
+                updateStatement.setInt(3, orderLine.getOrderNumber());
+                updateStatement.executeUpdate();
+            } else {
+                // Order line does not exist, insert a new record
+                String insertSQL = "INSERT INTO OrderLines (orderLineNumber, quantity, orderNumber, productCode) VALUES (?, ?, ?, ?)";
+                PreparedStatement insertStatement = db.con.prepareStatement(insertSQL);
+                insertStatement.setInt(1, orderLine.getOrderLineNumber());
+                insertStatement.setInt(2, orderLine.getQuantity());
+                insertStatement.setInt(3, orderLine.getOrderNumber());
+                insertStatement.setString(4, orderLine.getProductCode());
+                insertStatement.execute();
+            }
+
             db.close();
         } catch (SQLException e) {
             e.printStackTrace();

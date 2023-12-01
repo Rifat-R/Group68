@@ -403,6 +403,7 @@ public class HomePage extends JPanel {
 
                 if (db.checkIfOrderExsistsForCustomer(user.getID())) {
                     int orderNum = db.getOrderNumber(user.getID());
+                    // This also retrieves the orderlines from the database into the arraylist
                     Order myOrder = new Order(orderNum);
                     int myOrderLineNumber = myOrder.getNextOrderLineNumber();
                     OrderLine newOrderLine = new OrderLine(myOrderLineNumber + 1, orderQuantity, orderNum, productID);
@@ -418,9 +419,9 @@ public class HomePage extends JPanel {
                     Order myOrder = new Order(orderNumber, user.getID(), Status.Pending, date);
                     int myOrderLineNumber = myOrder.getNextOrderLineNumber();
                     OrderLine newOrderLine = new OrderLine(myOrderLineNumber, orderQuantity, orderNumber, productID);
+                    myOrder.orderToDB();
                     myOrder.addOrderLine(newOrderLine);
                     myOrder.addOrderLineToDB(newOrderLine);
-                    //myOrder.orderToDB();
                     status = "Success";
                     db.close();
                     refresh();
