@@ -399,7 +399,7 @@ public class HomePage extends JPanel {
                 SimpleDateFormat formatter = new SimpleDateFormat("mm/yy");  
                 java.util.Date date = new java.util.Date();
 
-                System.out.println(date);
+                //System.out.println(date);
 
                 int orderNumber = new Random().nextInt(90000000) + 10000000;
 
@@ -407,13 +407,17 @@ public class HomePage extends JPanel {
 
                 int myOrderLineNumber = myorder.getNextOrderLineNumber();
 
+
                 OrderLine newOrderLine = new OrderLine(myOrderLineNumber, orderQuantity, orderNumber, productID);
+                
                 myorder.addOrderLine(newOrderLine);
+                myorder.orderToDB();
+
 
                 //java.sql.Date(date.getTime());
 
                 
-                db.addOrder(date, Status.Pending, );
+                //db.addOrder(date, Status.Pending, );
                 //db.addOrderLine(productID, orderLineBrand, orderLineName, orderQuantity, orderLinePrice);
 
 

@@ -70,7 +70,7 @@ public class Order {
 
     public void orderToDB() throws SQLException {
         EasyDatabase db = new EasyDatabase();
-        db.executeQuery("SELECT * FROM Order WHERE orderNumber= " + this.orderNumber);
+        db.executeQuery("SELECT * FROM Order WHERE orderNumber = " + this.orderNumber);
         if (db.resultSet.next()){
             db.executeUpdate("UPDATE Order SET orderStatus = " + this.orderStatus + " WHERE orderNumber= " + this.orderNumber);
             for (int i = 0; i < this.orderLines.size(); i++) {
