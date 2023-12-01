@@ -133,48 +133,76 @@ public class Product {
         }
     }
 
-    /**
-    public Product(String name) throws SQLException{
+    public void addProductToDB() throws SQLDataException{
         EasyDatabase db = new EasyDatabase();
-        db.executeQuery("SELECT * FROM ProductTable WHERE productID={id}");
-        this.productID = db.resultSet.getInt(0);
-        this.productName = name;
-        this.productBrand = db.resultSet.getString(2);
-        this.productPrice = db.resultSet.getDouble(3);
-        switch(db.resultSet.getString(4)){
-            case "OO Gauge":
-                this.productGauge = Gauge.OO;
-                break;
-            case "TT Gauge":
-                this.productGauge = Gauge.TT;
-                break;
-            case "N Gauge":
-                this.productGauge = Gauge.N;
-                break;
-            default:
-                this.productGauge = null;
-                break;
+        try {
+            String sqlString = "INSERT INTO Product (productID, productName, ProductBrand, productPrice, productGauge, productEra, dCCCode, numberInStock) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement preparedStatement = db.con.prepareStatement(sqlString);
+            preparedStatement.setString(1, this.productID);
+            preparedStatement.setString(2, this.productName);
+            preparedStatement.setString(3, this.productBrand);
+            preparedStatement.setDouble(4, this.productPrice);
+            preparedStatement.setString(5, this.productGauge.toString());
+            preparedStatement.setString(6, this.productEra);
+            preparedStatement.setString(7, this.dCCCode.toString());
+            preparedStatement.setInt(8, this.numberInStock);
+            preparedStatement.execute();
+            db.close();
+        } catch (SQLException e) {
+            throw new SQLDataException();
         }
-        this.productEra = db.resultSet.getString(5);
-        switch(db.resultSet.getString(6)){
-            case "Analogue":
-                this.dCCCode = DCCCode.Analogue;
-                break;
-            case "DCC-Ready":
-                this.dCCCode = DCCCode.DCC_Ready;
-                break;
-            case "DCC-Fitted":
-                this.dCCCode = DCCCode.DCC_Fitted;
-                break;
-            case "DCC-Sound":
-                this.dCCCode = DCCCode.DCC_Sound;
-                break;
-            default:
-                this.dCCCode = null;
-                break;
+    }
+
+    public void updateProductInDB() throws SQLDataException{
+        EasyDatabase db = new EasyDatabase();
+        try {
+            String sqlString = "UPDATE Product SET productName = ?, ProductBrand = ?, productPrice = ?, productGauge = ?, productEra = ?, dCCCode = ?, numberInStock = ? WHERE productID = ?";
+            PreparedStatement preparedStatement = db.con.prepareStatement(sqlString);
+            preparedStatement.setString(1, this.productName);
+            preparedStatement.setString(2, this.productBrand);
+            preparedStatement.setDouble(3, this.productPrice);
+            preparedStatement.setString(4, this.productGauge.toString());
+            preparedStatement.setString(5, this.productEra);
+            preparedStatement.setString(6, this.dCCCode.toString());
+            preparedStatement.setInt(7, this.numberInStock);
+            preparedStatement.setString(8, this.productID);
+            preparedStatement.execute();
+            db.close();
+        } catch (SQLException e) {
+            throw new SQLDataException();
         }
-        this.numberInStock = db.resultSet.getInt(7);
-    }**/
+    }
+
+    public void deleteProductFromDB(Integer productID) throws SQLDataException{
+        EasyDatabase db = new EasyDatabase();
+        try {
+            String sqlString = "DELETE FROM Product WHERE productID = ?";
+            PreparedStatement preparedStatement = db.con.prepareStatement(sqlString);
+            preparedStatement.setInt(1, productID);
+            preparedStatement.execute();
+            db.close();
+        } catch (SQLException e) {
+            throw new SQLDataException();
+        }
+    }
+
+    public void updateProductQuantityInDB(Integer productID, Integer quantity) throws SQLDataException{
+        EasyDatabase db = new EasyDatabase();
+        try {
+            String sqlString = "UPDATE Product SET numberInStock = ? WHERE productID = ?";
+            PreparedStatement preparedStatement = db.con.prepareStatement(sqlString);
+            preparedStatement.setInt(1, quantity);
+            preparedStatement.setInt(2, productID);
+            preparedStatement.execute();
+            db.close();
+        } catch (SQLException e) {
+            throw new SQLDataException();
+        }
+    }
+
+
+
+
 
     public Product(String id, String name, String brand, double price, Gauge gauge, String era, DCCCode dCCCode, int stock){
         this.productID = id;
