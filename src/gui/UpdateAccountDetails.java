@@ -7,6 +7,7 @@ import src.database.User;
 import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.*;
@@ -69,10 +70,10 @@ public class UpdateAccountDetails extends JPanel {
         String initialRoadName = user.getRoadName();
         String initialCity = user.getCity();
         String initialPostcode = user.getPostCode();
-        String initialCardTypeName = user.getTypeNumber();
-        Integer initialCardNumber = user.getCardNumber();
+        String initialCardTypeName = user.getCardTypeName();
+        String initialCardNumber = user.getCardNumber();
         Date initialCardExpiryDate = user.getCardExpiryDate();
-        Integer initialCardSecurityCode = user.getCardSecurityCode();
+        String initialCardSecurityCode = user.getCardSecurityCode();
 
 
         String statusText = "";
@@ -232,70 +233,71 @@ public class UpdateAccountDetails extends JPanel {
         c.gridwidth = 1;
         c.weightx = 0.2;
         c.weighty = 0.2;
-        c.insets = new Insets(0,0,50,50);
+        c.insets = new Insets(0,0,0,50);
         this.add(updateAddress, c);
 
-        cardTypeName = new JTextField(initialCardTypeName);
-        c.anchor = GridBagConstraints.PAGE_START;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 0;
-        c.gridy = 5;
-        c.gridheight = 1;
-        c.gridwidth = 1;
-        c.weightx = 0.2;
-        c.weighty = 0.2;
-        c.insets = new Insets(50,50,0,0);
-        this.add(cardTypeName, c);
+        if ((initialCardNumber == null)) {
+            cardTypeName = new JTextField("Card Type (Visa, Mastercard etc)");
+            c.anchor = GridBagConstraints.PAGE_START;
+            c.fill = GridBagConstraints.HORIZONTAL;
+            c.gridx = 0;
+            c.gridy = 5;
+            c.gridheight = 1;
+            c.gridwidth = 1;
+            c.weightx = 0.2;
+            c.weighty = 0.2;
+            c.insets = new Insets(50,50,0,0);
+            this.add(cardTypeName, c);
 
-        cardNumber = new JTextField(initialCardNumber);
-        c.anchor = GridBagConstraints.PAGE_START;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 1;
-        c.gridy = 5;
-        c.gridheight = 1;
-        c.gridwidth = 1;
-        c.weightx = 0.2;
-        c.weighty = 0.2;
-        c.insets = new Insets(50,0,0,50);
-        this.add(cardNumber, c);
+            cardNumber = new JTextField("Card number");
+            c.anchor = GridBagConstraints.PAGE_START;
+            c.fill = GridBagConstraints.HORIZONTAL;
+            c.gridx = 1;
+            c.gridy = 5;
+            c.gridheight = 1;
+            c.gridwidth = 1;
+            c.weightx = 0.2;
+            c.weighty = 0.2;
+            c.insets = new Insets(50,0,0,50);
+            this.add(cardNumber, c);
 
+            cardExpiryDate = new JTextField("Card expiry date in the format mm/yy");
+            c.anchor = GridBagConstraints.PAGE_START;
+            c.fill = GridBagConstraints.HORIZONTAL;
+            c.gridx = 0;
+            c.gridy = 6;
+            c.gridheight = 1;
+            c.gridwidth = 1;
+            c.weightx = 0.2;
+            c.weighty = 0.2;
+            c.insets = new Insets(0, 50,0,0);
+            this.add(cardExpiryDate, c);
 
-        cardExpiryDate = new JTextField(initialCardExpiryDate);
-        c.anchor = GridBagConstraints.PAGE_START;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 0;
-        c.gridy = 6;
-        c.gridheight = 1;
-        c.gridwidth = 1;
-        c.weightx = 0.2;
-        c.weighty = 0.2;
-        c.insets = new Insets(0, 50,0,0);
-        this.add(cardExpiryDate, c);
+            cardSecurityCode = new JTextField("Card security code");
+            c.anchor = GridBagConstraints.PAGE_START;
+            c.fill = GridBagConstraints.HORIZONTAL;
+            c.gridx = 1;
+            c.gridy = 6;
+            c.gridheight = 1;
+            c.gridwidth = 1;
+            c.weightx = 0.2;
+            c.weighty = 0.2;
+            c.insets = new Insets(0,0,0,0);
+            this.add(cardSecurityCode, c);
 
-        cardSecurityCode = new JTextField(initialCardSecurityCode);
-        c.anchor = GridBagConstraints.PAGE_START;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 1;
-        c.gridy = 6;
-        c.gridheight = 1;
-        c.gridwidth = 1;
-        c.weightx = 0.2;
-        c.weighty = 0.2;
-        c.insets = new Insets(0,0,0,0);
-        this.add(cardSecurityCode, c);
-
-        JButton updateCard = new JButton("Update Card details");
-        updateCard.addActionListener(new updateCardListener());
-        c.anchor = GridBagConstraints.PAGE_START;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 2;
-        c.gridy = 6;
-        c.gridheight = 1;
-        c.gridwidth = 1;
-        c.weightx = 0.2;
-        c.weighty = 0.2;
-        c.insets = new Insets(0,0,50,50);
-        this.add(updateCard, c);
+            JButton updateCard = new JButton("Update Card details");
+            updateCard.addActionListener(new updateCardListener());
+            c.anchor = GridBagConstraints.PAGE_START;
+            c.fill = GridBagConstraints.HORIZONTAL;
+            c.gridx = 2;
+            c.gridy = 6;
+            c.gridheight = 1;
+            c.gridwidth = 1;
+            c.weightx = 0.2;
+            c.weighty = 0.2;
+            c.insets = new Insets(0,0,50,50);
+            this.add(updateCard, c);
+        }
     }
 
     

@@ -177,9 +177,9 @@ public class User {
         this.roadName = rs.getString("roadName");
         this.city = rs.getString("city");
         this.postCode = rs.getString("postCode");
-        this.cardExpiryDate = rs.getDate("expiryDate");
+        this.cardExpiryDate = rs.getDate("cardExpiryDate");
         this.cardNumber = rs.getString("cardNumber");
-        this.cardSecurityCode = rs.getString("securityCode");
+        this.cardSecurityCode = rs.getString("cardSecurityCode");
         this.cardTypeName = rs.getString("cardTypeName");
         db.close();
     }
@@ -216,9 +216,9 @@ public class User {
         this.roadName = rs.getString("roadName");
         this.city = rs.getString("city");
         this.postCode = rs.getString("postCode");
-        this.cardExpiryDate = rs.getDate("expiryDate");
+        this.cardExpiryDate = rs.getDate("cardExpiryDate");
         this.cardNumber = rs.getString("cardNumber");
-        this.cardSecurityCode = rs.getString("securityCode");
+        this.cardSecurityCode = rs.getString("cardSecurityCode");
         this.cardTypeName = rs.getString("cardTypeName");
         db.close();
     }

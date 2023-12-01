@@ -36,6 +36,7 @@ public class CustomerOrder extends JPanel {
     }
 
     public void renderLoggedInPage() {
+        this.removeAll();
         this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
 
