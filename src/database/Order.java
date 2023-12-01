@@ -7,6 +7,7 @@ import java.util.Date;
 
 public class Order {
 
+    // Since we only have 3 possible statuses, we can use an enum
     public enum Status{
         Pending,
         Confirmed,
@@ -16,7 +17,9 @@ public class Order {
     private int orderNumber = 0;
     private int userID = 0;
     private Status orderStatus = null;
+    // We use java.sql.Date so we can use it in the SQL Database
     private java.sql.Date orderDate = null;
+    // orderlines from the database are stored here AND/OR orderlines are added to this list and then added to the database
     private ArrayList<OrderLine> orderLines = new ArrayList<OrderLine>();
 
     public int getOrderNumber() {
@@ -128,11 +131,18 @@ public class Order {
         }
     }
 
+
+    // Adds an order to the database
+    // If the order already exists, it updates the order, otherwise it creates a new order and orderlines
+    
+    // If order already exists, it checks whether the orderlines already exist, if they do, it updates the 
+    // quantity, otherwise it creates a new orderline
     public void orderToDB() throws SQLException {
         EasyDatabase db = new EasyDatabase();
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
+        // Check if order already exists
         preparedStatement = db.getConnection().prepareStatement("SELECT * FROM `Order` WHERE orderNumber = ?");
         preparedStatement.setInt(1, this.orderNumber);
         resultSet = preparedStatement.executeQuery();
@@ -148,6 +158,7 @@ public class Order {
                 preparedStatement.setInt(1, line.getOrderLineNumber());
                 preparedStatement.setInt(2, line.getOrderNumber());
                 resultSet = preparedStatement.executeQuery();
+                // If orderline already exists, update the quantity
                 if (resultSet.next()) {
                     preparedStatement = db.getConnection().prepareStatement("UPDATE OrderLines SET orderLineNumber= ?, quantity= ?, orderNumber= ?, productCode= ? WHERE orderLineNumber= ?");
                     preparedStatement.setInt(1, line.getOrderLineNumber());
@@ -158,11 +169,13 @@ public class Order {
                     preparedStatement.executeUpdate();
                 }
             }
-            preparedStatement = db.getConnection().prepareStatement("SELECT * FROM `Order` WHERE orderNumber= ?");
-            preparedStatement.setInt(1, this.orderNumber);
-            resultSet = preparedStatement.executeQuery();
-            preparedStatement.close();
+
+            // preparedStatement = db.getConnection().prepareStatement("SELECT * FROM `Order` WHERE orderNumber= ?");
+            // preparedStatement.setInt(1, this.orderNumber);
+            // resultSet = preparedStatement.executeQuery();
+            // preparedStatement.close();
         } else {
+            // Order does not exist, create a new order
             preparedStatement = db.getConnection().prepareStatement("INSERT INTO `Order` (orderNumber, userID, orderStatus, orderDate) VALUES (?, ?, ?, ?)");
             preparedStatement.setInt(1, this.orderNumber);
             preparedStatement.setInt(2, this.userID);
@@ -183,6 +196,7 @@ public class Order {
         }
     }
 
+    // Constructor for a new order
     public Order(int orderNumber, int userId, Status status, java.util.Date date) {
         this.orderNumber = orderNumber;
         this.userID = userId;
@@ -190,6 +204,7 @@ public class Order {
         this.orderDate = new java.sql.Date(date.getTime());
     }
 
+    // Constructor for an existing order
     public Order(int orderNumber) throws SQLException {
         EasyDatabase db = new EasyDatabase();
         PreparedStatement preparedStatement = null;
