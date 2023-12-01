@@ -24,6 +24,10 @@ public class Order {
         return orderNumber;
     }
 
+    public ArrayList<OrderLine> getOrderLines() {
+        return orderLines;
+    }
+
     public int getLinesCount() {
         return orderLines.size();
     }
