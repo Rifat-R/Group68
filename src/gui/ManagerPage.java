@@ -88,7 +88,6 @@ public class ManagerPage extends JPanel {
                         e1.printStackTrace();
                     }
 
-                    db.executeUpdate(selectSQL);
                     db.close();
                     if(role.getText().equals("Customer")) {
                         role.setText("Staff");

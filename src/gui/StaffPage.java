@@ -3,18 +3,36 @@ package src.gui;
 import javax.swing.*;
 
 import src.database.EasyDatabase;
+import src.database.Encryption;
 import src.database.User;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.security.NoSuchAlgorithmException;
 import java.awt.*;
 
 public class StaffPage extends JPanel {
-    
+
     EasyDatabase db;
     User user;
+
+    // Add products
+
+    protected JPanel addProducts = new JPanel();
+    protected JTextField itemID = new JTextField(6);
+    protected JTextField itemName = new JTextField(20);
+    protected JTextField itemBrand = new JTextField(20);
+    protected JTextField itemPrice = new JTextField(10);
+    protected JComboBox<String> itemGauge = new JComboBox<>();
+    protected JComboBox<String> itemEra = new JComboBox<>();
+    protected JComboBox<String> itemDCC = new JComboBox<>();
+    protected JTextField itemStock = new JTextField(3);
+    protected JButton submitButton = new JButton("Submit");
+    protected JLabel errorLabel = new JLabel();
+
+    // Update Products
 
     ArrayList<JPanel> individualProduct = new ArrayList<JPanel>();
     ArrayList<JPanel> cards = new ArrayList<JPanel>();
@@ -23,6 +41,56 @@ public class StaffPage extends JPanel {
 
     public StaffPage() {
         this.setLayout(new CardLayout());
+        addProducts.setLayout(new BoxLayout(addProducts, BoxLayout.Y_AXIS));
+
+        itemGauge.addItem("OO Gauge");
+        itemGauge.addItem("N Gauge");
+        itemGauge.addItem("TT Gauge");
+
+        for(int i=1;i<=11;i++) {
+            itemEra.addItem("Era "+i);
+        }
+
+        itemDCC.addItem("Analogue");
+        itemDCC.addItem("DCC-Sound");
+        itemDCC.addItem("DCC-Fitted");
+        itemDCC.addItem("DCC-Ready");
+        
+        JPanel temp = new JPanel();
+        temp.add(new JLabel("ID: "));
+        temp.add(itemID);
+        addProducts.add(temp);
+        temp = new JPanel();
+        temp.add(new JLabel("Name: "));
+        temp.add(itemName);
+        addProducts.add(temp);
+        temp = new JPanel();
+        temp.add(new JLabel("Brand: "));
+        temp.add(itemBrand);
+        addProducts.add(temp);
+        temp = new JPanel();
+        temp.add(new JLabel("Price: "));
+        temp.add(itemPrice);
+        addProducts.add(temp);
+        temp = new JPanel();
+        temp.add(new JLabel("Gauge: "));
+        temp.add(itemGauge);
+        addProducts.add(temp);
+        temp = new JPanel();
+        temp.add(new JLabel("Era: "));
+        temp.add(itemEra);
+        addProducts.add(temp);
+        temp = new JPanel();
+        temp.add(new JLabel("DCC: "));
+        temp.add(itemDCC);
+        addProducts.add(temp);
+        temp = new JPanel();
+        temp.add(new JLabel("Stock: "));
+        temp.add(itemStock);
+        addProducts.add(temp);
+        addProducts.add(errorLabel);
+        addProducts.add(submitButton);
+        
 
         db = new EasyDatabase();
         String selectSQL = "SELECT * FROM Product";
@@ -47,24 +115,22 @@ public class StaffPage extends JPanel {
                 JButton plus = new JButton("+");
                 JButton minus = new JButton("-");
                 JLabel stockLabel = new JLabel(numberInStock.toString());
-                
 
-                JPanel temp = new JPanel();
-                temp.setLayout(new FlowLayout());
-                temp.add(tempLabel0);
-                temp.add(idLabel);
-                temp.add(tempLabel1);
-                temp.add(nameLabel);
-                temp.add(tempLabel2);
-                temp.add(brandLabel);
-                temp.add(tempLabel3);
-                temp.add(priceLabel);
-                temp.add(plus);
-                temp.add(minus);
-                temp.add(stockLabel);
+                JPanel temp1 = new JPanel();
+                temp1.setLayout(new FlowLayout());
+                temp1.add(tempLabel0);
+                temp1.add(idLabel);
+                temp1.add(tempLabel1);
+                temp1.add(nameLabel);
+                temp1.add(tempLabel2);
+                temp1.add(brandLabel);
+                temp1.add(tempLabel3);
+                temp1.add(priceLabel);
+                temp1.add(plus);
+                temp1.add(minus);
+                temp1.add(stockLabel);
 
-                individualProduct.add(temp);      
-                          
+                individualProduct.add(temp1);                          
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -75,11 +141,15 @@ public class StaffPage extends JPanel {
         for(int i=0;i<=individualProduct.size()/12;i++) {
             JButton next = new JButton("->");
             JButton previous = new JButton("<-");
+            JButton add = new JButton("Add");
             JPanel p = new JPanel();
             p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
-            p.add(next);
-            p.add(previous);
+            JPanel p2 = new JPanel();
+            p2.add(add);
+            p2.add(previous);
+            p2.add(next);
             try {
+                p.add(p2);
                 p.add(individualProduct.get(i*12));
                 p.add(individualProduct.get(i*12+1));
                 p.add(individualProduct.get(i*12+2));
@@ -101,6 +171,7 @@ public class StaffPage extends JPanel {
         }
         for(int i=0;i<cards.size();i++) {
             this.add(cards.get(i),Integer.toString(i));
+            this.add(addProducts, "AddProduct");
         }
 
         this.addListeners(this);
@@ -109,8 +180,9 @@ public class StaffPage extends JPanel {
     {
         CardLayout c1 = (CardLayout)(this.getLayout());
         for(JPanel c : cards) {
-            JButton nxt = (JButton) c.getComponent(0);
-            JButton pre = (JButton) c.getComponent(1);
+            JButton add = (JButton) ((JPanel)c.getComponent(0)).getComponent(0);
+            JButton pre = (JButton) ((JPanel)c.getComponent(0)).getComponent(1);
+            JButton nxt = (JButton) ((JPanel)c.getComponent(0)).getComponent(2);
             nxt.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     currentCard++;
@@ -125,6 +197,12 @@ public class StaffPage extends JPanel {
                     if(currentCard < 0) currentCard++;
                     c1.show(panel, Integer.toString(currentCard));
                     System.out.println(currentCard);            
+                }
+            });
+            add.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    currentCard = 0;
+                    c1.show(panel, "AddProduct");
                 }
             });
         }
@@ -158,9 +236,46 @@ public class StaffPage extends JPanel {
                 }
             });
         }
+        submitButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (!itemID.getText().matches("^[A-Z].*$")) {
+                    errorLabel.setText("Item ID must begin with a letter");
+                }
+                else if (itemID.getText().length() < 4) {
+                    errorLabel.setText("ID is too short");
+                }
+                else if (itemName.getText().isBlank() || itemBrand.getText().isBlank() 
+                        || itemPrice.getText().isBlank() || itemStock.getText().isBlank()) {
+                    errorLabel.setText("Fields cannot be left blank");
+                }
+                else addProductToDatabase();
+            }
+        });
     }
-    public void setUser(User user)
-    {
+    public void setUser(User user) {
         this.user = user;
+    }
+    public void addProductToDatabase() {
+        System.out.println("Please add product!");
+        db = new EasyDatabase();        
+        try {
+            String selectSQL = "INSERT INTO Product (productID, productName, ProductBrand, productPrice, productGauge, productEra, dCCCode, numberInStock) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement preparedStatement = db.getConnection().prepareStatement(selectSQL);
+            preparedStatement.setString(1, itemID.getText());
+            preparedStatement.setString(2, itemName.getText());
+            preparedStatement.setString(3, itemBrand.getText());
+            preparedStatement.setFloat(4, Float.parseFloat(itemPrice.getText()));
+            preparedStatement.setString(5, (String)itemGauge.getSelectedItem());
+            preparedStatement.setString(6, (String)itemEra.getSelectedItem());
+            preparedStatement.setString(7, (String)itemDCC.getSelectedItem());
+            preparedStatement.setInt(8, Integer.parseInt(itemStock.getText()));
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+            db.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+           errorLabel.setText("Price and stock must be a decimal and integer, respectively."); 
+        }
     }
 }
