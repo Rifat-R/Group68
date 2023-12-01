@@ -60,6 +60,8 @@ public class SwingWindow extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     }
+
+    //Add listeners for every menu item, taking the user to the correct page.
     public void addListeners() {
         CardLayout c1 = (CardLayout)(panel.getLayout());
     	  register.addActionListener(new ActionListener() {

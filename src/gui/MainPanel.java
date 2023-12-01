@@ -15,7 +15,12 @@ import java.awt.event.ActionListener;
 import java.awt.*;
 
 public class MainPanel extends JPanel {
+
+    // instance variables
+
     final int column = 20;
+
+    //All characters invalid for email.
     final String[] invalidChars = {"!","*", " ","_","-","'","+","<",">","(",")","[","]","{","}","&","="};
 
     EasyDatabase db;
@@ -23,7 +28,6 @@ public class MainPanel extends JPanel {
     protected User user;
 
     // Register JItems
-
     protected JButton registerContinueButton = new JButton("Continue");
     protected JTextField registerUsernameField = new JTextField(column);
     protected JTextField registerEmailField = new JTextField(column);
@@ -32,7 +36,6 @@ public class MainPanel extends JPanel {
     protected JLabel registerIssues = new JLabel();
 
     // Register2 JItems
-
     protected JButton registerSubmitButton = new JButton("Submit");
     protected JTextField registerFirstNameField = new JTextField(column);
     protected JTextField registerLastNameField = new JTextField(column);
@@ -113,15 +116,16 @@ public class MainPanel extends JPanel {
         JPanel loginContainer = new JPanel();
         loginContainer.add(loginPanel);
 
+        //All external pages.
         customerHome = new HomePage();
         afterLogin = new AfterLogin();
         updateAccount = new UpdateAccountDetails();
         customerOrder = new CustomerOrder();
-
         staffPage = new StaffPage();
         staffOrder = new StaffOrder();
         ManagerPage = new ManagerPage();
 
+        // Adding all cards to Panel
         this.add(new JPanel(),"Splash");
         this.add(registerContainer, "Register");
         this.add(register2Container, "Register2");
@@ -139,17 +143,18 @@ public class MainPanel extends JPanel {
 
     public void addListeners(MainPanel p) {
         CardLayout c1 = (CardLayout)(this.getLayout());
+
     	registerContinueButton.addActionListener(new ActionListener() {
     		public void actionPerformed(ActionEvent e) {
-    			System.out.println("Plz work register2");
                 String accountCreation = createAccountA();
                 if(accountCreation == "") c1.show(p,"Register2");
                 else registerIssues.setText(accountCreation);
     		}
         });
+
+        //Submits registration attempt, and if valid, will add user to database, or display more errors to the user.
         registerSubmitButton.addActionListener(new ActionListener() {
     		public void actionPerformed(ActionEvent e) {
-    			System.out.println("Plz submit data!");
                 String name, surname, street, city, postcode;
                 int house = 0;
                 String email = registerEmailField.getText();
@@ -174,11 +179,13 @@ public class MainPanel extends JPanel {
                 else registerIssues2.setText(accountCreation);
     		}
         });
+
+        // Logs the user in (First thread), checking if the user can log in, otherwise displaying errors to the user.
         loginSubmitButton.addActionListener(new ActionListener() {
     		public void actionPerformed(ActionEvent e) {
-    			System.out.println("Plz login using data!");
                 String loginResult = login();
                 if(loginResult != "") loginIssues.setText(loginResult);
+                // Details are removed from the JPanel after login is successful.
                 if(user != null) {
                     loginEmailField.setText("");
                     loginPasswordField.setText("");
@@ -189,41 +196,21 @@ public class MainPanel extends JPanel {
                         updateAccount.renderLoggedInPage();
                         customerOrder.renderLoggedInPage();
                         //customerHome.rednerLoggedInPage(); ??
-                        c1.show(p, "AfterLogin");
 
                     }
-                    else if(user.getRole() == Role.Staff)
-                        c1.show(p, "Splash");
-                    else {
-                        ManagerPage.setUser(user);
-                        c1.show(p, "ManagerPage");
-                    }
+                    c1.show(p, "AfterLogin");
+                    if(user.getRole() == Role.Manager) ManagerPage.setUser(user); // Sets the user to manager page only if they are a manager.
                 }
     		}
         });
     }
-    int getNextID(){
-        db = new EasyDatabase();
-        String selectSQL = "SELECT COUNT(id) FROM User";
-        db.executeQuery(selectSQL);
-        try {
-            while(db.resultSet.next()) {
-                return Integer.parseInt(db.resultSet.getString("id"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {            
-            db.close();
-        }
-        return -1;
 
-    }
+    // First account creation page - checks details are correct.
     String createAccountA() {
         String email, password, confirmation;
         email = registerEmailField.getText();
         password = registerPasswordField.getText();
         confirmation = registerConfirmField.getText();
-        System.out.println(password+confirmation);
         if(!isEmailValid(email)) return "Invalid email address, please revise";
         for (String i : invalidChars)
             if(email.contains(i) || password.contains(i)) {
@@ -235,6 +222,8 @@ public class MainPanel extends JPanel {
         
         return "";
     }
+
+    // Second verse, same as the first
     String createAccountB(String name, String surname, String street, String city, String postcode, int house) {
         if(name.equals("") || surname.equals("") || street.equals("") || city.equals("") || postcode.equals(""))
             return "Please check fields: One or more fields have been left blank.";
@@ -245,10 +234,13 @@ public class MainPanel extends JPanel {
         if(!isPostcodeValid(postcode)) return "Postcode is invalid.";
         return "";
     }
+
+    //Postcode validation - used in account creation
     Boolean isPostcodeValid(String x) {
         if (x.length() < 5 || x.length() > 7) return false;
         return true;
     }
+    //Email validation - also used in account creation
     Boolean isEmailValid(String x) {
         if(!x.contains("@")) return false;
         if(!x.contains(".")) return false;
@@ -263,7 +255,7 @@ public class MainPanel extends JPanel {
         else return false;
     }
 
-
+    //Logs the user in if details are correct - otherwise, returns specfic error.
     String login() {
         String email, password;
         email = loginEmailField.getText();
@@ -308,6 +300,7 @@ public class MainPanel extends JPanel {
         }
         return "";
     }
+
 
     public void addUserToDatabase(User addUser, String password) {
         db = new EasyDatabase();

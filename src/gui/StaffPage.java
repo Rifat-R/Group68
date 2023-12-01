@@ -13,11 +13,12 @@ import java.awt.*;
 
 public class StaffPage extends JPanel {
 
+    // instance variables
+
     EasyDatabase db;
     User user;
 
     // Add products
-
     protected JButton backButton = new JButton("Back");
     protected JPanel addProducts = new JPanel();
     protected JTextField itemID = new JTextField(6);
@@ -32,13 +33,12 @@ public class StaffPage extends JPanel {
     protected JLabel errorLabel = new JLabel();
 
     // Update Products
-
     ArrayList<JPanel> individualProduct = new ArrayList<JPanel>();
     ArrayList<JPanel> cards = new ArrayList<JPanel>();
-
     int currentCard = 0;
 
     public StaffPage() {
+        // Card layout for main panel; Boxlayout for listing details
         this.setLayout(new CardLayout());
         addProducts.setLayout(new BoxLayout(addProducts, BoxLayout.Y_AXIS));
 
@@ -55,6 +55,7 @@ public class StaffPage extends JPanel {
         itemDCC.addItem("DCC-Fitted");
         itemDCC.addItem("DCC-Ready");
         
+        // Adding JSwing elements to AddProducts card
         addProducts.add(backButton);
         JPanel temp = new JPanel();
         temp.add(new JLabel("ID: "));
@@ -91,7 +92,7 @@ public class StaffPage extends JPanel {
         addProducts.add(errorLabel);
         addProducts.add(submitButton);
         
-
+        // Listing all products, adding details to an individual panel in the boxlayout
         db = new EasyDatabase();
         String selectSQL = "SELECT * FROM Product";
         db.executeQuery(selectSQL);
@@ -116,6 +117,7 @@ public class StaffPage extends JPanel {
                 JButton minus = new JButton("-");
                 JLabel stockLabel = new JLabel(numberInStock.toString());
 
+                // adding to an arbitrary flow JPanel that lets me list details side by side.
                 JPanel temp1 = new JPanel();
                 temp1.setLayout(new FlowLayout());
                 temp1.add(tempLabel0);
@@ -138,6 +140,8 @@ public class StaffPage extends JPanel {
             db.close();
         }       
 
+
+        // Creating the cards
         for(int i=0;i<=individualProduct.size()/12;i++) {
             JButton next = new JButton("->");
             JButton previous = new JButton("<-");
@@ -148,22 +152,11 @@ public class StaffPage extends JPanel {
             p2.add(add);
             p2.add(previous);
             p2.add(next);
-            try {
+            try { // Add buttons and orders to a card
                 p.add(p2);
-                p.add(individualProduct.get(i*12));
-                p.add(individualProduct.get(i*12+1));
-                p.add(individualProduct.get(i*12+2));
-                p.add(individualProduct.get(i*12+3));
-                p.add(individualProduct.get(i*12+4));
-                p.add(individualProduct.get(i*12+5));
-                p.add(individualProduct.get(i*12+6));
-                p.add(individualProduct.get(i*12+7));
-                p.add(individualProduct.get(i*12+8));
-                p.add(individualProduct.get(i*12+9));
-                p.add(individualProduct.get(i*12+10));
-                p.add(individualProduct.get(i*12+11));
-            } catch (Exception e) {
-
+                for(int j=0; j<12;j++) p.add(individualProduct.get(i*12+j));
+            } catch (Exception e) { // break instance at end of individualOrder.
+                // This catch is expected; Nothing needs to be done here.
             }
             finally {
                 cards.add(p);
@@ -179,17 +172,22 @@ public class StaffPage extends JPanel {
     public void addListeners(StaffPage panel)
     {
         CardLayout c1 = (CardLayout)(this.getLayout());
+
+        // Returns to viewing orders
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 c1.show(panel, Integer.toString(currentCard));                
             }
         });
+
+        // Listeners are needed for the forward and backward buttons in each card.
         for(JPanel c : cards) {
             JButton add = (JButton) ((JPanel)c.getComponent(0)).getComponent(0);
             JButton pre = (JButton) ((JPanel)c.getComponent(0)).getComponent(1);
             JButton nxt = (JButton) ((JPanel)c.getComponent(0)).getComponent(2);
             nxt.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
+                    // Increment currentCard - goes forward in the list of product cards
                     currentCard++;
                     if(currentCard >= cards.size()) currentCard--;
                     c1.show(panel, Integer.toString(currentCard));
@@ -197,6 +195,7 @@ public class StaffPage extends JPanel {
             });
             pre.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
+                    // see above, but the opposite
                     currentCard--;
                     if(currentCard < 0) currentCard++;
                     c1.show(panel, Integer.toString(currentCard));
@@ -204,20 +203,22 @@ public class StaffPage extends JPanel {
             });
             add.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
+                    // Goes to different page "AddProduct"
                     currentCard = 0;
                     c1.show(panel, "AddProduct");
                 }
             });
         }
 
+        // Editing products
         for(JPanel iU : individualProduct) {
-            JButton p = (JButton) iU.getComponent(8);
-            JButton m = (JButton) iU.getComponent(9);
-            JLabel n = (JLabel) iU.getComponent(1);
-            String id = n.getText();
-            JLabel stock = (JLabel) iU.getComponent(10);
+            JButton p = (JButton) iU.getComponent(8); //plus button
+            JButton m = (JButton) iU.getComponent(9); //minus button
+            String id = ((JLabel) iU.getComponent(1)).getText(); //product ID
+            JLabel stock = (JLabel) iU.getComponent(10); // Quantity of product in stock
             p.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
+                    // Simply increments stock
                     db = new EasyDatabase();
                     String selectSQL = "UPDATE Product SET numberInStock = numberInStock + 1 WHERE productID = ?";
                     try {
@@ -233,6 +234,7 @@ public class StaffPage extends JPanel {
                 }
             });
             m.addActionListener(new ActionListener() {
+                // Simply decrements stock
                 public void actionPerformed(ActionEvent e) {
                     db = new EasyDatabase();
                     String selectSQL = "UPDATE Product SET numberInStock = numberInStock - 1 WHERE productID = ?";
@@ -250,6 +252,7 @@ public class StaffPage extends JPanel {
             });
         }
         submitButton.addActionListener(new ActionListener() {
+            // First sanitises the input, then will add the product to database (function at bottom of StaffPage.java)
             public void actionPerformed(ActionEvent e) {
                 if (!itemID.getText().matches("^[A-Z].*$")) {
                     errorLabel.setText("Item ID must begin with a letter");
@@ -265,13 +268,16 @@ public class StaffPage extends JPanel {
             }
         });
     }
+
     public void setUser(User user) {
         this.user = user;
     }
+
     public void addProductToDatabase() {
         db = new EasyDatabase();        
         try {
-            String selectSQL = "INSERT INTO Product (productID, productName, ProductBrand, productPrice, productGauge, productEra, dCCCode, numberInStock) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            String selectSQL = 
+            "INSERT INTO Product (productID, productName, ProductBrand, productPrice, productGauge, productEra, dCCCode, numberInStock) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement preparedStatement = db.getConnection().prepareStatement(selectSQL);
             preparedStatement.setString(1, itemID.getText());
             preparedStatement.setString(2, itemName.getText());

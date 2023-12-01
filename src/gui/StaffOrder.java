@@ -11,10 +11,12 @@ import java.awt.*;
 
 public class StaffOrder extends JPanel {
     
+    // instance variables
+
     EasyDatabase db;
     User user;
 
-    // View Details
+    // View Details JSwing
 
     protected JPanel detailsPanel = new JPanel();
     protected JButton backButton = new JButton("Back");
@@ -22,20 +24,22 @@ public class StaffOrder extends JPanel {
     protected ArrayList<OrderLine> orderLines = new ArrayList<>();
     protected ArrayList<JPanel> olPanels = new ArrayList<>();
 
-    // Update Order
+    // Update Order JSwing
 
     ArrayList<JPanel> individualOrder = new ArrayList<JPanel>();
-    ArrayList<JPanel> cards = new ArrayList<JPanel>();
-    
+    ArrayList<JPanel> cards = new ArrayList<JPanel>();    
 
-    int currentCard = 0;
+    int currentCard = 0; // Keeps track of cards
 
     public StaffOrder() {
+        // Card layout for main panel; Boxlayout for listing details
         this.setLayout(new CardLayout());  
-        detailsPanel.setLayout(new BoxLayout(detailsPanel,BoxLayout.Y_AXIS));      
+        detailsPanel.setLayout(new BoxLayout(detailsPanel,BoxLayout.Y_AXIS));
 
         detailsPanel.add(backButton);
         detailsPanel.add(nameLabel);
+
+        // Listing all orders, adding them to a boxlayout (divided by cards)
 
         db = new EasyDatabase();
         String selectSQL = "SELECT * FROM `Order`";
@@ -62,6 +66,7 @@ public class StaffOrder extends JPanel {
                 status.setSelectedItem(orderStatus);
                 JButton submit = new JButton("Submit");
 
+                // adding to an arbitrary flow JPanel that lets me list details side by side.
                 JPanel temp1 = new JPanel();
                 temp1.setLayout(new FlowLayout());
                 temp1.add(tempLabel0);
@@ -81,6 +86,7 @@ public class StaffOrder extends JPanel {
             db.close();
         }       
 
+        // Creating the cards
         for(int i=0;i<=individualOrder.size()/12;i++) {
             JButton next = new JButton("->");
             JButton previous = new JButton("<-");
@@ -89,22 +95,11 @@ public class StaffOrder extends JPanel {
             JPanel p2 = new JPanel();
             p2.add(previous);
             p2.add(next);
-            try {
+            try { // Add buttons and orders to a card
                 p.add(p2);
-                p.add(individualOrder.get(i*12));
-                p.add(individualOrder.get(i*12+1));
-                p.add(individualOrder.get(i*12+2));
-                p.add(individualOrder.get(i*12+3));
-                p.add(individualOrder.get(i*12+4));
-                p.add(individualOrder.get(i*12+5));
-                p.add(individualOrder.get(i*12+6));
-                p.add(individualOrder.get(i*12+7));
-                p.add(individualOrder.get(i*12+8));
-                p.add(individualOrder.get(i*12+9));
-                p.add(individualOrder.get(i*12+10));
-                p.add(individualOrder.get(i*12+11));
-            } catch (Exception e) {
-
+                for(int j=0; j<12;j++) p.add(individualOrder.get(i*12+j));
+            } catch (Exception e) { // break instance at end of individualOrder.
+                // Nothing needs to be done here; this catch is expected.
             }
             finally {
                 cards.add(p);
@@ -121,12 +116,14 @@ public class StaffOrder extends JPanel {
     public void addListeners(StaffOrder panel) {
         CardLayout c1 = (CardLayout)(this.getLayout());
 
+        // Returns to viewing orders
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 c1.show(panel, Integer.toString(currentCard));                
             }
         });
 
+        // Listeners are needed for the forward and backward buttons in each card.
         for(JPanel c : cards) {
             JButton pre = (JButton) ((JPanel)c.getComponent(0)).getComponent(0);
             JButton nxt = (JButton) ((JPanel)c.getComponent(0)).getComponent(1);
@@ -146,10 +143,13 @@ public class StaffOrder extends JPanel {
             });
         }
 
+        // Editing orders
         for(JPanel iO : individualOrder) {            
             JButton view = (JButton) iO.getComponent(4);
             JButton sub = (JButton) iO.getComponent(6);
             JComboBox<String> stat = (JComboBox<String>) iO.getComponent(5);
+
+            // Views specific order details
             view.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     User user1;
@@ -168,6 +168,7 @@ public class StaffOrder extends JPanel {
 
                     olPanels.clear();
 
+                    //Adds orderline details (quantity and codes) to list of panels
                     for(OrderLine ol : orderLines) {
                         JPanel j = new JPanel();
                         j.add(new JLabel(ol.getProductCode()));
@@ -175,6 +176,7 @@ public class StaffOrder extends JPanel {
                         olPanels.add(j);
                     }
                     
+                    //adds each detail panel to the view panel
                     for(JPanel oP : olPanels) {
                         detailsPanel.add(oP);
                     }
@@ -182,6 +184,8 @@ public class StaffOrder extends JPanel {
                     c1.show(panel, "ViewDetails");
                 }
             });
+
+            // Updates order in the database
             sub.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) { 
                     String statusUpdate = (String)stat.getSelectedItem();
@@ -197,8 +201,6 @@ public class StaffOrder extends JPanel {
                         preparedStatement.close();
                     } catch (SQLException f) {
                         f.printStackTrace();
-                    } finally {
-
                     }
                 }
             });
