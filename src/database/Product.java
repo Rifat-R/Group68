@@ -90,42 +90,43 @@ public class Product {
         EasyDatabase db = new EasyDatabase();
         try {
             ResultSet rs = db.getProduct(id); 
-            this.productName = rs.getString("productID");
-            this.productBrand = rs.getString("productName");
-            this.productPrice = db.resultSet.getDouble("productPrice");
-            switch(db.resultSet.getString("productGauge")){
-                case "OO Gauge":
-                    this.productGauge = Gauge.OO;
-                    break;
-                case "TT Gauge":
-                    this.productGauge = Gauge.TT;
-                    break;
-                case "N Gauge":
-                    this.productGauge = Gauge.N;
-                    break;
-                default:
-                    this.productGauge = null;
-                    break;
+            if (rs.next()){
+                this.productName = rs.getString("productName");
+                this.productBrand = rs.getString("productBrand");
+                this.productPrice = rs.getDouble("productPrice");
+                switch(rs.getString("productGauge")){
+                    case "OO Gauge":
+                        this.productGauge = Gauge.OO;
+                        break;
+                    case "TT Gauge":
+                        this.productGauge = Gauge.TT;
+                        break;
+                    case "N Gauge":
+                        this.productGauge = Gauge.N;
+                        break;
+                    default:
+                        this.productGauge = null;
+                        break;
+                }
+                this.productEra = rs.getString("productEra");
+                switch(rs.getString("dCCCode")){
+                    case "Analogue":
+                        this.dCCCode = DCCCode.Analogue;
+                        break;
+                    case "DCC-Ready":
+                        this.dCCCode = DCCCode.DCC_Ready;
+                        break;
+                    case "DCC-Fitted":
+                        this.dCCCode = DCCCode.DCC_Fitted;
+                        break;
+                    case "DCC-Sound":
+                        this.dCCCode = DCCCode.DCC_Sound;
+                        break;
+                    default:
+                        this.dCCCode = null;
+                        break;
+                }
             }
-            this.productEra = db.resultSet.getString("productEra");
-            switch(db.resultSet.getString("dCCCode")){
-                case "Analogue":
-                    this.dCCCode = DCCCode.Analogue;
-                    break;
-                case "DCC-Ready":
-                    this.dCCCode = DCCCode.DCC_Ready;
-                    break;
-                case "DCC-Fitted":
-                    this.dCCCode = DCCCode.DCC_Fitted;
-                    break;
-                case "DCC-Sound":
-                    this.dCCCode = DCCCode.DCC_Sound;
-                    break;
-                default:
-                    this.dCCCode = null;
-                    break;
-            }
-            this.numberInStock = db.resultSet.getInt("numberInStock");
         } catch (SQLException e) {
             return;
             //
