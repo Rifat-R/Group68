@@ -193,7 +193,6 @@ public class StaffPage extends JPanel {
                     currentCard++;
                     if(currentCard >= cards.size()) currentCard--;
                     c1.show(panel, Integer.toString(currentCard));
-                    System.out.println(currentCard);            
                 }
             });
             pre.addActionListener(new ActionListener() {
@@ -201,7 +200,6 @@ public class StaffPage extends JPanel {
                     currentCard--;
                     if(currentCard < 0) currentCard++;
                     c1.show(panel, Integer.toString(currentCard));
-                    System.out.println(currentCard);            
                 }
             });
             add.addActionListener(new ActionListener() {
@@ -220,7 +218,6 @@ public class StaffPage extends JPanel {
             JLabel stock = (JLabel) iU.getComponent(10);
             p.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println("Please plus!");
                     db = new EasyDatabase();
                     String selectSQL = "UPDATE Product SET numberInStock = numberInStock + 1 WHERE productID = ?";
                     try {
@@ -237,7 +234,6 @@ public class StaffPage extends JPanel {
             });
             m.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println("Please minus!");
                     db = new EasyDatabase();
                     String selectSQL = "UPDATE Product SET numberInStock = numberInStock - 1 WHERE productID = ?";
                     try {
@@ -273,7 +269,6 @@ public class StaffPage extends JPanel {
         this.user = user;
     }
     public void addProductToDatabase() {
-        System.out.println("Please add product!");
         db = new EasyDatabase();        
         try {
             String selectSQL = "INSERT INTO Product (productID, productName, ProductBrand, productPrice, productGauge, productEra, dCCCode, numberInStock) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
