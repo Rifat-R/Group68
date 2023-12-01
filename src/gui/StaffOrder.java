@@ -19,6 +19,9 @@ public class StaffOrder extends JPanel {
     protected JPanel detailsPanel = new JPanel();
     protected JButton backButton = new JButton("Back");
     protected JLabel nameLabel = new JLabel();
+    protected JLabel cStatusLabel = new JLabel();
+    protected ArrayList<OrderLine> orderLines = new ArrayList<>();
+    protected ArrayList<JPanel> olPanels;
 
     // Update Order
 
@@ -45,12 +48,14 @@ public class StaffOrder extends JPanel {
                 JLabel noLabel = new JLabel(orderNumber.toString());
                 JLabel tempLabel1 = new JLabel(" User: ");
                 JLabel idLabel = new JLabel(userID.toString());
+                JLabel dateLabel = new JLabel(date);
 
                 JButton view = new JButton("View Details");
                 JComboBox<String> status = new JComboBox<>();
+                status.addItem("Pending");
                 status.addItem("Confirmed");
                 status.addItem("Fulfilled");
-                status.addItem("Unfulfilled");
+                status.setSelectedItem(orderStatus);
                 JButton submit = new JButton("Submit");
 
                 JPanel temp1 = new JPanel();
@@ -62,6 +67,7 @@ public class StaffOrder extends JPanel {
                 temp1.add(view);
                 temp1.add(status);
                 temp1.add(submit);
+                temp1.add(dateLabel);
 
                 individualOrder.add(temp1);                          
             }
@@ -143,8 +149,29 @@ public class StaffOrder extends JPanel {
             JButton sub = (JButton) iO.getComponent(6);
             JComboBox<String> stat = (JComboBox<String>) iO.getComponent(5);
             view.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {                    
+                public void actionPerformed(ActionEvent e) {
+
                     c1.show(panel, "ViewDetails");
+                }
+            });
+            sub.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) { 
+                    String statusUpdate = (String)stat.getSelectedItem();
+                    EasyDatabase db = new EasyDatabase();
+                    String x = ((JLabel)iO.getComponent(1)).getText();
+                    int y = Integer.parseInt(x);
+                    PreparedStatement preparedStatement;
+                    try {
+                        preparedStatement = db.getConnection().prepareStatement("UPDATE `Order` SET orderStatus = ? WHERE orderNumber= ?");
+                        preparedStatement.setString(1, statusUpdate);
+                        preparedStatement.setInt(2, y);
+                        preparedStatement.executeUpdate();
+                        preparedStatement.close();
+                    } catch (SQLException f) {
+                        f.printStackTrace();
+                    } finally {
+
+                    }
                 }
             });
         }
