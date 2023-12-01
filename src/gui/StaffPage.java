@@ -217,8 +217,14 @@ public class StaffPage extends JPanel {
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("Please plus!");
                     db = new EasyDatabase();
-                    String selectSQL = "UPDATE Product SET numberInStock = numberInStock + 1 WHERE productID='"+id+"'";
-                    db.executeUpdate(selectSQL);
+                    String selectSQL = "UPDATE Product SET numberInStock = numberInStock + 1 WHERE productID = ?";
+                    try {
+                        PreparedStatement ps = db.getConnection().prepareStatement(selectSQL);
+                        ps.setString(1, id);
+                        ps.executeUpdate();
+                    } catch (SQLException e1) {
+                        e1.printStackTrace();
+                    }
                     db.close();         
                     int x = (Integer.parseInt(stock.getText()) + 1);
                     stock.setText(Integer.toString(x));                                                
@@ -228,8 +234,14 @@ public class StaffPage extends JPanel {
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("Please minus!");
                     db = new EasyDatabase();
-                    String selectSQL = "UPDATE Product SET numberInStock = numberInStock - 1 WHERE productID='"+id+"'";
-                    db.executeUpdate(selectSQL);
+                    String selectSQL = "UPDATE Product SET numberInStock = numberInStock - 1 WHERE productID = ?";
+                    try {
+                        PreparedStatement ps = db.getConnection().prepareStatement(selectSQL);
+                        ps.setString(1, id);
+                        ps.executeUpdate();
+                    } catch (SQLException e1) {
+                        e1.printStackTrace();
+                    }
                     db.close();                        
                     int x = (Integer.parseInt(stock.getText()) - 1);
                     stock.setText(Integer.toString(x));                              
