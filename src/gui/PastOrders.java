@@ -31,6 +31,8 @@ public class PastOrders extends JPanel {
     }
 
     public void renderLoggedInPage() {
+        if(user == null) return;
+
         this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
 

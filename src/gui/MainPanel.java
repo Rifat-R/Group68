@@ -59,6 +59,7 @@ public class MainPanel extends JPanel {
     protected StaffOrder staffOrder;
     protected AfterLogin afterLogin;
     protected CustomerOrder customerOrder;
+    protected PastOrders pastOrders;
 
     // Constructor
     public MainPanel(){
@@ -124,6 +125,7 @@ public class MainPanel extends JPanel {
         staffPage = new StaffPage();
         staffOrder = new StaffOrder();
         ManagerPage = new ManagerPage();
+        pastOrders = new PastOrders();
 
         // Adding all cards to Panel
         this.add(new JPanel(),"Splash");
