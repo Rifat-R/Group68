@@ -47,10 +47,6 @@ public class Order {
         this.orderLines.add(line);
     }
 
-    public int getTotalOrderCost() {
-        return 0;
-    }
-
     public void changeStatus() {
         try {
             EasyDatabase db = new EasyDatabase();

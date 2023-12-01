@@ -18,6 +18,7 @@ public class StaffPage extends JPanel {
 
     // Add products
 
+    protected JButton backButton = new JButton("Back");
     protected JPanel addProducts = new JPanel();
     protected JTextField itemID = new JTextField(6);
     protected JTextField itemName = new JTextField(20);
@@ -54,6 +55,7 @@ public class StaffPage extends JPanel {
         itemDCC.addItem("DCC-Fitted");
         itemDCC.addItem("DCC-Ready");
         
+        addProducts.add(backButton);
         JPanel temp = new JPanel();
         temp.add(new JLabel("ID: "));
         temp.add(itemID);
@@ -177,6 +179,11 @@ public class StaffPage extends JPanel {
     public void addListeners(StaffPage panel)
     {
         CardLayout c1 = (CardLayout)(this.getLayout());
+        backButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                c1.show(panel, Integer.toString(currentCard));                
+            }
+        });
         for(JPanel c : cards) {
             JButton add = (JButton) ((JPanel)c.getComponent(0)).getComponent(0);
             JButton pre = (JButton) ((JPanel)c.getComponent(0)).getComponent(1);
@@ -184,7 +191,7 @@ public class StaffPage extends JPanel {
             nxt.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     currentCard++;
-                    if(currentCard > cards.size()) currentCard--;
+                    if(currentCard >= cards.size()) currentCard--;
                     c1.show(panel, Integer.toString(currentCard));
                     System.out.println(currentCard);            
                 }
