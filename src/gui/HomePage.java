@@ -397,16 +397,20 @@ public class HomePage extends JPanel {
                 Double orderLinePrice = orderLinePriceIndividual * orderQuantity;
 
                 SimpleDateFormat formatter = new SimpleDateFormat("mm/yy");  
-                Date date = new Date();
+                java.util.Date date = new java.util.Date();
 
                 System.out.println(date);
 
-                int OrderNumber = new Random().nextInt(90000000) + 10000000;
+                int orderNumber = new Random().nextInt(90000000) + 10000000;
 
-                Order myorder = new Order(OrderNumber, user.getID(), Status.Pending, date);
+                Order myorder = new Order(orderNumber, user.getID(), Status.Pending, date);
 
-                newOrderLine = new OrderLine(#####, orderQuantity, orderNumber, productID);
+                int myOrderLineNumber = myorder.getNextOrderLineNumber();
+
+                OrderLine newOrderLine = new OrderLine(myOrderLineNumber, orderQuantity, orderNumber, productID);
                 myorder.addOrderLine(newOrderLine);
+
+                //java.sql.Date(date.getTime());
 
                 
                 db.addOrder(date, Status.Pending, );

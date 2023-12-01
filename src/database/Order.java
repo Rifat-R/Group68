@@ -2,6 +2,8 @@ package src.database;
 import java.sql.*;
 import java.util.ArrayList;
 
+import java.util.Date;
+
 import src.database.User.Role;
 
 public class Order {
@@ -42,6 +44,32 @@ public class Order {
         this.orderLines.add(line);
     }
 
+    public int getNextOrderLineNumber() {
+        EasyDatabase db = new EasyDatabase();
+        String selectSQL = "SELECT * FROM OrderLines WHERE orderNumber = ? ORDER BY orderLineNumber DESC LIMIT 1";
+        
+        try {
+            PreparedStatement preparedStatement = db.con.prepareStatement(selectSQL);
+            preparedStatement.setInt(1, this.orderNumber);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            if (!rs.isBeforeFirst() ) {    
+                return 1;
+            } else {
+                if(rs.next())
+                {
+                    // process resultset
+                    return rs.getInt("orderLineNumber");
+                }else
+                {
+                    return 0;
+                }
+            }
+        } catch (SQLException e) {
+            return 0;
+        }
+    }
+
     public void orderToDB() throws SQLException {
         EasyDatabase db = new EasyDatabase();
         db.executeQuery("SELECT * FROM Order WHERE orderNumber= " + this.orderNumber);
@@ -65,7 +93,7 @@ public class Order {
         }
     }
 
-    public Order(int orderNumber, int userId, Status status, Date date){
+    public Order(int orderNumber, int userId, Status status, java.util.Date date){
         this.orderNumber = orderNumber;
         this.userID = userId;
         this.orderStatus = status;
