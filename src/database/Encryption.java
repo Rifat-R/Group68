@@ -7,6 +7,7 @@ public class Encryption {
 
     private static final int SALT_LENGTH = 16; // Adjust the salt length as needed
 
+    // Generates a random salt of length SALT_LENGTH
     public static String generateSalt() {
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[SALT_LENGTH];
@@ -14,7 +15,7 @@ public class Encryption {
         return bytesToHex(salt);
     }
 
-    // Redundant method, can be deleted
+    // Redundant method, can be deleted (Old function)
 
     // public static String hashPassword(String password, String salt) throws NoSuchAlgorithmException {
     //     String saltedPassword = password + salt;
@@ -25,8 +26,11 @@ public class Encryption {
     //     return bytesToHex(hashedBytes);
     // }
 
+
+
     // Can be used to hash any string, not just passwords
     public static String generateHash(String inputString, String salt) throws NoSuchAlgorithmException {
+        // Hash the input string with the salt using SHA-256
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         String saltedInput = inputString + salt;
         byte[] hashedBytes = digest.digest(saltedInput.getBytes());
@@ -34,6 +38,7 @@ public class Encryption {
 
     }
 
+    // Converts a byte array to a hex string for storage in the database (Makes things easier)
     private static String bytesToHex(byte[] bytes) {
         StringBuilder hexStringBuilder = new StringBuilder();
         for (byte aByte : bytes) {

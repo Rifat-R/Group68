@@ -33,6 +33,9 @@ public class OrderLine {
         this.quantity= quantity;
     }
 
+
+
+    // Constructor for creating a new orderLine + Checks whether the product exists
     public OrderLine(int orderLineNumber, int quantity, int orderNumber, String productCode){
         this.orderLineNumber = orderLineNumber;
         this.quantity = quantity;
@@ -45,9 +48,5 @@ public class OrderLine {
             e.printStackTrace();
         }
     }
-
-    public OrderLine(int int1, int int2, int int3, int int4) {
-    }
-
     
 }

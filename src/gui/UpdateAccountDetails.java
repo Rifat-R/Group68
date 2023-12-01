@@ -5,6 +5,9 @@ import src.database.EasyDatabase;
 import src.database.User;
 
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.*;
@@ -20,6 +23,10 @@ public class UpdateAccountDetails extends JPanel {
     private JTextField roadName;
     private JTextField city;
     private JTextField postcode;
+    private JTextField cardTypeName;
+    private JTextField cardNumber;
+    private JTextField cardExpiryDate;
+    private JTextField cardSecurityCode;
 
     EasyDatabase db;
 
@@ -63,6 +70,10 @@ public class UpdateAccountDetails extends JPanel {
         String initialRoadName = user.getRoadName();
         String initialCity = user.getCity();
         String initialPostcode = user.getPostCode();
+        String initialCardTypeName = user.getCardTypeName();
+        String initialCardNumber = user.getCardNumber();
+        Date initialCardExpiryDate = user.getCardExpiryDate();
+        String initialCardSecurityCode = user.getCardSecurityCode();
 
 
         String statusText = "";
@@ -222,10 +233,71 @@ public class UpdateAccountDetails extends JPanel {
         c.gridwidth = 1;
         c.weightx = 0.2;
         c.weighty = 0.2;
-        c.insets = new Insets(0,0,50,50);
+        c.insets = new Insets(0,0,0,50);
         this.add(updateAddress, c);
 
+        if ((initialCardNumber == null)) {
+            cardTypeName = new JTextField("Card Type (Visa, Mastercard etc)");
+            c.anchor = GridBagConstraints.PAGE_START;
+            c.fill = GridBagConstraints.HORIZONTAL;
+            c.gridx = 0;
+            c.gridy = 5;
+            c.gridheight = 1;
+            c.gridwidth = 1;
+            c.weightx = 0.2;
+            c.weighty = 0.2;
+            c.insets = new Insets(50,50,0,0);
+            this.add(cardTypeName, c);
 
+            cardNumber = new JTextField("Card number");
+            c.anchor = GridBagConstraints.PAGE_START;
+            c.fill = GridBagConstraints.HORIZONTAL;
+            c.gridx = 1;
+            c.gridy = 5;
+            c.gridheight = 1;
+            c.gridwidth = 1;
+            c.weightx = 0.2;
+            c.weighty = 0.2;
+            c.insets = new Insets(50,0,0,50);
+            this.add(cardNumber, c);
+
+            cardExpiryDate = new JTextField("Card expiry date in the format mm/yy");
+            c.anchor = GridBagConstraints.PAGE_START;
+            c.fill = GridBagConstraints.HORIZONTAL;
+            c.gridx = 0;
+            c.gridy = 6;
+            c.gridheight = 1;
+            c.gridwidth = 1;
+            c.weightx = 0.2;
+            c.weighty = 0.2;
+            c.insets = new Insets(0, 50,0,0);
+            this.add(cardExpiryDate, c);
+
+            cardSecurityCode = new JTextField("Card security code");
+            c.anchor = GridBagConstraints.PAGE_START;
+            c.fill = GridBagConstraints.HORIZONTAL;
+            c.gridx = 1;
+            c.gridy = 6;
+            c.gridheight = 1;
+            c.gridwidth = 1;
+            c.weightx = 0.2;
+            c.weighty = 0.2;
+            c.insets = new Insets(0,0,0,0);
+            this.add(cardSecurityCode, c);
+
+            JButton updateCard = new JButton("Update Card details");
+            updateCard.addActionListener(new updateCardListener());
+            c.anchor = GridBagConstraints.PAGE_START;
+            c.fill = GridBagConstraints.HORIZONTAL;
+            c.gridx = 2;
+            c.gridy = 6;
+            c.gridheight = 1;
+            c.gridwidth = 1;
+            c.weightx = 0.2;
+            c.weighty = 0.2;
+            c.insets = new Insets(0,0,50,50);
+            this.add(updateCard, c);
+        }
     }
 
     
@@ -307,6 +379,31 @@ public class UpdateAccountDetails extends JPanel {
                 status = "Error";
                 refresh();
             }
+        }
+    }
+
+    class updateCardListener implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+            String newCardName = cardTypeName.getText(); //String not int
+            String newCardNumber = cardNumber.getText();
+            String newCardExpiryDate = cardExpiryDate.getText();
+            String newCardSecurityCode = cardSecurityCode.getText();
+            
+            if(newCardNumber.length() != 16){
+                status = "Error";
+                refresh();
+            }
+
+            if(newCardSecurityCode.length() != 3){
+                status = "Error";
+                refresh();
+            }
+
+            if(newCardExpiryDate.length() != 5){
+                status = "Error";
+                refresh();
+            }
+
         }
     }
 
