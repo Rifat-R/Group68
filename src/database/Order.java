@@ -48,6 +48,23 @@ public class Order {
         this.orderLines.add(line);
     }
 
+    public int getTotalOrderCost() {
+        return 0;
+    }
+
+    public void changeStatus() {
+        try {
+            EasyDatabase db = new EasyDatabase();
+            String selectSQL = "UPDATE `Order` SET orderStatus = ? WHERE orderNumber = ?";
+            PreparedStatement selectStatement = db.con.prepareStatement(selectSQL);
+            selectStatement.setString(1, Status.Confirmed.name());
+            selectStatement.setInt(2, this.orderNumber);
+            selectStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     
 
     public int getNextOrderLineNumber() {

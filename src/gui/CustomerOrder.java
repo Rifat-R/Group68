@@ -1,6 +1,7 @@
 package src.gui;
 
 import src.database.User;
+import src.gui.HomePage.buttonListener;
 import src.database.EasyDatabase;
 import src.database.Order;
 import src.database.OrderLine;
@@ -20,6 +21,7 @@ public class CustomerOrder extends JPanel {
 
     private User user;
     EasyDatabase db;
+    Order currentOrder;
 
     public void setUser(User user) {
         this.user = user;
@@ -30,6 +32,7 @@ public class CustomerOrder extends JPanel {
     }
 
     public void renderLoggedInPage() {
+        this.removeAll();
         this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
 
@@ -37,9 +40,10 @@ public class CustomerOrder extends JPanel {
         if (db.checkIfOrderExsistsForCustomer(user.getID())) {
             JLabel currentOrderText = new JLabel("Your current order:");
 
+            // returns current pending order if there is one
             int orderNum = db.getOrderNumber(user.getID());
             try {
-                Order currentOrder = new Order(orderNum);
+                currentOrder = new Order(orderNum);
 
 
 
@@ -61,8 +65,8 @@ public class CustomerOrder extends JPanel {
                 c.gridy = 1;
                 c.gridheight = 1;
                 c.gridwidth = 1;
-                c.weightx = 0.4;
-                c.weighty = 0.4;
+                c.weightx = 0;
+                c.weighty = 0;
                 c.insets = new Insets(0,50,0,0);
                 this.add(orderNumDisplay, c);
 
@@ -76,8 +80,8 @@ public class CustomerOrder extends JPanel {
                 c.gridy = 1;
                 c.gridheight = 1;
                 c.gridwidth = 1;
-                c.weightx = 0.4;
-                c.weighty = 0.4;
+                c.weightx = 0;
+                c.weighty = 0;
                 c.insets = new Insets(0,0,0,0);
                 this.add(orderDate, c);  
                 
@@ -121,6 +125,44 @@ public class CustomerOrder extends JPanel {
                 currentOrderPane.setBorder(null);
 
                 this.add(currentOrderPane, c);
+
+                JLabel orderPrice = new JLabel(Integer.toString(currentOrder.getTotalOrderCost()));
+                c.anchor = GridBagConstraints.FIRST_LINE_START;
+                c.fill = GridBagConstraints.HORIZONTAL;
+                c.gridx = 0;
+                c.gridy = 3;
+                c.gridheight = 1;
+                c.gridwidth = 1;
+                c.weightx = 0.4;
+                c.weighty = 0.4;
+                c.insets = new Insets(0,50,0,0);
+                this.add(orderPrice, c);
+
+                JLabel orderStatus = new JLabel(currentOrder.getStatus().name());
+                c.anchor = GridBagConstraints.FIRST_LINE_START;
+                c.fill = GridBagConstraints.HORIZONTAL;
+                c.gridx = 1;
+                c.gridy = 3;
+                c.gridheight = 1;
+                c.gridwidth = 1;
+                c.weightx = 0;
+                c.weighty = 0;
+                c.insets = new Insets(0,0,0,0);
+                this.add(orderStatus, c);
+
+                JButton orderOrderBtn = new JButton("Order");
+                orderOrderBtn.addActionListener(new buttonListener());
+                c.anchor = GridBagConstraints.FIRST_LINE_START;
+                c.fill = GridBagConstraints.HORIZONTAL;
+                c.gridx = 2;
+                c.gridy = 3;
+                c.gridheight = 1;
+                c.gridwidth = 1;
+                c.weightx = 0;
+                c.weighty = 0;
+                c.insets = new Insets(0,0,0,0);
+                this.add(orderOrderBtn, c);
+
                 
 
 
@@ -134,6 +176,16 @@ public class CustomerOrder extends JPanel {
 
         } else {
             JLabel currentOrderText = new JLabel("You have no current orders");
+            c.anchor = GridBagConstraints.FIRST_LINE_START;
+            c.fill = GridBagConstraints.HORIZONTAL;
+            c.gridx = 0;
+            c.gridy = 0;
+            c.gridheight = 1;
+            c.gridwidth = 1;
+            c.weightx = 0.4;
+            c.weighty = 0.4;
+            c.insets = new Insets(50,50,0,0);
+            this.add(currentOrderText, c);
         }
 
         JScrollPane pastOrders = new JScrollPane();
@@ -218,4 +270,18 @@ public class CustomerOrder extends JPanel {
         
         return p;
     }
+
+    class buttonListener implements ActionListener {
+        public void actionPerformed(ActionEvent event){
+            currentOrder.changeStatus();
+            refresh();
+        }
+    }
+
+    public void refresh() {
+        revalidate();
+        renderLoggedInPage();
+        repaint();
+    }
+
 }
