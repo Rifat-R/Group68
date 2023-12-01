@@ -8,7 +8,10 @@ import java.sql.*;
 
 public class CardDetails {
 
+    // Function to add card details to the database
     public static void addCardDetailToDB(Integer userID, Integer cardNumber, String expiryDate, Integer securityCode, String cardTypeName) throws ParseException {
+
+        // Convert expiryDate from String to java.util.Date
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/yy");
         java.util.Date parsedDate = dateFormat.parse(expiryDate);
 
@@ -19,6 +22,7 @@ public class CardDetails {
         
         try{
             User user = new User(userID);
+            // Hash the card number and security code using the user's salt from registration
             String salt = user.getSalt();
             String hashedCardNumber = Encryption.generateHash(cardNumber.toString(), salt);
             String hashedSecurityCode = Encryption.generateHash(securityCode.toString(), salt);

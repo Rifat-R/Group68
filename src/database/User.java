@@ -3,12 +3,14 @@ import java.sql.*;
 
 public class User {
 
+    // Enum for user roles
     public enum Role{
         Customer,
         Staff,
         Manager
     };
 
+    // Class variables to store user data
     private int userID = 0;
     private String userEmail = null;
     private String hashedPassword = null;
@@ -16,12 +18,12 @@ public class User {
     private Role userRole = Role.Customer;
     private String firstName = null;
     private String lastName = null;
-    private String fullName = null;
     private int houseNumber = 0;
     private String roadName = null;
     private String city = null;
     private String postCode = null;
     private String cardTypeName = null;
+    // Card number is stored as a string as it is encrypted (Same for security code)
     private String cardNumber = null;
     private Date cardExpiryDate = null;
     private String cardSecurityCode = null;
@@ -130,7 +132,7 @@ public class User {
     }
 
     
-    
+    // Constructor to populate the object
     public User(int id, String email, Role role, String firstName, String lastName, int houseNumber, String roadName, String city, String postCode){
         this.userID = id;
         this.userEmail = email;
@@ -144,6 +146,7 @@ public class User {
     }
     
 
+    // Constructor to get a user from the database using a userID and populate the object
     public User(int id) throws SQLException{
         EasyDatabase db = new EasyDatabase();
         // Using preparedStatement to prevent SQL injection
@@ -153,6 +156,7 @@ public class User {
         ResultSet rs = preparedStatement.executeQuery();
 
         this.userID = id;
+        // Move to the first row of the resultset
         rs.next();
         this.userEmail = rs.getString("email");
         this.hashedPassword = rs.getString("hashed_password");
@@ -177,13 +181,14 @@ public class User {
         this.roadName = rs.getString("roadName");
         this.city = rs.getString("city");
         this.postCode = rs.getString("postCode");
-        this.cardExpiryDate = rs.getDate("expiryDate");
+        this.cardExpiryDate = rs.getDate("cardExpiryDate");
         this.cardNumber = rs.getString("cardNumber");
-        this.cardSecurityCode = rs.getString("securityCode");
+        this.cardSecurityCode = rs.getString("cardSecurityCode");
         this.cardTypeName = rs.getString("cardTypeName");
         db.close();
     }
 
+    // Constructor to get a user from the database using an email and populate the object
     public User(String email) throws SQLException{
         EasyDatabase db = new EasyDatabase();
         // Fixed query
@@ -216,9 +221,9 @@ public class User {
         this.roadName = rs.getString("roadName");
         this.city = rs.getString("city");
         this.postCode = rs.getString("postCode");
-        this.cardExpiryDate = rs.getDate("expiryDate");
+        this.cardExpiryDate = rs.getDate("cardExpiryDate");
         this.cardNumber = rs.getString("cardNumber");
-        this.cardSecurityCode = rs.getString("securityCode");
+        this.cardSecurityCode = rs.getString("cardSecurityCode");
         this.cardTypeName = rs.getString("cardTypeName");
         db.close();
     }

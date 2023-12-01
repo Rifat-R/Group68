@@ -86,6 +86,8 @@ public class Product {
         this.numberInStock = number;
     }
 
+
+    // Constructor to get a product from the database using a productID and populate the object
     public Product(String id) throws SQLException{
         EasyDatabase db = new EasyDatabase();
         try {
@@ -133,6 +135,7 @@ public class Product {
         }
     }
 
+    // Method to add a new product to the database
     public void addProductToDB() throws SQLDataException{
         EasyDatabase db = new EasyDatabase();
         try {
@@ -153,6 +156,7 @@ public class Product {
         }
     }
 
+    // Method to update a product in the database
     public void updateProductInDB() throws SQLDataException{
         EasyDatabase db = new EasyDatabase();
         try {
@@ -204,6 +208,7 @@ public class Product {
 
 
 
+    // Constructor to create a new product object
     public Product(String id, String name, String brand, double price, Gauge gauge, String era, DCCCode dCCCode, int stock){
         this.productID = id;
         this.productName = name;

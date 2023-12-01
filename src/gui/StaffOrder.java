@@ -19,19 +19,23 @@ public class StaffOrder extends JPanel {
     protected JPanel detailsPanel = new JPanel();
     protected JButton backButton = new JButton("Back");
     protected JLabel nameLabel = new JLabel();
-    protected JLabel cStatusLabel = new JLabel();
     protected ArrayList<OrderLine> orderLines = new ArrayList<>();
-    protected ArrayList<JPanel> olPanels;
+    protected ArrayList<JPanel> olPanels = new ArrayList<>();
 
     // Update Order
 
     ArrayList<JPanel> individualOrder = new ArrayList<JPanel>();
     ArrayList<JPanel> cards = new ArrayList<JPanel>();
+    
 
     int currentCard = 0;
 
     public StaffOrder() {
-        this.setLayout(new CardLayout());        
+        this.setLayout(new CardLayout());  
+        detailsPanel.setLayout(new BoxLayout(detailsPanel,BoxLayout.Y_AXIS));      
+
+        detailsPanel.add(backButton);
+        detailsPanel.add(nameLabel);
 
         db = new EasyDatabase();
         String selectSQL = "SELECT * FROM `Order`";
@@ -131,7 +135,6 @@ public class StaffOrder extends JPanel {
                     currentCard++;
                     if(currentCard >= cards.size()) currentCard--;
                     c1.show(panel, Integer.toString(currentCard));
-                    System.out.println(currentCard);
                 }
             });
             pre.addActionListener(new ActionListener() {
@@ -139,7 +142,6 @@ public class StaffOrder extends JPanel {
                     currentCard--;
                     if(currentCard < 0) currentCard++;
                     c1.show(panel, Integer.toString(currentCard));
-                    System.out.println(currentCard);            
                 }
             });
         }
@@ -150,6 +152,32 @@ public class StaffOrder extends JPanel {
             JComboBox<String> stat = (JComboBox<String>) iO.getComponent(5);
             view.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
+                    User user1;
+                    try {
+                        user1 = new User(Integer.parseInt(((JLabel)iO.getComponent(3)).getText()));      
+                        nameLabel.setText(user1.getFullName());
+                        
+                        orderLines.clear();
+                        int orderNumber = Integer.parseInt(((JLabel)iO.getComponent(1)).getText());
+                        Order order = new Order(orderNumber);
+                        orderLines.addAll(order.getOrderLines());
+
+                    } catch (SQLException f) {
+                        f.printStackTrace();
+                    }
+
+                    olPanels.clear();
+
+                    for(OrderLine ol : orderLines) {
+                        JPanel j = new JPanel();
+                        j.add(new JLabel(ol.getProductCode()));
+                        j.add(new JLabel(" Quantity: " + ol.getQuantity()));
+                        olPanels.add(j);
+                    }
+                    
+                    for(JPanel oP : olPanels) {
+                        detailsPanel.add(oP);
+                    }
 
                     c1.show(panel, "ViewDetails");
                 }
@@ -175,10 +203,5 @@ public class StaffOrder extends JPanel {
                 }
             });
         }
-    }
-
-    public String getNameFromID() {
-        
-        return "";
     }
 }
