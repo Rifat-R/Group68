@@ -1,6 +1,7 @@
 package src.gui;
 import javax.swing.*;
 
+import src.database.CardDetails;
 import src.database.EasyDatabase;
 import src.database.User;
 
@@ -384,6 +385,7 @@ public class UpdateAccountDetails extends JPanel {
 
     class updateCardListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
+            
             String newCardName = cardTypeName.getText(); //String not int
             String newCardNumber = cardNumber.getText();
             String newCardExpiryDate = cardExpiryDate.getText();
@@ -404,6 +406,7 @@ public class UpdateAccountDetails extends JPanel {
                 refresh();
             }
 
+            //CardDetails.addCardDetailToDB(user.getID(), newCardNumber, newCardExpiryDate, newCardSecurityCode, newCardName);
         }
     }
 

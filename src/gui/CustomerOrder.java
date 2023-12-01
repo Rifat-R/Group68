@@ -267,7 +267,8 @@ public class CustomerOrder extends JPanel {
             if (db.checkIfCardDetailsExsists(user.getID())) {
                 currentOrder.changeStatus();
             } else {
-                status = "Please enter card details in account settings";
+                currentOrder.changeStatus();
+                //status = "Please enter card details in account settings";
                 refresh();
             }
         }
