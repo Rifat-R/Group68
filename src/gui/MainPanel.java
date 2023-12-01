@@ -1,7 +1,6 @@
 package src.gui;
 import javax.swing.*;
 
-import com.mysql.cj.protocol.Resultset;
 
 import src.database.EasyDatabase;
 import src.database.User;

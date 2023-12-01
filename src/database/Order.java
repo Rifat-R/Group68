@@ -3,7 +3,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 
-import com.mysql.cj.xdevapi.SelectStatement;
 
 
 public class Order {
@@ -65,7 +64,13 @@ public class Order {
         }
     }
 
-    
+    public int getTotalOrderCost() {
+        int total = 0;
+        for(OrderLine ol : orderLines) {
+            total += ol.getQuantity() * ol.getProduct().getPrice();
+        }
+        return total;
+    }    
 
     public int getNextOrderLineNumber() {
         EasyDatabase db = new EasyDatabase();

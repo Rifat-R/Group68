@@ -6,8 +6,6 @@ import src.database.EasyDatabase;
 import src.database.Order;
 import src.database.OrderLine;
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
 import java.sql.*;
 import java.text.DateFormat;
