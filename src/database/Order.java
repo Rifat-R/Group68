@@ -48,7 +48,13 @@ public class Order {
         this.orderLines.add(line);
     }
 
-    
+    public int getTotalOrderCost() {
+        int total = 0;
+        for(OrderLine ol : orderLines) {
+            total += ol.getQuantity() * ol.getProduct().getPrice();
+        }
+        return total;
+    }    
 
     public int getNextOrderLineNumber() {
         EasyDatabase db = new EasyDatabase();
